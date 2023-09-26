@@ -6,11 +6,11 @@ namespace mr24hpc1_text_sensor {
 
 static const char *TAG = "mr24hpc1_text_sensor.text_sensor";
 
-void MR24HPC1_TextSensor::setup() {
+void mr24hpc1TextSensor::setup() {
   
 }
 
-void MR24HPC1_TextSensor::dump_config() { 
+void mr24hpc1TextSensor::dump_config() { 
     ESP_LOGCONFIG(TAG, "Empty text sensor");
 }
 
