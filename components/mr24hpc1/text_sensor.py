@@ -1,31 +1,27 @@
 import esphome.codegen as cg
-import esphome.config_validation as cv
 from esphome.components import text_sensor
-from esphome.const import CONF_ID
+import esphome.config_validation as cv
+from esphome.const import (
+    ENTITY_CATEGORY_DIAGNOSTIC,
+)
+from . import CONF_MR24HPC1_ID, mr24hpc1Component
 
-CODEOWNERS = ["@limengdu"]
+CONF_HEARTBEAT = 'heartbeat'
 
-# 这行代码创建了一个新的名为 mr24hpc1_ns 的命名空间。
-# 该命名空间将作为 mr24hpc1_ns 组件相关的所有类、函数和变量的前缀，确保它们不会与其他组件的名称产生冲突。
-mr24hpc1_text_sensor_ns = cg.esphome_ns.namespace('mr24hpc1_text_sensor')
-# 这个 MyCustomTextSensor 类将是一个定期轮询的 UART 设备
-mr24hpc1TextSensor = mr24hpc1_text_sensor_ns.class_('mr24hpc1TextSensor', text_sensor.TextSensor, cg.Component)
+DEPENDENCIES = ["mr24hpc1"]
 
-# sensor.sensor_schema(UNIT_EMPTY, ICON_EMPTY, 1) 创建了一个基础的传感器模式，设置了单位 (UNIT_EMPTY)，图标 (ICON_EMPTY)，以及数据的小数点位数（1）。
-# .extend({ cv.GenerateID(): cv.declare_id(mr24hpc1Sensor), }) 扩展了基础模式，添加了一个必需的 ID。
-# cv.GenerateID() 是一个函数，它生成一个唯一的 ID，cv.declare_id(mr24hpc1Sensor) 声明了一个新的 mr24hpc1Sensor ID。
-# .extend(cv.polling_component_schema('60s')) '60s' 指定了默认的轮询间隔为 60 秒。
-# .extend(uart.UART_DEVICE_SCHEMA) 这允许用户在配置文件中设置 UART 设备的参数，如波特率和接收/发送引脚。
-CONFIG_SCHEMA = text_sensor.TEXT_SENSOR_SCHEMA.extend({
-    cv.GenerateID(): cv.declare_id(mr24hpc1TextSensor)
-}).extend(cv.COMPONENT_SCHEMA)
+# The entity category for read only diagnostic values, for example RSSI, uptime or MAC Address
+CONFIG_SCHEMA = {
+    cv.GenerateID(CONF_MR24HPC1_ID): cv.use_id(mr24hpc1Component),
+    cv.Optional(CONF_HEARTBEAT): text_sensor.text_sensor_schema(
+        entity_category=ENTITY_CATEGORY_DIAGNOSTIC, icon="mdi:connection"
+    ),
+}
 
-def to_code(config):
-    # 这行代码创建了一个新的 Pvariable（一个代表 C++ 变量的 Python 对象），变量的 ID 是从配置中取出的。
-    var = cg.new_Pvariable(config[CONF_ID])
-    # 注册了一个文本传感器
-    yield text_sensor.register_text_sensor(var, config)
-    # 这个生成器负责生成注册组件所需要的 C++ 代码。
-    yield cg.register_component(var, config)
+async def to_code(config):
+    mr24hpc1_component = await cg.get_variable(config[CONF_MR24HPC1_ID])
+    if heartbeat_config := config.get(CONF_HEARTBEAT):
+        sens = await text_sensor.new_text_sensor(heartbeat_config)
+        cg.add(mr24hpc1_component.set_heartbeat_state_text_sensor(sens))
     
     
