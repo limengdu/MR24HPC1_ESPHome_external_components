@@ -23,12 +23,6 @@ CONF_MR24HPC1_ID = "mr24hpc1_id"
 CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(): cv.declare_id(mr24hpc1Component),
-
-        # throttle（可选，int）：控制数据更新速率的时间（以毫秒为单位）。默认值为 1000ms 。
-        cv.Optional(CONF_THROTTLE, default="1000ms"): cv.All(
-            cv.positive_time_period_milliseconds,
-            cv.Range(min=cv.TimePeriod(milliseconds=1)),
-        ),
     }
 )
 
@@ -57,8 +51,6 @@ async def to_code(config):
     await cg.register_component(var, config)
     # 这行代码将新创建的 Pvariable 注册为一个设备。
     await uart.register_uart_device(var, config)
-    # "throttle" 可能是用来限制设备操作频率的
-    cg.add(var.set_throttle(config[CONF_THROTTLE]))
 
 CALIBRATION_ACTION_SCHEMA = maybe_simple_id(
     {
