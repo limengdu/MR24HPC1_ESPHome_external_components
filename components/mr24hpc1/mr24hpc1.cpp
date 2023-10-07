@@ -207,27 +207,22 @@ void mr24hpc1Component::R24_parse_data_frame(uint8_t *data, uint8_t len)
     break;
     case 0x02:
     {
-        this->R24_frame_parse_product_Information(data);
+        // this->R24_frame_parse_product_Information(data);
     }
     break;
     case 0x05:
     {
-        this->R24_frame_parse_work_status(data);
+        // this->R24_frame_parse_work_status(data);
     }
     break;
-    // case 0x07:
-    // {
-    //     this->R24_frame_parse_detection_range(data);
-    // }
-    // break;
     case 0x08:
     {
-        this->R24_frame_parse_open_underlying_information(data);
+        // this->R24_frame_parse_open_underlying_information(data);
     }
     break;
     case 0x80:
     {
-        this->R24_frame_parse_human_information(data);
+        // this->R24_frame_parse_human_information(data);
     }
     break;
     default:
