@@ -66,7 +66,6 @@ enum
     STANDARD_FUNCTION_QUERY_PRODUCT_ID,
     STANDARD_FUNCTION_QUERY_FIRMWARE_VERDION,
     STANDARD_FUNCTION_QUERY_HARDWARE_MODE,
-    // STANDARD_FUNCTION_QUERY_PROTOCOL_TYPE,
     STANDARD_FUNCTION_QUERY_HUMAN_STATUS,
     STANDARD_FUNCTION_QUERY_SCENE_MODE,
     STANDARD_FUNCTION_QUERY_SENSITIVITY,
@@ -78,11 +77,7 @@ enum
     STANDARD_FUNCTION_MAX,
 
     CUSTOM_FUNCTION_QUERY_RADAR_OUITPUT_INFORMATION_SWITCH,
-    // CUSTOM_FUNCTION_QUERY_SPATIAL_STATIC_VALUE,
-    // CUSTOM_FUNCTION_QUERY_SPATIAL_MOTION_AMPLITUDE,
     CUSTOM_FUNCTION_QUERY_PRESENCE_OF_DETECTION_RANGE,
-    // CUSTOM_FUNCTION_QUERY_DISTANCE_OF_MOVING_OBJECT,
-    // CUSTOM_FUNCTION_QUERY_TARGET_MOVEMENT_SPEED,
     CUSTOM_FUNCTION_QUERY_JUDGMENT_THRESHOLD_EXISTS,
     CUSTOM_FUNCTION_QUERY_MOTION_AMPLITUDE_TRIGGER_THRESHOLD,
     CUSTOM_FUNCTION_QUERY_PRESENCE_OF_PERCEPTION_BOUNDARY,
@@ -141,6 +136,10 @@ class mr24hpc1Component : public Component, public uart::UARTDevice {      // ç±
 ****/
 #ifdef USE_TEXT_SENSOR
   SUB_TEXT_SENSOR(heartbeat_state)
+  SUB_TEXT_SENSOR(product_model)
+  SUB_TEXT_SENSOR(product_id)
+  SUB_TEXT_SENSOR(hardware_model)
+  SUB_TEXT_SENSOR(firware_version)
 #endif
 
   public:
@@ -150,7 +149,13 @@ class mr24hpc1Component : public Component, public uart::UARTDevice {      // ç±
     void update();
     void R24_split_data_frame(uint8_t value);
     void R24_parse_data_frame(uint8_t *data, uint8_t len);
+    void R24_frame_parse_product_Information(uint8_t *data);
+    void send_query(uint8_t *query, size_t string_length);
+    void get_product_mode(void);
+    void get_product_id(void);
+    void get_hardware_model(void);
+    void get_firmware_version(void);
 };
 
-}  // namespace empty_text_sensor
+}  // namespace mr24hpc1
 }  // namespace esphome
