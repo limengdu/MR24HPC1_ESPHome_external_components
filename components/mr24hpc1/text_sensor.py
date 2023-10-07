@@ -8,7 +8,7 @@ from . import CONF_MR24HPC1_ID, mr24hpc1Component
 
 CONF_HEARTBEAT = 'heartbeat'
 
-DEPENDENCIES = ["mr24hpc1"]
+AUTO_LOAD = ["mr24hpc1"]
 
 # The entity category for read only diagnostic values, for example RSSI, uptime or MAC Address
 CONFIG_SCHEMA = {
