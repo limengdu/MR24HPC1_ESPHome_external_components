@@ -142,6 +142,11 @@ class mr24hpc1Component : public Component, public uart::UARTDevice {      // ç±
   SUB_TEXT_SENSOR(firware_version)
 #endif
 
+  private:
+    char c_product_mode[PRODUCT_BUF_MAX_SIZE + 1];
+    char c_product_id[PRODUCT_BUF_MAX_SIZE + 1];
+    char c_hardware_model[PRODUCT_BUF_MAX_SIZE + 1];
+    char c_firmware_version[PRODUCT_BUF_MAX_SIZE + 1];
   public:
     void setup() override;
     void dump_config() override;
