@@ -52,7 +52,7 @@ void mr24hpc1Component::dump_config() {
     LOG_TEXT_SENSOR(" ", "ProductModelTextSensor", this->product_model_text_sensor_);
     LOG_TEXT_SENSOR(" ", "ProductIDTextSensor", this->product_id_text_sensor_);
     LOG_TEXT_SENSOR(" ", "HardwareModelTextSensor", this->hardware_model_text_sensor_);
-    LOG_TEXT_SENSOR(" ", "FirwareVerisonTextSensor", this->firware_verison_text_sensor_);
+    LOG_TEXT_SENSOR(" ", "FirwareVerisonTextSensor", this->firware_version_text_sensor_);
 #endif
 }
 
