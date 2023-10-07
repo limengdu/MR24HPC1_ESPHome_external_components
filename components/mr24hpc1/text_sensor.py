@@ -23,13 +23,13 @@ CONFIG_SCHEMA = {
     cv.Optional(CONF_PRODUCTMODEL): text_sensor.text_sensor_schema(
         entity_category=ENTITY_CATEGORY_DIAGNOSTIC, icon="mdi:information-outline"
     ),
-    cv.Optional(CONF_PRODUCTID): text_sensor.text_sensor_scheema(
+    cv.Optional(CONF_PRODUCTID): text_sensor.text_sensor_schema(
         entity_category=ENTITY_CATEGORY_DIAGNOSTIC, icon="mdi:information-outline"
     ),
-    cv.Optional(CONF_HARDWAREMODEL): text_sensor.text_sensor_scheema(
+    cv.Optional(CONF_HARDWAREMODEL): text_sensor.text_sensor_schema(
         entity_category=ENTITY_CATEGORY_DIAGNOSTIC, icon="mdi:information-outline"
     ),
-    cv.Optional(CONF_FIRWAREVERSION): text_sensor.text_sensor_scheema(
+    cv.Optional(CONF_FIRWAREVERSION): text_sensor.text_sensor_schema(
         entity_category=ENTITY_CATEGORY_DIAGNOSTIC, icon="mdi:information-outline"
     )
 }
