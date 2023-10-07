@@ -49,6 +49,7 @@ void mr24hpc1Component::setup() {
 }
 
 void mr24hpc1Component::loop() {
+    update();
     uint8_t byte;
     while (this->available())
     {
@@ -68,7 +69,10 @@ void mr24hpc1Component::update() {
 }
 
 void mr24hpc1Component::dump_config() { 
-    
+    ESP_LOGCONFIG(TAG, "MR24HPC1:");
+#ifdef USE_TEXT_SENSOR
+  LOG_TEXT_SENSOR("  ", "HeartbeatTextSensor", this->heartbeat_state_text_sensor_);
+#endif
 }
 
 void mr24hpc1Component::R24_split_data_frame(uint8_t value)

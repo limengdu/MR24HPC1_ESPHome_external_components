@@ -132,12 +132,13 @@ static uint8_t sg_heartbeat_flag = 255;
 static uint8_t s_power_on_status = 0;
 
 class mr24hpc1Component : public Component, public uart::UARTDevice {      // 类名必须是text_sensor.py定义的名字
-// #define SUB_TEXT_SENSOR(name) \
-//  protected: \
-//   text_sensor::TextSensor *name##_text_sensor_{nullptr}; \
-// \
-//  public: \
-//   void set_##name##_text_sensor(text_sensor::TextSensor *text_sensor) { this->name##_text_sensor_ = text_sensor; }
+/**** 
+#define SUB_TEXT_SENSOR(name)
+  protected:
+   text_sensor::TextSensor *name##_text_sensor_{nullptr};
+  public:
+   void set_##name##_text_sensor(text_sensor::TextSensor *text_sensor) { this->name##_text_sensor_ = text_sensor; }
+****/
 #ifdef USE_TEXT_SENSOR
   SUB_TEXT_SENSOR(heartbeat_state)
 #endif
@@ -146,7 +147,7 @@ class mr24hpc1Component : public Component, public uart::UARTDevice {      // �
     void setup() override;
     void dump_config() override;
     void loop() override;
-    void update() override;
+    void update();
     void R24_split_data_frame(uint8_t value);
     void R24_parse_data_frame(uint8_t *data, uint8_t len);
 };
