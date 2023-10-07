@@ -1,0 +1,70 @@
+substitutions:
+  name: "seeedstudio-mmwave-kit"
+  friendly_name: "SeeedStudio mmWave Kit"
+
+esphome:
+  name: "${name}"
+  friendly_name: "${friendly_name}"
+  name_add_mac_suffix: true
+  project:
+    name: "seeedstudio.mmwave_kit"
+    version: "1.2"
+  platformio_options:
+    board_build.flash_mode: dio
+    board_build.mcu: esp32c3
+
+external_components:
+  - source: github://limengdu/mmwave-kit-external-components@main
+    refresh: 0s
+
+esp32:
+  board: esp32-c3-devkitm-1
+  variant: esp32c3
+  framework:
+    type: esp-idf
+
+# Enable logging
+logger:
+  hardware_uart: USB_SERIAL_JTAG
+  level: DEBUG
+
+# Enable Home Assistant API
+api:
+
+ota:
+
+wifi:
+  ssid: "mengdu-H68K"
+  password: "15935700"
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "mmwave-kit"
+
+captive_portal:
+
+# Sets up Bluetooth LE (Only on ESP32) to allow the user
+# to provision wifi credentials to the device.
+esp32_improv:
+  authorizer: none
+
+# Sets up the improv via serial client for Wi-Fi provisioning.
+# Handy if your device has a usb port for the user to add credentials when they first get it.
+# improv_serial: # Commented until improv works with usb-jtag on idf
+
+uart:
+  id: uart_bus
+  baud_rate: 115200
+  rx_pin: 4
+  tx_pin: 5
+  parity: NONE
+  stop_bits: 1
+
+mr24hpc1:
+  id: my_mr24hpc1
+
+text_sensor:
+  - platform: mr24hpc1
+    heartbeat:
+      name: "Heartbeat"
+
