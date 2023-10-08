@@ -148,6 +148,8 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
     char c_hardware_model[PRODUCT_BUF_MAX_SIZE + 1];
     char c_firmware_version[PRODUCT_BUF_MAX_SIZE + 1];
   public:
+    mr24hpc1Component() : PollingComponent(8000) {}
+    float get_setup_priority() const override { return esphome::setup_priority::LATE; }
     void setup() override;
     void update() override;
     void dump_config() override;
@@ -156,6 +158,7 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
     void R24_parse_data_frame(uint8_t *data, uint8_t len);
     void R24_frame_parse_product_Information(uint8_t *data);
     void send_query(uint8_t *query, size_t string_length);
+    void get_heartbeat_packet(void);
     void get_product_mode(void);
     void get_product_id(void);
     void get_hardware_model(void);

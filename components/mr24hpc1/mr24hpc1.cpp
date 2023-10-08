@@ -62,6 +62,11 @@ void mr24hpc1Component::setup() {
     sg_init_flag = true;
     ESP_LOGCONFIG(TAG, "uart_settings is 115200");
     this->check_uart_settings(115200);
+
+    memset(this->c_product_mode, 0, PRODUCT_BUF_MAX_SIZE);
+    memset(this->c_product_id, 0, PRODUCT_BUF_MAX_SIZE);
+    memset(this->c_firmware_version, 0, PRODUCT_BUF_MAX_SIZE);
+    memset(this->c_hardware_model, 0, PRODUCT_BUF_MAX_SIZE);
 }
 
 // 组件回调函数,它会在每次循环被调用
@@ -71,7 +76,7 @@ void mr24hpc1Component::update() {
     if (sg_init_flag && (255 != sg_heartbeat_flag))
     {
         this->heartbeat_state_text_sensor_->publish_state(s_heartbeat_str[sg_heartbeat_flag]);
-        // sg_heartbeat_flag = 0;
+        sg_heartbeat_flag = 0;
     }
 }
 
@@ -125,7 +130,6 @@ void mr24hpc1Component::loop() {
                 {
                     this->get_firmware_version();  // 查询估计版本号
                 }
-
                 break;
             case STANDARD_FUNCTION_QUERY_HARDWARE_MODE:
                 if (strlen(this->c_hardware_model) > 0)
@@ -136,6 +140,9 @@ void mr24hpc1Component::loop() {
                 {
                     this->get_hardware_model();  // 查询硬件型号
                 }
+                break;
+            case STANDARD_FUNCTION_MAX:
+                this->get_heartbeat_packet();
                 break;
         }
         sg_start_query_data++;
@@ -378,6 +385,15 @@ void mr24hpc1Component::send_query(uint8_t *query, size_t string_length)
         write(query[i]);
     }
     show_frame_data(query, i);
+}
+
+// 下发心跳包命令
+void mr24hpc1Component::get_heartbeat_packet(void)
+{
+    uint8_t send_data_len = 10;
+    uint8_t send_data[10] = {0x53, 0x59, 0x01, 0x01, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+    send_data[FRAME_DATA_INDEX + 1] = get_frame_crc_sum(send_data, send_data_len);
+    this->send_query(send_data, send_data_len);
 }
 
 // 下发产品型号命令
