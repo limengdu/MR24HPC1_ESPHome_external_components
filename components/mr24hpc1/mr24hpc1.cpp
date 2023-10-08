@@ -360,7 +360,7 @@ void mr24hpc1Component::R24_frame_parse_product_Information(uint8_t *data)
 }
 
 // 解析底层开放参数
-void UartReadLineSensor::R24_frame_parse_open_underlying_information(uint8_t *data)
+void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *data)
 {
     if (data[FRAME_COMMAND_WORD_INDEX] == 0x00)
     {
