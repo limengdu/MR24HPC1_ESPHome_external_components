@@ -657,6 +657,15 @@ void mr24hpc1Component::get_heartbeat_packet(void)
     this->send_query(send_data, send_data_len);
 }
 
+// 下发底层开放参数查询命令
+void mr24hpc1Component::get_radar_output_information_switch(void)
+{
+    unsigned char send_data_len = 10;
+    unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x80, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+    send_data[FRAME_DATA_INDEX + 1] = get_frame_crc_sum(send_data, send_data_len);
+    this->send_query(send_data, send_data_len);
+}
+
 // 下发产品型号命令
 void mr24hpc1Component::get_product_mode(void)
 {
