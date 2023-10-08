@@ -152,7 +152,6 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
     void update() override;
     void dump_config() override;
     void loop() override;
-    void update();
     void R24_split_data_frame(uint8_t value);
     void R24_parse_data_frame(uint8_t *data, uint8_t len);
     void R24_frame_parse_product_Information(uint8_t *data);
