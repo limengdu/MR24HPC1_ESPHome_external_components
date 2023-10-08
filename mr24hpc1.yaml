@@ -67,4 +67,12 @@ text_sensor:
   - platform: mr24hpc1
     heartbeat:
       name: "Heartbeat"
+    productmodel:
+      name: "Product Model"
+    productid:
+      name: "Product ID"
+    hardwaremodel:
+      name: "Hardware Model"
+    hardwareversion:
+      name: "Hardware Version"
 
