@@ -53,6 +53,10 @@ void mr24hpc1Component::dump_config() {
     LOG_TEXT_SENSOR(" ", "ProductIDTextSensor", this->product_id_text_sensor_);
     LOG_TEXT_SENSOR(" ", "HardwareModelTextSensor", this->hardware_model_text_sensor_);
     LOG_TEXT_SENSOR(" ", "FirwareVerisonTextSensor", this->firware_version_text_sensor_);
+    LOG_TEXT_SENSOR(" ", "KeepAwayTextSensor", this->keep_away_text_sensor_);
+    LOG_TEXT_SENSOR(" ", "MotionStatusTextSensor", this->motion_status_text_sensor_);
+    LOG_TEXT_SENSOR(" ", "SomeoneExistsTextSensor", this->someoneExists_text_sensor_);
+    LOG_TEXT_SENSOR(" ", "CustomPresenceOfDetection", this->custom_presence_of_detection_text_sensor_);
 #endif
 }
 
@@ -633,6 +637,97 @@ void mr24hpc1Component::R24_parse_data_frame(uint8_t *data, uint8_t len)
         default:
             ESP_LOGD(TAG, "control world:0x%02X not found", data[FRAME_CONTROL_WORD_INDEX]);
         break;
+    }
+}
+
+void mr24hpc1Component::R24_frame_parse_human_information(uint8_t *data)
+{
+    if (data[FRAME_COMMAND_WORD_INDEX] == 0x01)
+    {
+
+        // id(someoneExists).publish_state(s_someoneExists_str[data[FRAME_DATA_INDEX]]);
+        // ESP_LOGD(TAG, "Report: someoneExists %d", data[FRAME_DATA_INDEX]);
+    }
+    else if (data[FRAME_COMMAND_WORD_INDEX] == 0x02)
+    {
+        // if (data[FRAME_DATA_INDEX] < 3 && data[FRAME_DATA_INDEX] >= 0)
+        // {
+        //     id(motion_status).publish_state(s_motion_status_str[data[FRAME_DATA_INDEX]]);
+        // }
+        // ESP_LOGD(TAG, "Report: motion_status %d", data[FRAME_DATA_INDEX]);
+    }
+    else if (data[FRAME_COMMAND_WORD_INDEX] == 0x03)
+    {
+        // if (sg_movementSigns_bak != data[FRAME_DATA_INDEX])
+        // {
+        //     this->movementSigns->publish_state(data[FRAME_DATA_INDEX]);
+        //     sg_movementSigns_bak = data[FRAME_DATA_INDEX];
+        // }
+        // ESP_LOGD(TAG, "Report: movementSigns %d", data[FRAME_DATA_INDEX]);
+    }
+    else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0A)
+    {
+        // none:0x00  1s:0x01 30s:0x02 1min:0x03 2min:0x04 5min:0x05 10min:0x06 30min:0x07 1hour:0x08
+        // if (data[FRAME_DATA_INDEX] < 9 && data[FRAME_DATA_INDEX] >= 0)
+        // {
+        //     id(unmanned_time).publish_state(s_unmanned_time_str[data[FRAME_DATA_INDEX]]);
+        // }
+        // ESP_LOGD(TAG, "Reply: set enter unmanned time %d", data[FRAME_DATA_INDEX]);
+    }
+    else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0B)
+    {
+        // none:0x00  close_to:0x01  far_away:0x02
+        // if (data[FRAME_DATA_INDEX] < 3 && data[FRAME_DATA_INDEX] >= 0)
+        // {
+        //     id(keep_away).publish_state(s_keep_away_str[data[FRAME_DATA_INDEX]]);
+        // }
+
+        // ESP_LOGD(TAG, "Report:  moving direction  %d", data[FRAME_DATA_INDEX]);
+    }
+    else if (data[FRAME_COMMAND_WORD_INDEX] == 0x81)
+    {
+        // id(someoneExists).publish_state(s_someoneExists_str[data[FRAME_DATA_INDEX]]);
+        // ESP_LOGD(TAG, "Reply: get someoneExists %d", data[FRAME_DATA_INDEX]);
+    }
+    else if (data[FRAME_COMMAND_WORD_INDEX] == 0x82)
+    {
+        // if (data[FRAME_DATA_INDEX] < 3 && data[FRAME_DATA_INDEX] >= 0)
+        // {
+        //     id(motion_status).publish_state(s_motion_status_str[data[FRAME_DATA_INDEX]]);
+        // }
+        // ESP_LOGD(TAG, "Reply: get motion_status %d", data[FRAME_DATA_INDEX]);
+    }
+    else if (data[FRAME_COMMAND_WORD_INDEX] == 0x83)
+    {
+        // if (sg_movementSigns_bak != data[FRAME_DATA_INDEX])
+        // {
+        //     this->movementSigns->publish_state(data[FRAME_DATA_INDEX]);
+        //     sg_movementSigns_bak = data[FRAME_DATA_INDEX];
+        // }
+        // ESP_LOGD(TAG, "Reply: get movementSigns %d", data[FRAME_DATA_INDEX]);
+    }
+    else if (data[FRAME_COMMAND_WORD_INDEX] == 0x8A)
+    {
+        // none:0x00  1s:0x01 30s:0x02 1min:0x03 2min:0x04 5min:0x05 10min:0x06 30min:0x07 1hour:0x08
+        // if (data[FRAME_DATA_INDEX] < 9 && data[FRAME_DATA_INDEX] >= 0)
+        // {
+        //     id(unmanned_time).publish_state(s_unmanned_time_str[data[FRAME_DATA_INDEX]]);
+        // }
+        // ESP_LOGD(TAG, "Report: get enter unmanned time %d", data[FRAME_DATA_INDEX]);
+    }
+    else if (data[FRAME_COMMAND_WORD_INDEX] == 0x8B)
+    {
+        // none:0x00  close_to:0x01  far_away:0x02
+        // if (data[FRAME_DATA_INDEX] < 3 && data[FRAME_DATA_INDEX] >= 0)
+        // {
+        //     id(keep_away).publish_state(s_keep_away_str[data[FRAME_DATA_INDEX]]);
+        // }
+
+        // ESP_LOGD(TAG, "Reply: get moving direction  %d", data[FRAME_DATA_INDEX]);
+    }
+    else
+    {
+        // ESP_LOGD(TAG, "[%s] No found COMMAND_WORD(%02X) in Frame", __FUNCTION__, data[FRAME_COMMAND_WORD_INDEX]);
     }
 }
 

@@ -140,6 +140,10 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
   SUB_TEXT_SENSOR(product_id)
   SUB_TEXT_SENSOR(hardware_model)
   SUB_TEXT_SENSOR(firware_version)
+  SUB_TEXT_SENSOR(keep_away)
+  SUB_TEXT_SENSOR(motion_status)
+  SUB_TEXT_SENSOR(someoneExists)
+  SUB_TEXT_SENSOR(custom_presence_of_detection)
 #endif
 
   private:
@@ -158,6 +162,7 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
     void R24_parse_data_frame(uint8_t *data, uint8_t len);
     void R24_frame_parse_open_underlying_information(uint8_t *data);
     void R24_frame_parse_product_Information(uint8_t *data);
+    void R24_frame_parse_human_information(uint8_t *data);
     void send_query(uint8_t *query, size_t string_length);
     void get_heartbeat_packet(void);
     void get_radar_output_information_switch(void);
