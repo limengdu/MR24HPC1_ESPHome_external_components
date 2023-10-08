@@ -602,7 +602,6 @@ void mr24hpc1Component::R24_parse_data_frame(uint8_t *data, uint8_t len)
         {
             if (data[FRAME_COMMAND_WORD_INDEX] == 0x01)
             {
-                sg_heartbeat_flag = 1;
                 ESP_LOGD(TAG, "Reply: query Heartbeat packet");
             }
             else if (data[FRAME_COMMAND_WORD_INDEX] == 0x02)
