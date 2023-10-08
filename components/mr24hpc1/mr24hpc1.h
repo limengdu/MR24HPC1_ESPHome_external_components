@@ -156,6 +156,7 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
     void loop() override;
     void R24_split_data_frame(uint8_t value);
     void R24_parse_data_frame(uint8_t *data, uint8_t len);
+    void R24_frame_parse_open_underlying_information(uint8_t *data);
     void R24_frame_parse_product_Information(uint8_t *data);
     void send_query(uint8_t *query, size_t string_length);
     void get_heartbeat_packet(void);
