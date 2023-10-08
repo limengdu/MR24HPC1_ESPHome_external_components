@@ -126,7 +126,7 @@ static uint8_t sg_motion_speed_bak;
 static uint8_t sg_heartbeat_flag = 255;
 static uint8_t s_power_on_status = 0;
 
-class mr24hpc1Component : public Component, public uart::UARTDevice {      // 类名必须是text_sensor.py定义的名字
+class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {      // 类名必须是text_sensor.py定义的名字
 /**** 
 #define SUB_TEXT_SENSOR(name)
   protected:
@@ -149,6 +149,7 @@ class mr24hpc1Component : public Component, public uart::UARTDevice {      // �
     char c_firmware_version[PRODUCT_BUF_MAX_SIZE + 1];
   public:
     void setup() override;
+    void update() override;
     void dump_config() override;
     void loop() override;
     void update();

@@ -64,9 +64,19 @@ void mr24hpc1Component::setup() {
     this->check_uart_settings(115200);
 }
 
+// 雷达工作状态
+void mr24hpc1Component::update() {
+    if (!sg_init_flag)
+        return;
+    if (sg_init_flag && (255 != sg_heartbeat_flag))
+    {
+        this->heartbeat_state_text_sensor_->publish_state(s_heartbeat_str[sg_heartbeat_flag]);
+        // sg_heartbeat_flag = 0;
+    }
+}
+
 // 主循环
 void mr24hpc1Component::loop() {
-    update();
     uint8_t byte;
 
     // 串口是否有数据
@@ -129,17 +139,6 @@ void mr24hpc1Component::loop() {
                 break;
         }
         sg_start_query_data++;
-    }
-}
-
-// 雷达工作状态
-void mr24hpc1Component::update() {
-    if (!sg_init_flag)
-        return;
-    if (sg_init_flag && (255 != sg_heartbeat_flag))
-    {
-        this->heartbeat_state_text_sensor_->publish_state(s_heartbeat_str[sg_heartbeat_flag]);
-        // sg_heartbeat_flag = 0;
     }
 }
 
