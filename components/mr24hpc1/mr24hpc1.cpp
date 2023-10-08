@@ -64,7 +64,7 @@ void mr24hpc1Component::setup() {
     this->check_uart_settings(115200);
 }
 
-// 雷达工作状态
+// 组件回调函数,它会在每次循环被调用
 void mr24hpc1Component::update() {
     if (!sg_init_flag)
         return;
