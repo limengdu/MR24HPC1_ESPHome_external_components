@@ -3,7 +3,10 @@ from esphome.components import text_sensor
 import esphome.config_validation as cv
 from esphome.const import (
     ENTITY_CATEGORY_DIAGNOSTIC,
-    STATE_CLASS_MEASUREMENT,
+    DEVICE_CLASS_OCCUPANCY,
+    DEVICE_CLASS_DISTANCE,
+    DEVICE_CLASS_MOTION,
+    DEVICE_CLASS_MOVING,
 )
 from . import CONF_MR24HPC1_ID, mr24hpc1Component
 
@@ -39,16 +42,16 @@ CONFIG_SCHEMA = {
     ),
     # The state represents a measurement in present time
     cv.Optional(CONF_KEEPAWAY): text_sensor.text_sensor_schema(
-        state_classes=STATE_CLASS_MEASUREMENT, icon="mdi:walk"
+        device_class=DEVICE_CLASS_MOVING, icon="mdi:walk"
     ),
     cv.Optional(CONF_MOTIONSTATUS): text_sensor.text_sensor_schema(
-        state_classes=STATE_CLASS_MEASUREMENT, icon="mdi:human-greeting"
+        device_class=DEVICE_CLASS_MOTION, icon="mdi:human-greeting"
     ),
     cv.Optional(CONF_SOMEONEEXIST): text_sensor.text_sensor_schema(
-        state_classes=STATE_CLASS_MEASUREMENT, icon="mdi:motion-sensor"
+        device_class=DEVICE_CLASS_OCCUPANCY, icon="mdi:motion-sensor"
     ),
     cv.Optional(CONF_CUSTOMPRESENCEOFDETECTION): text_sensor.text_sensor_schema(
-        state_classes=STATE_CLASS_MEASUREMENT, icon="mdi:signal-distance-variant"
+        device_class=DEVICE_CLASS_DISTANCE, icon="mdi:signal-distance-variant"
     ),
 }
 
