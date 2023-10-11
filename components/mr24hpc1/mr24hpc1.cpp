@@ -411,11 +411,11 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x06)
     {
         // none:0x00  close_to:0x01  far_away:0x02
-        // if (data[FRAME_DATA_INDEX] < 3 && data[FRAME_DATA_INDEX] >= 0)
-        // {
-        //     id(keep_away).publish_state(s_keep_away_str[data[FRAME_DATA_INDEX]]);
-        // }
-        // ESP_LOGD(TAG, "Report:  moving direction  %d", data[FRAME_DATA_INDEX]);
+        if (data[FRAME_DATA_INDEX] < 3 && data[FRAME_DATA_INDEX] >= 0)
+        {
+            this->keep_away_text_sensor_->publish_state(s_keep_away_str[data[FRAME_DATA_INDEX]]);
+        }
+        ESP_LOGD(TAG, "Report:  moving direction  %d", data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x07)
     {
@@ -511,8 +511,8 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x83)
     {
-        // id(custom_presence_of_detection).publish_state(s_presence_of_detection_range_str[data[FRAME_DATA_INDEX]]);
-        // ESP_LOGD(TAG, "Reply: get Presence of detection range %d", data[FRAME_DATA_INDEX]);
+        this->custom_presence_of_detection_text_sensor_->publish_state(s_presence_of_detection_range_str[data[FRAME_DATA_INDEX]]);
+        ESP_LOGD(TAG, "Reply: get Presence of detection range %d", data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x84) { 
         // sg_motion_distance_bak = data[FRAME_DATA_INDEX];
@@ -528,7 +528,7 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x86)
     {
-        // ESP_LOGD(TAG, "Reply: get keep_away %d", data[FRAME_DATA_INDEX]);
+        ESP_LOGD(TAG, "Reply: get keep_away %d", data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x87)
     {
@@ -631,7 +631,7 @@ void mr24hpc1Component::R24_parse_data_frame(uint8_t *data, uint8_t len)
         break;
         case 0x80:
         {
-            // this->R24_frame_parse_human_information(data);
+            this->R24_frame_parse_human_information(data);
         }
         break;
         default:
@@ -644,17 +644,16 @@ void mr24hpc1Component::R24_frame_parse_human_information(uint8_t *data)
 {
     if (data[FRAME_COMMAND_WORD_INDEX] == 0x01)
     {
-
-        // id(someoneExists).publish_state(s_someoneExists_str[data[FRAME_DATA_INDEX]]);
-        // ESP_LOGD(TAG, "Report: someoneExists %d", data[FRAME_DATA_INDEX]);
+        this->someoneExists_text_sensor_->publish_state(s_someoneExists_str[data[FRAME_DATA_INDEX]]);
+        ESP_LOGD(TAG, "Report: someoneExists %d", data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x02)
     {
-        // if (data[FRAME_DATA_INDEX] < 3 && data[FRAME_DATA_INDEX] >= 0)
-        // {
-        //     id(motion_status).publish_state(s_motion_status_str[data[FRAME_DATA_INDEX]]);
-        // }
-        // ESP_LOGD(TAG, "Report: motion_status %d", data[FRAME_DATA_INDEX]);
+        if (data[FRAME_DATA_INDEX] < 3 && data[FRAME_DATA_INDEX] >= 0)
+        {
+            this->motion_status_text_sensor_->publish_state(s_motion_status_str[data[FRAME_DATA_INDEX]]);
+        }
+        ESP_LOGD(TAG, "Report: motion_status %d", data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x03)
     {
@@ -677,25 +676,24 @@ void mr24hpc1Component::R24_frame_parse_human_information(uint8_t *data)
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0B)
     {
         // none:0x00  close_to:0x01  far_away:0x02
-        // if (data[FRAME_DATA_INDEX] < 3 && data[FRAME_DATA_INDEX] >= 0)
-        // {
-        //     id(keep_away).publish_state(s_keep_away_str[data[FRAME_DATA_INDEX]]);
-        // }
-
-        // ESP_LOGD(TAG, "Report:  moving direction  %d", data[FRAME_DATA_INDEX]);
+        if (data[FRAME_DATA_INDEX] < 3 && data[FRAME_DATA_INDEX] >= 0)
+        {
+            this->keep_away_text_sensor_->publish_state(s_keep_away_str[data[FRAME_DATA_INDEX]]);
+        }
+        ESP_LOGD(TAG, "Report:  moving direction  %d", data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x81)
     {
-        // id(someoneExists).publish_state(s_someoneExists_str[data[FRAME_DATA_INDEX]]);
-        // ESP_LOGD(TAG, "Reply: get someoneExists %d", data[FRAME_DATA_INDEX]);
+        this->someoneExists_text_sensor_->publish_state(s_someoneExists_str[data[FRAME_DATA_INDEX]]);
+        ESP_LOGD(TAG, "Reply: get someoneExists %d", data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x82)
     {
-        // if (data[FRAME_DATA_INDEX] < 3 && data[FRAME_DATA_INDEX] >= 0)
-        // {
-        //     id(motion_status).publish_state(s_motion_status_str[data[FRAME_DATA_INDEX]]);
-        // }
-        // ESP_LOGD(TAG, "Reply: get motion_status %d", data[FRAME_DATA_INDEX]);
+        if (data[FRAME_DATA_INDEX] < 3 && data[FRAME_DATA_INDEX] >= 0)
+        {
+            this->motion_status_text_sensor_->publish_state(s_motion_status_str[data[FRAME_DATA_INDEX]]);
+        }
+        ESP_LOGD(TAG, "Reply: get motion_status %d", data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x83)
     {
@@ -718,16 +716,15 @@ void mr24hpc1Component::R24_frame_parse_human_information(uint8_t *data)
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x8B)
     {
         // none:0x00  close_to:0x01  far_away:0x02
-        // if (data[FRAME_DATA_INDEX] < 3 && data[FRAME_DATA_INDEX] >= 0)
-        // {
-        //     id(keep_away).publish_state(s_keep_away_str[data[FRAME_DATA_INDEX]]);
-        // }
-
-        // ESP_LOGD(TAG, "Reply: get moving direction  %d", data[FRAME_DATA_INDEX]);
+        if (data[FRAME_DATA_INDEX] < 3 && data[FRAME_DATA_INDEX] >= 0)
+        {
+            this->keep_away_text_sensor_->publish_state(s_keep_away_str[data[FRAME_DATA_INDEX]]);
+        }
+        ESP_LOGD(TAG, "Reply: get moving direction  %d", data[FRAME_DATA_INDEX]);
     }
     else
     {
-        // ESP_LOGD(TAG, "[%s] No found COMMAND_WORD(%02X) in Frame", __FUNCTION__, data[FRAME_COMMAND_WORD_INDEX]);
+        ESP_LOGD(TAG, "[%s] No found COMMAND_WORD(%02X) in Frame", __FUNCTION__, data[FRAME_COMMAND_WORD_INDEX]);
     }
 }
 

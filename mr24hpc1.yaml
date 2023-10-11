@@ -75,4 +75,12 @@ text_sensor:
       name: "Hardware Model"
     hardwareversion:
       name: "Hardware Version"
+    keepaway:
+      name: "Active Reporting Of Proximity"
+    motionstatus:
+      name: "Motion Information"
+    someoneexist:
+      name: "Presence Information"
+    custompresenceofdetection:
+      name: "Static Distance"
 
