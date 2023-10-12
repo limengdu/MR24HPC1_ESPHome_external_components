@@ -87,3 +87,11 @@ binary_sensor:
   someoneexist:
       name: "Presence Information"
 
+sensor:
+  - platform: mr24hpc1
+    keepaway:
+      name: "Active Reporting Of Proximity"
+    motionstatus:
+      name: "Motion Information"
+    custompresenceofdetection:
+      name: "Static Distance"
