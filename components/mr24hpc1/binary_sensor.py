@@ -6,8 +6,6 @@ from esphome.const import (                    # 这些库都可以在esphome仓
 )
 from . import CONF_MR24HPC1_ID, mr24hpc1Component
 
-DEPENDENCIES = ["ld2410"]                       # 为所有的该组件的类型变量赋值
-
 CONF_SOMEONEEXIST = 'someoneexist'
 
 AUTO_LOAD = ["mr24hpc1"]

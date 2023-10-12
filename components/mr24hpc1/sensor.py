@@ -8,8 +8,6 @@ from esphome.const import (
 )
 from . import CONF_MR24HPC1_ID, mr24hpc1Component
 
-DEPENDENCIES = ["ld2410"]
-
 CONF_KEEPAWAY = 'keepaway'
 CONF_MOTIONSTATUS = 'motionstatus'
 CONF_CUSTOMPRESENCEOFDETECTION = 'custompresenceofdetection'

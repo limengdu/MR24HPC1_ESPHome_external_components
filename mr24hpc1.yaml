@@ -75,12 +75,6 @@ text_sensor:
       name: "Hardware Model"
     hardwareversion:
       name: "Hardware Version"
-    keepaway:
-      name: "Active Reporting Of Proximity"
-    motionstatus:
-      name: "Motion Information"
-    custompresenceofdetection:
-      name: "Static Distance"
 
 binary_sensor:
   - platform: mr24hpc1
