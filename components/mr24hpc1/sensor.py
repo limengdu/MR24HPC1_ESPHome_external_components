@@ -2,8 +2,6 @@ import esphome.codegen as cg
 from esphome.components import sensor
 import esphome.config_validation as cv
 from esphome.const import (
-    DEVICE_CLASS_MOVING,
-    DEVICE_CLASS_MOTION,
     DEVICE_CLASS_DISTANCE,
 )
 from . import CONF_MR24HPC1_ID, mr24hpc1Component
@@ -17,10 +15,10 @@ AUTO_LOAD = ["mr24hpc1"]
 CONFIG_SCHEMA = {
     cv.GenerateID(CONF_MR24HPC1_ID): cv.use_id(mr24hpc1Component),
     cv.Optional(CONF_KEEPAWAY): sensor.sensor_schema(
-        device_class=DEVICE_CLASS_MOVING, icon="mdi:walk"
+        icon="mdi:walk"
     ),
     cv.Optional(CONF_MOTIONSTATUS): sensor.sensor_schema(
-        device_class=DEVICE_CLASS_MOTION, icon="mdi:human-greeting"
+        icon="mdi:human-greeting"
     ),
     cv.Optional(CONF_CUSTOMPRESENCEOFDETECTION): sensor.sensor_schema(
         device_class=DEVICE_CLASS_DISTANCE, icon="mdi:signal-distance-variant"
