@@ -79,8 +79,11 @@ text_sensor:
       name: "Active Reporting Of Proximity"
     motionstatus:
       name: "Motion Information"
-    someoneexist:
-      name: "Presence Information"
     custompresenceofdetection:
       name: "Static Distance"
+
+binary_sensor:
+  - platform: mr24hpc1
+  someoneexist:
+      name: "Presence Information"
 

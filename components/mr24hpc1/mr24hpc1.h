@@ -142,8 +142,15 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
   SUB_TEXT_SENSOR(firware_version)
   SUB_TEXT_SENSOR(keep_away)
   SUB_TEXT_SENSOR(motion_status)
-  SUB_TEXT_SENSOR(someoneExists)
   SUB_TEXT_SENSOR(custom_presence_of_detection)
+#endif
+#ifdef USE_BINARY_SENSOR
+  SUB_BINARY_SENSOR(someoneExists)
+#endif
+#ifdef USE_SENSOR
+  SUB_SENSOR(keepaway)
+  SUB_SENSOR(motionstatus)
+  SUB_SENSOR(custompresenceofdetection)
 #endif
 
   private:
