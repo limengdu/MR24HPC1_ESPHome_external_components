@@ -148,9 +148,9 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
   SUB_BINARY_SENSOR(someoneExists)
 #endif
 #ifdef USE_SENSOR
-  SUB_SENSOR(keepaway)
-  SUB_SENSOR(motionstatus)
-  SUB_SENSOR(custompresenceofdetection)
+  SUB_SENSOR(keep_away)
+  SUB_SENSOR(motion_status)
+  SUB_SENSOR(custom_presence_of_detection)
 #endif
 
   private:
