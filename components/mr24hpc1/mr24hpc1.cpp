@@ -53,13 +53,13 @@ void mr24hpc1Component::dump_config() {
     LOG_TEXT_SENSOR(" ", "ProductIDTextSensor", this->product_id_text_sensor_);
     LOG_TEXT_SENSOR(" ", "HardwareModelTextSensor", this->hardware_model_text_sensor_);
     LOG_TEXT_SENSOR(" ", "FirwareVerisonTextSensor", this->firware_version_text_sensor_);
+    LOG_TEXT_SENSOR(" ", "KeepAwaySensor", this->keep_away_text_sensor_);
+    LOG_TEXT_SENSOR(" ", "MotionStatusSensor", this->motion_status_text_sensor_);
 #endif
 #ifdef USE_BINARY_SENSOR
     LOG_BINARY_SENSOR(" ", "SomeoneExistsBinarySensor", this->someoneExists_binary_sensor_);
 #endif
 #ifdef USE_SENSOR
-    LOG_SENSOR(" ", "KeepAwaySensor", this->keep_away_sensor_);
-    LOG_SENSOR(" ", "MotionStatusSensor", this->motion_status_sensor_);
     LOG_SENSOR(" ", "CustomPresenceOfDetectionSensor", this->custom_presence_of_detection_sensor_);
 #endif
 }
@@ -417,7 +417,7 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
         // none:0x00  close_to:0x01  far_away:0x02
         if (data[FRAME_DATA_INDEX] < 3 && data[FRAME_DATA_INDEX] >= 0)
         {
-            this->keep_away_sensor_->publish_state(s_keep_away_str[data[FRAME_DATA_INDEX]]);
+            this->keep_away_text_sensor_->publish_state(s_keep_away_str[data[FRAME_DATA_INDEX]]);
         }
         ESP_LOGD(TAG, "Report:  moving direction  %d", data[FRAME_DATA_INDEX]);
     }
@@ -655,7 +655,7 @@ void mr24hpc1Component::R24_frame_parse_human_information(uint8_t *data)
     {
         if (data[FRAME_DATA_INDEX] < 3 && data[FRAME_DATA_INDEX] >= 0)
         {
-            this->motion_status_sensor_->publish_state(s_motion_status_str[data[FRAME_DATA_INDEX]]);
+            this->motion_status_text_sensor_->publish_state(s_motion_status_str[data[FRAME_DATA_INDEX]]);
         }
         ESP_LOGD(TAG, "Report: motion_status %d", data[FRAME_DATA_INDEX]);
     }
@@ -682,7 +682,7 @@ void mr24hpc1Component::R24_frame_parse_human_information(uint8_t *data)
         // none:0x00  close_to:0x01  far_away:0x02
         if (data[FRAME_DATA_INDEX] < 3 && data[FRAME_DATA_INDEX] >= 0)
         {
-            this->keep_away_sensor_->publish_state(s_keep_away_str[data[FRAME_DATA_INDEX]]);
+            this->keep_away_text_sensor_->publish_state(s_keep_away_str[data[FRAME_DATA_INDEX]]);
         }
         ESP_LOGD(TAG, "Report:  moving direction  %d", data[FRAME_DATA_INDEX]);
     }
@@ -695,7 +695,7 @@ void mr24hpc1Component::R24_frame_parse_human_information(uint8_t *data)
     {
         if (data[FRAME_DATA_INDEX] < 3 && data[FRAME_DATA_INDEX] >= 0)
         {
-            this->motion_status_sensor_->publish_state(s_motion_status_str[data[FRAME_DATA_INDEX]]);
+            this->motion_status_text_sensor_->publish_state(s_motion_status_str[data[FRAME_DATA_INDEX]]);
         }
         ESP_LOGD(TAG, "Reply: get motion_status %d", data[FRAME_DATA_INDEX]);
     }
@@ -722,7 +722,7 @@ void mr24hpc1Component::R24_frame_parse_human_information(uint8_t *data)
         // none:0x00  close_to:0x01  far_away:0x02
         if (data[FRAME_DATA_INDEX] < 3 && data[FRAME_DATA_INDEX] >= 0)
         {
-            this->keep_away_sensor_->publish_state(s_keep_away_str[data[FRAME_DATA_INDEX]]);
+            this->keep_away_text_sensor_->publish_state(s_keep_away_str[data[FRAME_DATA_INDEX]]);
         }
         ESP_LOGD(TAG, "Reply: get moving direction  %d", data[FRAME_DATA_INDEX]);
     }

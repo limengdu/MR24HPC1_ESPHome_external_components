@@ -15,6 +15,9 @@ CONF_PRODUCTID = 'productid'
 CONF_HARDWAREMODEL = 'hardwaremodel'
 CONF_FIRWAREVERSION = 'hardwareversion'
 
+CONF_KEEPAWAY = 'keepaway'
+CONF_MOTIONSTATUS = 'motionstatus'
+
 
 AUTO_LOAD = ["mr24hpc1"]
 
@@ -35,7 +38,13 @@ CONFIG_SCHEMA = {
     ),
     cv.Optional(CONF_FIRWAREVERSION): text_sensor.text_sensor_schema(
         entity_category=ENTITY_CATEGORY_DIAGNOSTIC, icon="mdi:information-outline"
-    ),    
+    ),
+    cv.Optional(CONF_KEEPAWAY): text_sensor.sensor_schema(
+        entity_category=ENTITY_CATEGORY_DIAGNOSTIC, icon="mdi:walk"
+    ),
+    cv.Optional(CONF_MOTIONSTATUS): text_sensor.sensor_schema(
+        entity_category=ENTITY_CATEGORY_DIAGNOSTIC, icon="mdi:human-greeting"
+    ),
 }
 
 async def to_code(config):
@@ -55,6 +64,11 @@ async def to_code(config):
     if firwareversion_config := config.get(CONF_FIRWAREVERSION):
         sens = await text_sensor.new_text_sensor(firwareversion_config)
         cg.add(mr24hpc1_component.set_firware_version_text_sensor(sens))
-    
+    if keepaway_config := config.get(CONF_KEEPAWAY):
+        sens = await text_sensor.new_text_sensor(keepaway_config)
+        cg.add(mr24hpc1_component.set_keep_away_text_sensor(sens))
+    if motionstatus_config := config.get(CONF_MOTIONSTATUS):
+        sens = await text_sensor.new_text_sensor(motionstatus_config)
+        cg.add(mr24hpc1_component.set_motion_status_text_sensor(sens))
     
     
