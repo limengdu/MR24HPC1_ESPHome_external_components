@@ -39,10 +39,10 @@ CONFIG_SCHEMA = {
     cv.Optional(CONF_FIRWAREVERSION): text_sensor.text_sensor_schema(
         entity_category=ENTITY_CATEGORY_DIAGNOSTIC, icon="mdi:information-outline"
     ),
-    cv.Optional(CONF_KEEPAWAY): text_sensor.sensor_schema(
+    cv.Optional(CONF_KEEPAWAY): text_sensor.text_sensor_schema(
         entity_category=ENTITY_CATEGORY_DIAGNOSTIC, icon="mdi:walk"
     ),
-    cv.Optional(CONF_MOTIONSTATUS): text_sensor.sensor_schema(
+    cv.Optional(CONF_MOTIONSTATUS): text_sensor.text_sensor_schema(
         entity_category=ENTITY_CATEGORY_DIAGNOSTIC, icon="mdi:human-greeting"
     ),
 }
