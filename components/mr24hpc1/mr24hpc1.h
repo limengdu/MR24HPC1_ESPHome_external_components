@@ -94,11 +94,11 @@ enum
     OUTPUT_SWTICH_ON,
     OUTPUT_SWTICH_OFF,
 };
-static char s_heartbeat_str[2] = {"Abnormal", "Normal"};
-static char s_scene_str[5] = {"None", "Living Room", "Area Detection", "Washroom", "Bedroom"};
+static const char* s_heartbeat_str[] = {"Abnormal", "Normal"};
+static const char* s_scene_str[] = {"None", "Living Room", "Area Detection", "Washroom", "Bedroom"};
 static bool s_someoneExists_str[2] = {false, true};
-static char s_motion_status_str[3] = {"None", "Motionless", "Active"};
-static char s_keep_away_str[3] = {"None", "Close", "Away"};
+static const char* s_motion_status_str[3] = {"None", "Motionless", "Active"};
+static const char* s_keep_away_str[3] = {"None", "Close", "Away"};
 static int s_unmanned_time_str[9] = {0, 10, 30, 60, 120, 300, 600, 1800, 3600};   // unit: s
 static float s_motion_trig_boundary_str[10] = {0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0};  // unit: m
 static float s_presence_of_perception_boundary_str[10] = {0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0}; // uint: m
