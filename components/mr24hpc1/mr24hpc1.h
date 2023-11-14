@@ -94,15 +94,15 @@ enum
     OUTPUT_SWTICH_ON,
     OUTPUT_SWTICH_OFF,
 };
-static char s_heartbeat_str[2][20] = {"Abnormal", "Normal"};
-static char s_scene_str[5][20] = {"None", "Living Room", "Area Detection", "Washroom", "Bedroom"};
-static bool s_someoneExists_str[2][20] = {false, true};
-static char s_motion_status_str[3][20] = {"None", "Motionless", "Active"};
-static char s_keep_away_str[3][20] = {"None", "Close", "Away"};
-static int s_unmanned_time_str[9][20] = {0, 10, 30, 60, 120, 300, 600, 1800, 3600};   // unit: s
-static float s_motion_trig_boundary_str[10][5] = {0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0};  // unit: m
-static float s_presence_of_perception_boundary_str[10][5] = {0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0}; // uint: m
-static float s_presence_of_detection_range_str[7][10] = {0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0};  // uint: m
+static char s_heartbeat_str[2] = {"Abnormal", "Normal"};
+static char s_scene_str[5] = {"None", "Living Room", "Area Detection", "Washroom", "Bedroom"};
+static bool s_someoneExists_str[2] = {false, true};
+static char s_motion_status_str[3] = {"None", "Motionless", "Active"};
+static char s_keep_away_str[3] = {"None", "Close", "Away"};
+static int s_unmanned_time_str[9] = {0, 10, 30, 60, 120, 300, 600, 1800, 3600};   // unit: s
+static float s_motion_trig_boundary_str[10] = {0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0};  // unit: m
+static float s_presence_of_perception_boundary_str[10] = {0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0}; // uint: m
+static float s_presence_of_detection_range_str[7] = {0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0};  // uint: m
 
 static uint8_t s_output_info_switch_flag = OUTPUT_SWITCH_INIT;
 
