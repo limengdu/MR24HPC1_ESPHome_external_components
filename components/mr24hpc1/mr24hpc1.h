@@ -94,15 +94,15 @@ enum
     OUTPUT_SWTICH_ON,
     OUTPUT_SWTICH_OFF,
 };
-static char s_heartbeat_str[2][20] = {"Abnormal", "Normal"};
-static char s_scene_str[5][20] = {"None", "Living Room", "Area Detection", "Washroom", "Bedroom"};
-static char s_someoneExists_str[2][20] = {"Nobody", "Someone"};
-static char s_motion_status_str[3][20] = {"None", "Motionless", "Active"};
-static char s_keep_away_str[3][20] = {"None", "Close", "Away"};
-static char s_unmanned_time_str[9][20] = {"none", "10s", "30s", "1min", "2min", "5min", "10min", "30min", "60min"};
-static char s_motion_trig_boundary_str[10][5] = {"0.5m", "1.0m", "1.5m", "2.0m", "2.5m", "3.0m", "3.5m", "4.0m", "4.5m", "5.0m"};
-static char s_presence_of_perception_boundary_str[10][5] = {"0.5m", "1.0m", "1.5m", "2.0m", "2.5m", "3.0m", "3.5m", "4.0m", "4.5m", "5.0m"};
-static char s_presence_of_detection_range_str[7][10] = {"None", "0.5m", "1.0m", "1.5m", "2.0m", "2.5m", "3.0m"};
+static const char* s_heartbeat_str[] = {"Abnormal", "Normal"};
+static const char* s_scene_str[] = {"None", "Living Room", "Area Detection", "Washroom", "Bedroom"};
+static bool s_someoneExists_str[2] = {false, true};
+static const char* s_motion_status_str[3] = {"None", "Motionless", "Active"};
+static const char* s_keep_away_str[3] = {"None", "Close", "Away"};
+static int s_unmanned_time_str[9] = {0, 10, 30, 60, 120, 300, 600, 1800, 3600};   // unit: s
+static float s_motion_trig_boundary_str[10] = {0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0};  // unit: m
+static float s_presence_of_perception_boundary_str[10] = {0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0}; // uint: m
+static float s_presence_of_detection_range_str[7] = {0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0};  // uint: m
 
 static uint8_t s_output_info_switch_flag = OUTPUT_SWITCH_INIT;
 
@@ -126,20 +126,22 @@ static uint8_t sg_motion_speed_bak;
 static uint8_t sg_heartbeat_flag = 255;
 static uint8_t s_power_on_status = 0;
 
-class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {      // 类名必须是text_sensor.py定义的名字
-/**** 
-#define SUB_TEXT_SENSOR(name)
-  protected:
-   text_sensor::TextSensor *name##_text_sensor_{nullptr};
-  public:
-   void set_##name##_text_sensor(text_sensor::TextSensor *text_sensor) { this->name##_text_sensor_ = text_sensor; }
-****/
+class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {
+
 #ifdef USE_TEXT_SENSOR
   SUB_TEXT_SENSOR(heartbeat_state)
   SUB_TEXT_SENSOR(product_model)
   SUB_TEXT_SENSOR(product_id)
   SUB_TEXT_SENSOR(hardware_model)
   SUB_TEXT_SENSOR(firware_version)
+  SUB_TEXT_SENSOR(keep_away)
+  SUB_TEXT_SENSOR(motion_status)
+#endif
+#ifdef USE_BINARY_SENSOR
+  SUB_BINARY_SENSOR(someoneExists)
+#endif
+#ifdef USE_SENSOR
+  SUB_SENSOR(custom_presence_of_detection)
 #endif
 
   private:
@@ -158,6 +160,7 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
     void R24_parse_data_frame(uint8_t *data, uint8_t len);
     void R24_frame_parse_open_underlying_information(uint8_t *data);
     void R24_frame_parse_product_Information(uint8_t *data);
+    void R24_frame_parse_human_information(uint8_t *data);
     void send_query(uint8_t *query, size_t string_length);
     void get_heartbeat_packet(void);
     void get_radar_output_information_switch(void);
