@@ -1,8 +1,7 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import uart
-from esphome.const import CONF_ID, CONF_THROTTLE, CONF_TIMEOUT, CONF_PASSWORD
-from esphome import automation
+from esphome.const import CONF_ID
 from esphome.automation import maybe_simple_id
 
 DEPENDENCIES = ["uart"]
@@ -15,7 +14,9 @@ MULTI_CONF = True
 # 该命名空间将作为 ld2410_ns 组件相关的所有类、函数和变量的前缀，确保它们不会与其他组件的名称产生冲突。
 mr24hpc1_ns = cg.esphome_ns.namespace("mr24hpc1")
 # 这个 LD2410Component 类将是一个定期轮询的 UART 设备
-mr24hpc1Component = mr24hpc1_ns.class_("mr24hpc1Component", cg.PollingComponent, uart.UARTDevice)
+mr24hpc1Component = mr24hpc1_ns.class_(
+    "mr24hpc1Component", cg.PollingComponent, uart.UARTDevice
+)
 
 CONF_MR24HPC1_ID = "mr24hpc1_id"
 
@@ -42,6 +43,7 @@ FINAL_VALIDATE_SCHEMA = uart.final_validate_device_schema(
     stop_bits=1,
 )
 
+
 # async def 关键字用于定义协程函数。
 # 协程函数是一种特殊的函数，设计用来配合 Python 的 asyncio 库，支持异步 I/O 操作。
 async def to_code(config):
@@ -57,5 +59,3 @@ CALIBRATION_ACTION_SCHEMA = maybe_simple_id(
         cv.Required(CONF_ID): cv.use_id(mr24hpc1Component),
     }
 )
-
-    

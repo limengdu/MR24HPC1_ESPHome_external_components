@@ -34,8 +34,8 @@ api:
 ota:
 
 wifi:
-  ssid: "mengdu-H68K"
-  password: "15935700"
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
@@ -75,17 +75,17 @@ text_sensor:
       name: "Hardware Model"
     hardwareversion:
       name: "Hardware Version"
-
-binary_sensor:
-  - platform: mr24hpc1
-  someoneexist:
-      name: "Presence Information"
-
-sensor:
-  - platform: mr24hpc1
     keepaway:
       name: "Active Reporting Of Proximity"
     motionstatus:
       name: "Motion Information"
+
+binary_sensor:
+  - platform: mr24hpc1
+    someoneexist:
+      name: "Presence Information"
+
+sensor:
+  - platform: mr24hpc1
     custompresenceofdetection:
       name: "Static Distance"

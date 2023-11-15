@@ -6,9 +6,8 @@ from esphome.const import (                    # 这些库都可以在esphome仓
 )
 from . import CONF_MR24HPC1_ID, mr24hpc1Component
 
-CONF_SOMEONEEXIST = 'someoneexist'
-
 AUTO_LOAD = ["mr24hpc1"]
+CONF_SOMEONEEXIST = "someoneexist"
 
 CONFIG_SCHEMA = {
     cv.GenerateID(CONF_MR24HPC1_ID): cv.use_id(mr24hpc1Component),
@@ -16,6 +15,7 @@ CONFIG_SCHEMA = {
         device_class=DEVICE_CLASS_OCCUPANCY, icon="mdi:motion-sensor"
     ),
 }
+
 
 async def to_code(config):
     mr24hpc1_component = await cg.get_variable(config[CONF_MR24HPC1_ID])
