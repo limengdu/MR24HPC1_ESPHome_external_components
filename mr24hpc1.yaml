@@ -89,3 +89,7 @@ sensor:
   - platform: mr24hpc1
     custompresenceofdetection:
       name: "Static Distance"
+    initial:
+      name: "Initialization Status"
+    movementsigns:
+      name: "Body Movement Parameter"
