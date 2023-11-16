@@ -639,7 +639,7 @@ void mr24hpc1Component::R24_parse_data_frame(uint8_t *data, uint8_t len)
     }
 }
 
-void UartReadLineSensor::R24_frame_parse_work_status(uint8_t *data)
+void mr24hpc1Component::R24_frame_parse_work_status(uint8_t *data)
 {
     if (data[FRAME_COMMAND_WORD_INDEX] == 0x01)
     {
