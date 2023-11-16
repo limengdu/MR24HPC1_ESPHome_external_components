@@ -94,8 +94,8 @@ enum
     OUTPUT_SWTICH_ON,
     OUTPUT_SWTICH_OFF,
 };
-static const char* s_heartbeat_str[] = {"Abnormal", "Normal"};
-static const char* s_scene_str[] = {"None", "Living Room", "Area Detection", "Washroom", "Bedroom"};
+static const char* s_heartbeat_str[2] = {"Abnormal", "Normal"};
+static const char* s_scene_str[5] = {"None", "Living Room", "Area Detection", "Washroom", "Bedroom"};
 static bool s_someoneExists_str[2] = {false, true};
 static const char* s_motion_status_str[3] = {"None", "Motionless", "Active"};
 static const char* s_keep_away_str[3] = {"None", "Close", "Away"};
@@ -114,7 +114,6 @@ static uint8_t sg_frame_prase_buf[FRAME_BUF_MAX_SIZE] = {0};
 static bool sg_init_flag = false;
 static int sg_start_query_data = -1;
 static int sg_start_query_data_max = -1;
-static uint8_t sg_movementSigns_bak;
 static uint32_t sg_motion_trigger_time_bak;
 static uint32_t sg_move_to_rest_time_bak;
 static uint32_t sg_enter_unmanned_time_bak;
@@ -148,6 +147,8 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
 #endif
 #ifdef USE_SENSOR
   SUB_SENSOR(custom_presence_of_detection)
+  SUB_SENSOR(inited)
+  SUB_SENSOR(movementSigns)
 #endif
 
   private:

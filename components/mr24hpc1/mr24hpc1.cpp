@@ -61,6 +61,8 @@ void mr24hpc1Component::dump_config() {
 #endif
 #ifdef USE_SENSOR
     LOG_SENSOR(" ", "CustomPresenceOfDetectionSensor", this->custom_presence_of_detection_sensor_);
+    LOG_SENSOR(" ", "initial", this->inited_sensor_);
+    LOG_SENSOR(" ", "movementsigns", this->movementSigns_sensor_);
 #endif
 }
 
@@ -83,8 +85,8 @@ void mr24hpc1Component::update() {
         return;
     if (sg_init_flag && (255 != sg_heartbeat_flag))  // sg_heartbeat_flag初值是255，所以首次不执行，先执行上电检查的内容
     {
-        this->heartbeat_state_text_sensor_->publish_state(s_heartbeat_str[sg_heartbeat_flag]);
         sg_heartbeat_flag = 0;
+        this->heartbeat_state_text_sensor_->publish_state(s_heartbeat_str[sg_heartbeat_flag]);
     }
     if (s_power_on_status < 4)  // 上电后状态检查
     {
@@ -423,12 +425,8 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x07)
     {
-        // if (sg_movementSigns_bak != data[FRAME_DATA_INDEX])
-        // {
-        //     this->movementSigns->publish_state(data[FRAME_DATA_INDEX]);
-        //     sg_movementSigns_bak = data[FRAME_DATA_INDEX];
-        // }
-        // ESP_LOGD(TAG, "Report: get movementSigns %d", data[FRAME_DATA_INDEX]);
+        this->movementSigns_sensor_->publish_state(data[FRAME_DATA_INDEX]);
+        ESP_LOGD(TAG, "Report: get movementSigns %d", data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x08)
     {
@@ -536,12 +534,8 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x87)
     {
-        // if (sg_movementSigns_bak != data[FRAME_DATA_INDEX])
-        // {
-        //     this->movementSigns->publish_state(data[FRAME_DATA_INDEX]);
-        //     sg_movementSigns_bak = data[FRAME_DATA_INDEX];
-        // }
-        // ESP_LOGD(TAG, "Reply: get movementSigns %d", data[FRAME_DATA_INDEX]);
+        this->movementSigns_sensor_->publish_state(data[FRAME_DATA_INDEX]);
+        ESP_LOGD(TAG, "Reply: get movementSigns %d", data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x88)
     {
@@ -610,6 +604,7 @@ void mr24hpc1Component::R24_parse_data_frame(uint8_t *data, uint8_t len)
         {
             if (data[FRAME_COMMAND_WORD_INDEX] == 0x01)
             {
+                sg_heartbeat_flag = 1;
                 ESP_LOGD(TAG, "Reply: query Heartbeat packet");
             }
             else if (data[FRAME_COMMAND_WORD_INDEX] == 0x02)
@@ -644,6 +639,75 @@ void mr24hpc1Component::R24_parse_data_frame(uint8_t *data, uint8_t len)
     }
 }
 
+void UartReadLineSensor::R24_frame_parse_work_status(uint8_t *data)
+{
+    if (data[FRAME_COMMAND_WORD_INDEX] == 0x01)
+    {
+
+        this->inited_sensor_->publish_state(data[FRAME_DATA_INDEX]);
+        ESP_LOGD(TAG, "Report: radar init status 0x%02X", data[FRAME_DATA_INDEX]);
+    }
+    else if (data[FRAME_COMMAND_WORD_INDEX] == 0x07)
+    {
+
+        // if (id(scene_mode).has_index(data[FRAME_DATA_INDEX] - 1))
+        // {
+        //     id(scene_mode).publish_state(s_scene_str[data[FRAME_DATA_INDEX] - 1]);
+        // }
+        // else
+        // {
+        //     ESP_LOGD(TAG, "Select has index offset %d Error", data[FRAME_DATA_INDEX]);
+        // }
+        // ESP_LOGD(TAG, "Reply: set scene_mode 0x%02X", data[FRAME_DATA_INDEX]);
+    }
+    else if (data[FRAME_COMMAND_WORD_INDEX] == 0x08)
+    {
+        // 1-3
+        // id(sensitivity).publish_state(data[FRAME_DATA_INDEX]);
+        // ESP_LOGD(TAG, "Reply: set sensitivity 0x%02X", data[FRAME_DATA_INDEX]);
+    }
+    else if (data[FRAME_COMMAND_WORD_INDEX] == 0x09)
+    {
+        // 1-4
+        // id(custom_mode_settings).publish_state(data[FRAME_DATA_INDEX]);
+        // ESP_LOGD(TAG, "Reply: set custom_mode_settings 0x%02X", data[FRAME_DATA_INDEX]);
+    }
+    else if (data[FRAME_COMMAND_WORD_INDEX] == 0x81)
+    {
+
+        this->inited_sensor_->publish_state(data[FRAME_DATA_INDEX]);
+        ESP_LOGD(TAG, "Reply: get radar init status 0x%02X", data[FRAME_DATA_INDEX]);
+    }
+    else if (data[FRAME_COMMAND_WORD_INDEX] == 0x87)
+    {
+
+        // if (id(scene_mode).has_index(data[FRAME_DATA_INDEX] - 1))
+        // {
+        //     id(scene_mode).publish_state(s_scene_str[data[FRAME_DATA_INDEX] - 1]);
+        // }
+        // else
+        // {
+        //     ESP_LOGD(TAG, "Select has index offset %d Error", data[FRAME_DATA_INDEX]);
+        // }
+        // ESP_LOGD(TAG, "Reply: get scene_mode 0x%02X", data[FRAME_DATA_INDEX]);
+    }
+    else if (data[FRAME_COMMAND_WORD_INDEX] == 0x88)
+    {
+        // id(sensitivity).publish_state(data[FRAME_DATA_INDEX]);
+        // ESP_LOGD(TAG, "Reply: get sensitivity 0x%02X", data[FRAME_DATA_INDEX]);
+    }
+    else if (data[FRAME_COMMAND_WORD_INDEX] == 0x89)
+    {
+        // 1-4
+        // id(custom_mode_settings).publish_state(data[FRAME_DATA_INDEX]);
+        // ESP_LOGD(TAG, "Reply: get custom_mode_settings 0x%02X", data[FRAME_DATA_INDEX]);
+    }
+    else
+    {
+        ESP_LOGD(TAG, "[%s] No found COMMAND_WORD(%02X) in Frame", __FUNCTION__, data[FRAME_COMMAND_WORD_INDEX]);
+    }
+}
+
 void mr24hpc1Component::R24_frame_parse_human_information(uint8_t *data)
 {
     if (data[FRAME_COMMAND_WORD_INDEX] == 0x01)
@@ -661,12 +725,8 @@ void mr24hpc1Component::R24_frame_parse_human_information(uint8_t *data)
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x03)
     {
-        // if (sg_movementSigns_bak != data[FRAME_DATA_INDEX])
-        // {
-        //     this->movementSigns->publish_state(data[FRAME_DATA_INDEX]);
-        //     sg_movementSigns_bak = data[FRAME_DATA_INDEX];
-        // }
-        // ESP_LOGD(TAG, "Report: movementSigns %d", data[FRAME_DATA_INDEX]);
+        this->movementSigns_sensor_->publish_state(data[FRAME_DATA_INDEX]);
+        ESP_LOGD(TAG, "Report: movementSigns %d", data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0A)
     {
@@ -701,12 +761,8 @@ void mr24hpc1Component::R24_frame_parse_human_information(uint8_t *data)
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x83)
     {
-        // if (sg_movementSigns_bak != data[FRAME_DATA_INDEX])
-        // {
-        //     this->movementSigns->publish_state(data[FRAME_DATA_INDEX]);
-        //     sg_movementSigns_bak = data[FRAME_DATA_INDEX];
-        // }
-        // ESP_LOGD(TAG, "Reply: get movementSigns %d", data[FRAME_DATA_INDEX]);
+        this->movementSigns_sensor_->publish_state(data[FRAME_DATA_INDEX]);
+        ESP_LOGD(TAG, "Reply: get movementSigns %d", data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x8A)
     {
