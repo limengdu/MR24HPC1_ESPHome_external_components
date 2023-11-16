@@ -85,7 +85,7 @@ void mr24hpc1Component::update() {
         return;
     if (sg_init_flag && (255 != sg_heartbeat_flag))  // sg_heartbeat_flag初值是255，所以首次不执行，先执行上电检查的内容
     {
-        sg_heartbeat_flag = 0;
+        sg_heartbeat_flag = 1;
         this->heartbeat_state_text_sensor_->publish_state(s_heartbeat_str[sg_heartbeat_flag]);
     }
     if (s_power_on_status < 4)  // 上电后状态检查
@@ -604,7 +604,7 @@ void mr24hpc1Component::R24_parse_data_frame(uint8_t *data, uint8_t len)
         {
             if (data[FRAME_COMMAND_WORD_INDEX] == 0x01)
             {
-                sg_heartbeat_flag = 1;
+                sg_heartbeat_flag = 0;
                 ESP_LOGD(TAG, "Reply: query Heartbeat packet");
             }
             else if (data[FRAME_COMMAND_WORD_INDEX] == 0x02)
