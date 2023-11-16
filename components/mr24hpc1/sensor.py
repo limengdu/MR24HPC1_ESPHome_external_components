@@ -3,7 +3,6 @@ from esphome.components import sensor
 import esphome.config_validation as cv
 from esphome.const import (
     DEVICE_CLASS_DISTANCE,
-    DEVICE_CLASS_MOVING,
     UNIT_METER,
 )
 from . import CONF_MR24HPC1_ID, mr24hpc1Component
@@ -26,7 +25,6 @@ CONFIG_SCHEMA = cv.Schema(
             icon="mdi:all-inclusive",
         ),
         cv.Optional(CONF_MOVEMENTSIGNS): sensor.sensor_schema(
-            device_class=DEVICE_CLASS_MOVING,
             icon="mdi:human-greeting-variant",
         ),
     }
