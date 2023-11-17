@@ -3,6 +3,8 @@ from esphome.components import sensor
 import esphome.config_validation as cv
 from esphome.const import (
     DEVICE_CLASS_DISTANCE,
+    DEVICE_CLASS_ENERGY,
+    DEVICE_CLASS_SPEED,
     UNIT_METER,
 )
 from . import CONF_MR24HPC1_ID, mr24hpc1Component
@@ -13,6 +15,10 @@ CONF_CUSTOMPRESENCEOFDETECTION = "custompresenceofdetection"
 CONF_INITIAL = "initial"
 CONF_MOVEMENTSIGNS = "movementsigns"
 CONF_CUSTOMMOTIONDISTANCE = "custommotiondistance"
+CONF_CUSTOMSPATIALSTATICVALUE = "customspatialstaticvalue"
+CONF_CUSTOMSPATIALMOTIONVALUE = "customspatialmotionvalue"
+CONF_CUSTOMMOTIONSPEED =  "custommotionspeed"
+
 
 CONFIG_SCHEMA = cv.Schema(
     {
@@ -30,6 +36,18 @@ CONFIG_SCHEMA = cv.Schema(
         ),
         cv.Optional(CONF_CUSTOMMOTIONDISTANCE): sensor.sensor_schema(
             icon="mdi:signal-distance-variant",
+        ),
+        cv.Optional(CONF_CUSTOMSPATIALSTATICVALUE): sensor.sensor_schema(
+            device_class=DEVICE_CLASS_ENERGY,
+            icon="mdi:counter"
+        ),
+        cv.Optional(CONF_CUSTOMSPATIALMOTIONVALUE): sensor.sensor_schema(
+            device_class=DEVICE_CLASS_ENERGY,
+            icon="mdi:counter"
+        ),
+        cv.Optional(CONF_CUSTOMMOTIONSPEED): sensor.sensor_schema(
+            device_class=DEVICE_CLASS_SPEED,
+            icon="mdi:run-fast"
         ),
     }
 )
@@ -49,3 +67,12 @@ async def to_code(config):
     if custommotiondistance_config := config.get(CONF_CUSTOMMOTIONDISTANCE):
         sens = await sensor.new_sensor(custommotiondistance_config)
         cg.add(mr24hpc1_component.set_custom_motion_distance_sensor(sens))
+    if customspatialstaticvalue_config := config.get(CONF_CUSTOMSPATIALSTATICVALUE):
+        sens = await sensor.new_sensor(customspatialstaticvalue_config)
+        cg.add(mr24hpc1_component.set_custom_spatial_static_value_sensor(sens))
+    if customspatialmotionvalue_config := config.get(CONF_CUSTOMSPATIALMOTIONVALUE):
+        sens = await sensor.new_sensor(customspatialmotionvalue_config)
+        cg.add(mr24hpc1_component.set_custom_spatial_motion_value_sensor(sens))
+    if custommotionspeed_config := config.get(CONF_CUSTOMMOTIONSPEED):
+        sens = await sensor.new_sensor(custommotionspeed_config)
+        cg.add(mr24hpc1_component.set_custom_motion_speed_sensor(sens))

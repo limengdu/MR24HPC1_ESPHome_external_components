@@ -64,6 +64,9 @@ void mr24hpc1Component::dump_config() {
     LOG_SENSOR(" ", "initial", this->inited_sensor_);
     LOG_SENSOR(" ", "movementsigns", this->movementSigns_sensor_);
     LOG_SENSOR(" ", "custommotiondistance", this->custom_motion_distance_sensor_);
+    LOG_SENSOR(" ", "customspatialstaticvalue", this->custom_spatial_static_value_sensor_);
+    LOG_SENSOR(" ", "customspatialmotionvalue", this->custom_spatial_motion_value_sensor_);
+    LOG_SENSOR(" ", "custommotionspeed", this->custom_motion_speed_sensor_);
 #endif
 }
 
@@ -388,30 +391,11 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x01)
     {
-        // if (sg_spatial_static_value_bak != data[FRAME_DATA_INDEX])
-        // {
-        //     sg_spatial_static_value_bak = data[FRAME_DATA_INDEX];
-        //     id(custom_spatial_static_value).publish_state(sg_spatial_static_value_bak);
-        // }
-        // if (sg_static_distance_bak != data[FRAME_DATA_INDEX + 1])
-        // {
-        //     sg_static_distance_bak = data[FRAME_DATA_INDEX + 1];
-        //     id(custom_static_distance).publish_state(sg_static_distance_bak * 0.5);
-        // }
-        // if (sg_spatial_motion_value_bak != data[FRAME_DATA_INDEX + 2])
-        // {
-        //     sg_spatial_motion_value_bak = data[FRAME_DATA_INDEX + 2];
-        //     id(custom_spatial_motion_value).publish_state(sg_spatial_motion_value_bak);
-        // }
-
+        this->custom_spatial_static_value_sensor_->publish_state(data[FRAME_DATA_INDEX]);
+        this->custom_presence_of_detection_sensor_->publish_state(data[FRAME_DATA_INDEX + 1] * 0.5);
+        this->custom_spatial_motion_value_sensor_->publish_state(data[FRAME_DATA_INDEX + 2]);
         this->custom_motion_distance_sensor_->publish_state(data[FRAME_DATA_INDEX + 3] * 0.5);
-
-        // if (sg_motion_speed_bak != data[FRAME_DATA_INDEX + 4])
-        // {
-        //     sg_motion_speed_bak = data[FRAME_DATA_INDEX + 4];
-        //     id(custom_motion_speed).publish_state((sg_motion_speed_bak - 10) * 0.5);
-        // }
-        // ESP_LOGD(TAG, "Reply: get output info %d  %d  %d  %d", data[FRAME_DATA_INDEX], data[FRAME_DATA_INDEX + 1], data[FRAME_DATA_INDEX + 2], data[FRAME_DATA_INDEX + 3]);
+        this->custom_motion_speed->publish_state((data[FRAME_DATA_INDEX + 4] - 10) * 0.5);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x06)
     {
@@ -420,12 +404,10 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
         {
             this->keep_away_text_sensor_->publish_state(s_keep_away_str[data[FRAME_DATA_INDEX]]);
         }
-        ESP_LOGD(TAG, "Report:  moving direction  %d", data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x07)
     {
         this->movementSigns_sensor_->publish_state(data[FRAME_DATA_INDEX]);
-        ESP_LOGD(TAG, "Report: get movementSigns %d", data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x08)
     {
@@ -494,46 +476,30 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
             s_output_info_switch_flag = OUTPUT_SWTICH_OFF;
         }
         // id(output_info_switch).publish_state(data[FRAME_DATA_INDEX]);
-        ESP_LOGD(TAG, "Reply: get output switch %d", data[FRAME_DATA_INDEX]);
-    } 
+    }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x81) {
-        // if (sg_spatial_static_value_bak != data[FRAME_DATA_INDEX]) {
-        //     sg_spatial_static_value_bak = data[FRAME_DATA_INDEX];
-        //     id(custom_spatial_static_value).publish_state(sg_spatial_static_value_bak);
-        // }
-        // ESP_LOGD(TAG, "Reply: get spatial static value %d", data[FRAME_DATA_INDEX]);
+        this->custom_spatial_static_value_sensor_->publish_state(data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x82) {
-        // if (sg_spatial_motion_value_bak != data[FRAME_DATA_INDEX]) {
-        //     sg_spatial_motion_value_bak = data[FRAME_DATA_INDEX];
-        //     id(custom_spatial_motion_value).publish_state(sg_spatial_motion_value_bak);
-        // }
-        // ESP_LOGD(TAG, "Reply: get spatial motion amplitude %d", data[FRAME_DATA_INDEX]);
+        this->custom_spatial_motion_value->publish_state(data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x83)
     {
         this->custom_presence_of_detection_sensor_->publish_state(s_presence_of_detection_range_str[data[FRAME_DATA_INDEX]]);
-        ESP_LOGD(TAG, "Reply: get Presence of detection range %d", data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x84) { 
         this->custom_motion_distance_sensor_->publish_state(data[FRAME_DATA_INDEX] * 0.5);
-        ESP_LOGD(TAG, "Report: get distance of moving object %lf", data[FRAME_DATA_INDEX]*0.5);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x85) {  
-        // if (sg_motion_speed_bak != data[FRAME_DATA_INDEX]) {
-        //     sg_motion_speed_bak = data[FRAME_DATA_INDEX];
-        //     id(custom_motion_speed).publish_state((sg_motion_speed_bak - 10) * 0.5);
-        // }
-        // ESP_LOGD(TAG, "Reply: get target movement speed %d", data[FRAME_DATA_INDEX]);
+        this->custom_motion_speed_sensor_->publish_state((data[FRAME_DATA_INDEX] - 10) * 0.5);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x86)
     {
-        ESP_LOGD(TAG, "Reply: get keep_away %d", data[FRAME_DATA_INDEX]);
+        this->keep_away_text_sensor_->publish_state(s_keep_away_str[data[FRAME_DATA_INDEX]]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x87)
     {
         this->movementSigns_sensor_->publish_state(data[FRAME_DATA_INDEX]);
-        ESP_LOGD(TAG, "Reply: get movementSigns %d", data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x88)
     {
@@ -618,7 +584,7 @@ void mr24hpc1Component::R24_parse_data_frame(uint8_t *data, uint8_t len)
         break;
         case 0x05:
         {
-            // this->R24_frame_parse_work_status(data);
+            this->R24_frame_parse_work_status(data);
         }
         break;
         case 0x08:
