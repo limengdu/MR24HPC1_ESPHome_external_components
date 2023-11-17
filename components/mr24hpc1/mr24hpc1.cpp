@@ -63,6 +63,7 @@ void mr24hpc1Component::dump_config() {
     LOG_SENSOR(" ", "CustomPresenceOfDetectionSensor", this->custom_presence_of_detection_sensor_);
     LOG_SENSOR(" ", "initial", this->inited_sensor_);
     LOG_SENSOR(" ", "movementsigns", this->movementSigns_sensor_);
+    LOG_SENSOR(" ", "custommotiondistance", this->custom_motion_distance_sensor_);
 #endif
 }
 
@@ -402,11 +403,9 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
         //     sg_spatial_motion_value_bak = data[FRAME_DATA_INDEX + 2];
         //     id(custom_spatial_motion_value).publish_state(sg_spatial_motion_value_bak);
         // }
-        // if (sg_motion_distance_bak != data[FRAME_DATA_INDEX + 3])
-        // {
-        //     sg_motion_distance_bak = data[FRAME_DATA_INDEX + 3];
-        //     id(custom_motion_distance).publish_state(sg_motion_distance_bak * 0.5);
-        // }
+
+        this->custom_motion_distance_sensor_->publish_state(data[FRAME_DATA_INDEX + 3] * 0.5);
+
         // if (sg_motion_speed_bak != data[FRAME_DATA_INDEX + 4])
         // {
         //     sg_motion_speed_bak = data[FRAME_DATA_INDEX + 4];
@@ -517,9 +516,8 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
         ESP_LOGD(TAG, "Reply: get Presence of detection range %d", data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x84) { 
-        // sg_motion_distance_bak = data[FRAME_DATA_INDEX];
-        // id(custom_motion_distance).publish_state(sg_motion_distance_bak * 0.5);
-        // ESP_LOGD(TAG, "Report: get distance of moving object %lf", data[FRAME_DATA_INDEX]*0.5);
+        this->custom_motion_distance_sensor_->publish_state(data[FRAME_DATA_INDEX] * 0.5);
+        ESP_LOGD(TAG, "Report: get distance of moving object %lf", data[FRAME_DATA_INDEX]*0.5);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x85) {  
         // if (sg_motion_speed_bak != data[FRAME_DATA_INDEX]) {

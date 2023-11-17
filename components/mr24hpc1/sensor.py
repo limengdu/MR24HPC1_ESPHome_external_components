@@ -12,6 +12,7 @@ AUTO_LOAD = ["mr24hpc1"]
 CONF_CUSTOMPRESENCEOFDETECTION = "custompresenceofdetection"
 CONF_INITIAL = "initial"
 CONF_MOVEMENTSIGNS = "movementsigns"
+CONF_CUSTOMMOTIONDISTANCE = "custommotiondistance"
 
 CONFIG_SCHEMA = cv.Schema(
     {
@@ -26,6 +27,9 @@ CONFIG_SCHEMA = cv.Schema(
         ),
         cv.Optional(CONF_MOVEMENTSIGNS): sensor.sensor_schema(
             icon="mdi:human-greeting-variant",
+        ),
+        cv.Optional(CONF_CUSTOMMOTIONDISTANCE): sensor.sensor_schema(
+            icon="mdi:signal-distance-variant",
         ),
     }
 )
@@ -42,3 +46,6 @@ async def to_code(config):
     if movementsigns_config := config.get(CONF_MOVEMENTSIGNS):
         sens = await sensor.new_sensor(movementsigns_config)
         cg.add(mr24hpc1_component.set_movementSigns_sensor(sens))
+    if custommotiondistance_config := config.get(CONF_CUSTOMMOTIONDISTANCE):
+        sens = await sensor.new_sensor(custommotiondistance_config)
+        cg.add(mr24hpc1_component.set_custom_motion_distance_sensor(sens))

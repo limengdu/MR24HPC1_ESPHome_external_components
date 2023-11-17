@@ -120,7 +120,6 @@ static uint32_t sg_enter_unmanned_time_bak;
 static uint8_t sg_spatial_static_value_bak;
 static uint8_t sg_static_distance_bak;
 static uint8_t sg_spatial_motion_value_bak;
-static uint8_t sg_motion_distance_bak;
 static uint8_t sg_motion_speed_bak;
 static uint8_t sg_heartbeat_flag = 255;
 static uint8_t s_power_on_status = 0;
@@ -149,6 +148,7 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
   SUB_SENSOR(custom_presence_of_detection)
   SUB_SENSOR(inited)
   SUB_SENSOR(movementSigns)
+  SUB_SENSOR(custom_motion_distance)
 #endif
 
   private:
