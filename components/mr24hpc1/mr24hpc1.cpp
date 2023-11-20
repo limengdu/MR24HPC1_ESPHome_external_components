@@ -68,6 +68,8 @@ void mr24hpc1Component::dump_config() {
     LOG_SENSOR(" ", "customspatialmotionvalue", this->custom_spatial_motion_value_sensor_);
     LOG_SENSOR(" ", "custommotionspeed", this->custom_motion_speed_sensor_);
 #endif
+#ifdef USE_SWITCH
+    LOG_SWITCH(" ", "", this->underly_open_function_switch_);
 }
 
 // 初始化函数
@@ -744,7 +746,6 @@ void mr24hpc1Component::R24_frame_parse_human_information(uint8_t *data)
         {
             this->keep_away_text_sensor_->publish_state(s_keep_away_str[data[FRAME_DATA_INDEX]]);
         }
-        ESP_LOGD(TAG, "Reply: get moving direction  %d", data[FRAME_DATA_INDEX]);
     }
     else
     {
