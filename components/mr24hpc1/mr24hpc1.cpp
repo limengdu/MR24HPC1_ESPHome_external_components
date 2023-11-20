@@ -829,7 +829,7 @@ void mr24hpc1Component::set_underlying_open_function(bool enable)
     this->custom_spatial_static_value_sensor_->publish_state(0.0f);
     this->custom_spatial_motion_value_sensor_->publish_state(0.0f);
     this->custom_motion_distance_sensor_->publish_state(0.0f);
-    this->custom_static_distance_sensor_->publish_state(0.0f);
+    this->custom_presence_of_detection_sensor_->publish_state(0.0f);
     this->custom_motion_speed_sensor_->publish_state(0.0f);
 }
 
