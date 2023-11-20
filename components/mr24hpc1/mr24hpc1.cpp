@@ -478,7 +478,7 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
         {
             s_output_info_switch_flag = OUTPUT_SWTICH_OFF;
         }
-        this->underly_open_function_switch_.publish_state(data[FRAME_DATA_INDEX]);
+        this->underly_open_function_switch_->publish_state(data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x81) {
         this->custom_spatial_static_value_sensor_->publish_state(data[FRAME_DATA_INDEX]);
