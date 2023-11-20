@@ -69,7 +69,7 @@ void mr24hpc1Component::dump_config() {
     LOG_SENSOR(" ", "custommotionspeed", this->custom_motion_speed_sensor_);
 #endif
 #ifdef USE_SWITCH
-    LOG_SWITCH(" ", "", this->underly_open_function_switch_);
+    LOG_SWITCH(" ", "underly_open_function", this->underly_open_function_switch_);
 }
 
 // 初始化函数
