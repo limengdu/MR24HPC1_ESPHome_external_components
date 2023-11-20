@@ -1,0 +1,52 @@
+title: My Home
+views:
+  - path: default_view
+    title: Home
+    cards:
+      - type: horizontal-stack
+        cards:
+          - type: entities
+            entities:
+              - entity: sensor.seeedstudio_mmwave_kit_hardware_model
+                name: Hardware Model
+              - entity: sensor.seeedstudio_mmwave_kit_hardware_version
+                name: Hardware Version
+              - entity: sensor.seeedstudio_mmwave_kit_heartbeat
+                name: Heartbeat
+              - entity: sensor.seeedstudio_mmwave_kit_initialization_status
+                name: Initialization Status
+              - entity: sensor.seeedstudio_mmwave_kit_product_id
+                name: Product ID
+              - entity: sensor.seeedstudio_mmwave_kit_product_model
+                name: Product Model
+            title: DEVICE Information
+      - type: vertical-stack
+        cards:
+          - type: entities
+            entities:
+              - entity: binary_sensor.seeedstudio_mmwave_kit_presence_information
+                name: Presence Information
+              - entity: sensor.seeedstudio_mmwave_kit_motion_information
+                name: Motion Information
+              - entity: sensor.seeedstudio_mmwave_kit_body_movement_parameter
+                name: Body Movement Parameter
+              - entity: sensor.seeedstudio_mmwave_kit_active_reporting_of_proximity
+                name: Active Reporting Of Proximity
+            title: Unsolicited Information
+      - type: horizontal-stack
+        cards:
+          - type: entities
+            entities:
+              - entity: switch.seeedstudio_mmwave_kit_underlying_open_function_info_output_switch
+                name: Underlying Open Function Info Output Switch
+              - entity: sensor.seeedstudio_mmwave_kit_existence_energy_value_proactive_reporting
+                name: Existence Energy Value (Proactive Reporting)
+              - entity: sensor.seeedstudio_mmwave_kit_motion_energy_value_proactive_reporting
+                name: Motion Energy Value (Proactive Reporting)
+              - entity: sensor.seeedstudio_mmwave_kit_static_distance
+                name: Static Distance
+              - entity: sensor.seeedstudio_mmwave_kit_motion_distance_proactive_reporting
+                name: Motion Distance
+              - entity: sensor.seeedstudio_mmwave_kit_motion_speed
+                name: Motion Speed
+            title: Underlying Open Function

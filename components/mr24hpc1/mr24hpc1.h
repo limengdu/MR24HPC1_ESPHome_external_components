@@ -28,9 +28,6 @@
 
 #include <map>
 
-#include "esphome/core/component.h"
-#include "esphome/components/text_sensor/text_sensor.h"
-
 namespace esphome {
 namespace mr24hpc1 {
 
@@ -94,8 +91,8 @@ enum
     OUTPUT_SWTICH_ON,
     OUTPUT_SWTICH_OFF,
 };
-static const char* s_heartbeat_str[] = {"Abnormal", "Normal"};
-static const char* s_scene_str[] = {"None", "Living Room", "Area Detection", "Washroom", "Bedroom"};
+static const char* s_heartbeat_str[2] = {"Abnormal", "Normal"};
+static const char* s_scene_str[5] = {"None", "Living Room", "Area Detection", "Washroom", "Bedroom"};
 static bool s_someoneExists_str[2] = {false, true};
 static const char* s_motion_status_str[3] = {"None", "Motionless", "Active"};
 static const char* s_keep_away_str[3] = {"None", "Close", "Away"};
@@ -114,20 +111,13 @@ static uint8_t sg_frame_prase_buf[FRAME_BUF_MAX_SIZE] = {0};
 static bool sg_init_flag = false;
 static int sg_start_query_data = -1;
 static int sg_start_query_data_max = -1;
-static uint8_t sg_movementSigns_bak;
 static uint32_t sg_motion_trigger_time_bak;
 static uint32_t sg_move_to_rest_time_bak;
 static uint32_t sg_enter_unmanned_time_bak;
-static uint8_t sg_spatial_static_value_bak;
-static uint8_t sg_static_distance_bak;
-static uint8_t sg_spatial_motion_value_bak;
-static uint8_t sg_motion_distance_bak;
-static uint8_t sg_motion_speed_bak;
 static uint8_t sg_heartbeat_flag = 255;
 static uint8_t s_power_on_status = 0;
 
-class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {
-
+class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {      // The class name must be the name defined by text_sensor.py
 #ifdef USE_TEXT_SENSOR
   SUB_TEXT_SENSOR(heartbeat_state)
   SUB_TEXT_SENSOR(product_model)
@@ -142,6 +132,15 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {
 #endif
 #ifdef USE_SENSOR
   SUB_SENSOR(custom_presence_of_detection)
+  SUB_SENSOR(inited)
+  SUB_SENSOR(movementSigns)
+  SUB_SENSOR(custom_motion_distance)
+  SUB_SENSOR(custom_spatial_static_value)
+  SUB_SENSOR(custom_spatial_motion_value)
+  SUB_SENSOR(custom_motion_speed)
+#endif
+#ifdef USE_SWITCH
+  SUB_SWITCH(underly_open_function)
 #endif
 
   private:
@@ -159,6 +158,7 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {
     void R24_split_data_frame(uint8_t value);
     void R24_parse_data_frame(uint8_t *data, uint8_t len);
     void R24_frame_parse_open_underlying_information(uint8_t *data);
+    void R24_frame_parse_work_status(uint8_t *data);
     void R24_frame_parse_product_Information(uint8_t *data);
     void R24_frame_parse_human_information(uint8_t *data);
     void send_query(uint8_t *query, size_t string_length);
@@ -168,6 +168,7 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {
     void get_product_id(void);
     void get_hardware_model(void);
     void get_firmware_version(void);
+    void set_underlying_open_function(bool enable);
 };
 
 }  // namespace mr24hpc1
