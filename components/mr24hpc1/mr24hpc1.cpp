@@ -70,6 +70,7 @@ void mr24hpc1Component::dump_config() {
 #endif
 #ifdef USE_SWITCH
     LOG_SWITCH(" ", "underly_open_function", this->underly_open_function_switch_);
+#endif
 }
 
 // 初始化函数
