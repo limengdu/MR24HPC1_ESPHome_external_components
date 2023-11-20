@@ -175,6 +175,7 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
     void get_product_id(void);
     void get_hardware_model(void);
     void get_firmware_version(void);
+    void set_underlying_open_function(bool enable);
 };
 
 }  // namespace mr24hpc1
