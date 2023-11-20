@@ -26,7 +26,7 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Optional(CONF_CUSTOMPRESENCEOFDETECTION): sensor.sensor_schema(
             device_class=DEVICE_CLASS_DISTANCE,
             unit_of_measurement=UNIT_METER,
-            accuracy_decimals=2,
+            accuracy_decimals=2,                   # Specify the number of decimal places
             icon="mdi:signal-distance-variant",
         ),
         cv.Optional(CONF_INITIAL): sensor.sensor_schema(

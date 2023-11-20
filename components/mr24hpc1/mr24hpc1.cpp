@@ -14,7 +14,7 @@ namespace mr24hpc1 {
 
 static const char *TAG = "mr24hpc1";
 
-// 计算CRC校验码
+// Calculate CRC check digit
 static uint8_t get_frame_crc_sum(uint8_t *data, int len)
 {
     unsigned int crc_sum = 0;
@@ -25,7 +25,7 @@ static uint8_t get_frame_crc_sum(uint8_t *data, int len)
     return crc_sum & 0xff;
 }
 
-// 检查校验码是否正确
+// Check that the check digit is correct
 static int get_frame_check_status(uint8_t *data, int len)
 {
     uint8_t crc_sum = get_frame_crc_sum(data, len);
@@ -33,7 +33,7 @@ static int get_frame_check_status(uint8_t *data, int len)
     return (verified == crc_sum) ? 1 : 0;
 }
 
-// 打印数据帧
+// Print data frame
 static void show_frame_data(uint8_t *data, int len)
 {
     printf("[%s] FRAME: %d, ", __FUNCTION__, len);
@@ -44,7 +44,7 @@ static void show_frame_data(uint8_t *data, int len)
     printf("\r\n");
 }
 
-// 打印组件的配置数据。dump_config()会以易读的格式将组件的所有配置项打印出来,包括配置的键值对。
+// Prints the component's configuration data. dump_config() prints all of the component's configuration items in an easy-to-read format, including the configuration key-value pairs.
 void mr24hpc1Component::dump_config() { 
     ESP_LOGCONFIG(TAG, "MR24HPC1:");
 #ifdef USE_TEXT_SENSOR
@@ -73,7 +73,7 @@ void mr24hpc1Component::dump_config() {
 #endif
 }
 
-// 初始化函数
+// Initialisation functions
 void mr24hpc1Component::setup() {
     s_power_on_status = 0;
     sg_init_flag = true;
@@ -86,33 +86,33 @@ void mr24hpc1Component::setup() {
     memset(this->c_hardware_model, 0, PRODUCT_BUF_MAX_SIZE);
 }
 
-// 组件回调函数,它会在每次循环被调用
+// component callback function, which is called every time the loop is called
 void mr24hpc1Component::update() {
-    if (!sg_init_flag)                // setup函数执行完毕
+    if (!sg_init_flag)                // The setup function is complete.
         return;
-    if (sg_init_flag && (255 != sg_heartbeat_flag))  // sg_heartbeat_flag初值是255，所以首次不执行，先执行上电检查的内容
+    if (sg_init_flag && (255 != sg_heartbeat_flag))  // The initial value of sg_heartbeat_flag is 255, so it is not executed for the first time, and the power-up check is executed first
     {
         sg_heartbeat_flag = 1;
         this->heartbeat_state_text_sensor_->publish_state(s_heartbeat_str[sg_heartbeat_flag]);
     }
-    if (s_power_on_status < 4)  // 上电后状态检查
+    if (s_power_on_status < 4)  // Post power-up status check
     {
-        if (s_output_info_switch_flag == OUTPUT_SWITCH_INIT)  // 上电状态检查第一项
+        if (s_output_info_switch_flag == OUTPUT_SWITCH_INIT)  // Power-up status check first item
         {
-            sg_start_query_data = CUSTOM_FUNCTION_QUERY_RADAR_OUITPUT_INFORMATION_SWITCH;  // 自定义函数查询雷达输出信息开关
+            sg_start_query_data = CUSTOM_FUNCTION_QUERY_RADAR_OUITPUT_INFORMATION_SWITCH;  // Custom function to query radar output information switch
             sg_start_query_data_max = CUSTOM_FUNCTION_MAX;
         }
-        else if (s_output_info_switch_flag == OUTPUT_SWTICH_OFF)  // 当底层开放参数按钮关闭，上电状态检查第二项
+        else if (s_output_info_switch_flag == OUTPUT_SWTICH_OFF)  // When the bottom open parameter button is closed, the power-up status checks the second item
         {
             sg_start_query_data = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
             sg_start_query_data_max = STANDARD_FUNCTION_MAX;
         }
-        else if (s_output_info_switch_flag == OUTPUT_SWTICH_ON)   // 当底层开放参数按钮开启，上电状态检查第二项
+        else if (s_output_info_switch_flag == OUTPUT_SWTICH_ON)   // When the bottom open parameter button is on, the power-up state checks the second item
         {
             sg_start_query_data = CUSTOM_FUNCTION_QUERY_RADAR_OUITPUT_INFORMATION_SWITCH;
             sg_start_query_data_max = CUSTOM_FUNCTION_MAX;
         }
-        s_power_on_status++;  // 共有四项内容检查
+        s_power_on_status++;  // There are a total of four inspections
     }
     else
     {
@@ -121,25 +121,25 @@ void mr24hpc1Component::update() {
     }
 }
 
-// 主循环
+// main loop
 void mr24hpc1Component::loop() {
     uint8_t byte;
 
-    // 串口是否有数据
+    // Is there data on the serial port
     while (this->available())
     {
         this->read_byte(&byte);
-        this->R24_split_data_frame(byte);  // 拆分数据帧
+        this->R24_split_data_frame(byte);  // split data frame
     }
 
-    // !s_output_info_switch_flag = !OUTPUT_SWITCH_INIT = !0 = 1  (上电检查第一项——检查是否开启底层开放参数)
+    // !s_output_info_switch_flag = !OUTPUT_SWITCH_INIT = !0 = 1  (Power-up check first item - check if the underlying open parameters are turned on)
     if (!s_output_info_switch_flag && sg_start_query_data == CUSTOM_FUNCTION_QUERY_RADAR_OUITPUT_INFORMATION_SWITCH)
     {
-        // 检查底层开放参数的按钮是否开启，如果开启
-        this->get_radar_output_information_switch();  // 该函数配合R24_split_data_frame会改变s_output_info_switch_flag的状态，ON或OFF
-        sg_start_query_data++;    // 此时 sg_start_query_data = CUSTOM_FUNCTION_QUERY_PRESENCE_OF_DETECTION_RANGE  sg_start_query_data_max = CUSTOM_FUNCTION_MAX
+        // Check if the button for the underlying open parameter is on, if so
+        this->get_radar_output_information_switch();  // This function in conjunction with R24_split_data_frame changes the state of the s_output_info_switch_flag, ON or OFF.
+        sg_start_query_data++;    // now: sg_start_query_data = CUSTOM_FUNCTION_QUERY_PRESENCE_OF_DETECTION_RANGE  sg_start_query_data_max = CUSTOM_FUNCTION_MAX
     }
-    // 当底层开放参数的开关处于关闭状态，sg_start_query_data的值应该在限定范围之内
+    // When the switch for the underlying open parameter is off, the value of sg_start_query_data should be within limits
     if ((s_output_info_switch_flag == OUTPUT_SWTICH_OFF) && (sg_start_query_data <= sg_start_query_data_max) && (sg_start_query_data >= STANDARD_FUNCTION_QUERY_PRODUCT_MODE))
     {
         switch (sg_start_query_data)
@@ -147,41 +147,41 @@ void mr24hpc1Component::loop() {
             case STANDARD_FUNCTION_QUERY_PRODUCT_MODE:
                 if (strlen(this->c_product_mode) > 0)
                 {
-                    this->product_model_text_sensor_->publish_state(this->c_product_mode);  // 发布产品型号
+                    this->product_model_text_sensor_->publish_state(this->c_product_mode);  // Release Product Model
                 }
                 else
                 {
-                    this->get_product_mode();  // 查询产品型号
+                    this->get_product_mode();  // Check Product Model
                 }
                 break;
             case STANDARD_FUNCTION_QUERY_PRODUCT_ID:
                 if (strlen(this->c_product_id) > 0)
                 {
-                    this->product_id_text_sensor_->publish_state(this->c_product_id);  // 发布产品ID
+                    this->product_id_text_sensor_->publish_state(this->c_product_id);  // Publish Product ID
                 }
                 else
                 {
-                    this->get_product_id();  // 查询产品ID
+                    this->get_product_id();  // Check Product ID
                 }
                 break;
             case STANDARD_FUNCTION_QUERY_FIRMWARE_VERDION:
                 if (strlen(this->c_firmware_version) > 0)
                 {
-                    this->firware_version_text_sensor_->publish_state(this->c_firmware_version);  // 发布固件版本号
+                    this->firware_version_text_sensor_->publish_state(this->c_firmware_version);  // Release Firmware Version Number
                 }
                 else
                 {
-                    this->get_firmware_version();  // 查询估计版本号
+                    this->get_firmware_version();  // check firmware version number
                 }
                 break;
             case STANDARD_FUNCTION_QUERY_HARDWARE_MODE:
                 if (strlen(this->c_hardware_model) > 0)
                 {
-                    this->hardware_model_text_sensor_->publish_state(this->c_hardware_model);  // 发布硬件型号
+                    this->hardware_model_text_sensor_->publish_state(this->c_hardware_model);  // Release Hardware Models
                 }
                 else
                 {
-                    this->get_hardware_model();  // 查询硬件型号
+                    this->get_hardware_model();  // check Hardware Model
                 }
                 break;
             case STANDARD_FUNCTION_MAX:
@@ -193,12 +193,12 @@ void mr24hpc1Component::loop() {
     if (sg_start_query_data > CUSTOM_FUNCTION_MAX) sg_start_query_data = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
 }
 
-// 拆分数据帧
+// split data frame
 void mr24hpc1Component::R24_split_data_frame(uint8_t value)
 {
     switch (sg_recv_data_state)
     {
-        case FRAME_IDLE:                    // 初始值
+        case FRAME_IDLE:                    // starting value
             if (FRAME_HEADER1_VALUE == value)
             {
                 sg_recv_data_state = FRAME_HEADER2;
@@ -309,7 +309,7 @@ void mr24hpc1Component::R24_split_data_frame(uint8_t value)
     }
 }
 
-// 解析产品信息相关的数据帧
+// Parses data frames related to product information
 void mr24hpc1Component::R24_frame_parse_product_Information(uint8_t *data)
 {
     uint8_t product_len = 0;
@@ -376,12 +376,12 @@ void mr24hpc1Component::R24_frame_parse_product_Information(uint8_t *data)
     }
 }
 
-// 解析底层开放参数
+// Parsing the underlying open parameters
 void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *data)
 {
     if (data[FRAME_COMMAND_WORD_INDEX] == 0x00)
     {
-        this->underly_open_function_switch_->publish_state(data[FRAME_DATA_INDEX]);  // 底层开放参数开关状态更新
+        this->underly_open_function_switch_->publish_state(data[FRAME_DATA_INDEX]);  // Underlying Open Parameter Switch Status Updates
         if (data[FRAME_DATA_INDEX])
         {
             s_output_info_switch_flag = OUTPUT_SWTICH_ON;
@@ -754,7 +754,7 @@ void mr24hpc1Component::R24_frame_parse_human_information(uint8_t *data)
     }
 }
 
-// 发送数据帧
+// Sending data frames
 void mr24hpc1Component::send_query(uint8_t *query, size_t string_length)
 {
     int i;
@@ -765,7 +765,7 @@ void mr24hpc1Component::send_query(uint8_t *query, size_t string_length)
     show_frame_data(query, i);
 }
 
-// 下发心跳包命令
+// Send Heartbeat Packet Command
 void mr24hpc1Component::get_heartbeat_packet(void)
 {
     uint8_t send_data_len = 10;
@@ -774,7 +774,7 @@ void mr24hpc1Component::get_heartbeat_packet(void)
     this->send_query(send_data, send_data_len);
 }
 
-// 下发底层开放参数查询命令
+// Issuance of the underlying open parameter query command
 void mr24hpc1Component::get_radar_output_information_switch(void)
 {
     unsigned char send_data_len = 10;
@@ -783,7 +783,7 @@ void mr24hpc1Component::get_radar_output_information_switch(void)
     this->send_query(send_data, send_data_len);
 }
 
-// 下发产品型号命令
+// Issuance of product model orders
 void mr24hpc1Component::get_product_mode(void)
 {
     unsigned char send_data_len = 10;
@@ -792,7 +792,7 @@ void mr24hpc1Component::get_product_mode(void)
     this->send_query(send_data, send_data_len);
 }
 
-// 下发获得产品ID命令
+// Issuing the Get Product ID command
 void mr24hpc1Component::get_product_id(void)
 {
     unsigned char send_data_len = 10;
@@ -801,7 +801,7 @@ void mr24hpc1Component::get_product_id(void)
     this->send_query(send_data, send_data_len);
 }
 
-// 下发硬件型号命令
+// Issuing hardware model commands
 void mr24hpc1Component::get_hardware_model(void)
 {
     unsigned char send_data_len = 10;
@@ -810,7 +810,7 @@ void mr24hpc1Component::get_hardware_model(void)
     this->send_query(send_data, send_data_len);
 }
 
-// 下发软件版本命令
+// Issuing software version commands
 void mr24hpc1Component::get_firmware_version(void)
 {
     unsigned char send_data_len = 10;
