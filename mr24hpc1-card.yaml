@@ -13,8 +13,6 @@ views:
                 name: Hardware Version
               - entity: sensor.seeedstudio_mmwave_kit_heartbeat
                 name: Heartbeat
-              - entity: sensor.seeedstudio_mmwave_kit_initialization_status
-                name: Initialization Status
               - entity: sensor.seeedstudio_mmwave_kit_product_id
                 name: Product ID
               - entity: sensor.seeedstudio_mmwave_kit_product_model

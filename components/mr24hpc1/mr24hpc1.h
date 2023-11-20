@@ -64,6 +64,7 @@ enum
     STANDARD_FUNCTION_QUERY_FIRMWARE_VERDION,
     STANDARD_FUNCTION_QUERY_HARDWARE_MODE,
     STANDARD_FUNCTION_QUERY_HUMAN_STATUS,
+    STANDARD_FUNCTION_QUERY_KEEPAWAY_STATUS,
     STANDARD_FUNCTION_QUERY_SCENE_MODE,
     STANDARD_FUNCTION_QUERY_SENSITIVITY,
     STANDARD_FUNCTION_QUERY_RADAR_INIT_STATUS,
@@ -132,7 +133,6 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
 #endif
 #ifdef USE_SENSOR
   SUB_SENSOR(custom_presence_of_detection)
-  SUB_SENSOR(inited)
   SUB_SENSOR(movementSigns)
   SUB_SENSOR(custom_motion_distance)
   SUB_SENSOR(custom_spatial_static_value)
@@ -168,6 +168,8 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
     void get_product_id(void);
     void get_hardware_model(void);
     void get_firmware_version(void);
+    void get_human_status(void);
+    void get_keep_away(void);
     void set_underlying_open_function(bool enable);
 };
 
