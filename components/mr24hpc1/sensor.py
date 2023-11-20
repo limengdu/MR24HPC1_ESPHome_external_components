@@ -26,6 +26,7 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Optional(CONF_CUSTOMPRESENCEOFDETECTION): sensor.sensor_schema(
             device_class=DEVICE_CLASS_DISTANCE,
             unit_of_measurement=UNIT_METER,
+            accuracy_decimals=2,
             icon="mdi:signal-distance-variant",
         ),
         cv.Optional(CONF_INITIAL): sensor.sensor_schema(
@@ -36,6 +37,7 @@ CONFIG_SCHEMA = cv.Schema(
         ),
         cv.Optional(CONF_CUSTOMMOTIONDISTANCE): sensor.sensor_schema(
             unit_of_measurement=UNIT_METER,
+            accuracy_decimals=2,
             icon="mdi:signal-distance-variant",
         ),
         cv.Optional(CONF_CUSTOMSPATIALSTATICVALUE): sensor.sensor_schema(
@@ -48,6 +50,7 @@ CONFIG_SCHEMA = cv.Schema(
         ),
         cv.Optional(CONF_CUSTOMMOTIONSPEED): sensor.sensor_schema(
             device_class=DEVICE_CLASS_SPEED,
+            accuracy_decimals=2,
             icon="mdi:run-fast"
         ),
     }

@@ -381,7 +381,7 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
 {
     if (data[FRAME_COMMAND_WORD_INDEX] == 0x00)
     {
-        // id(output_info_switch).publish_state(data[FRAME_DATA_INDEX]);  // 底层开放参数开光状态更新
+        this->underly_open_function_switch_->publish_state(data[FRAME_DATA_INDEX]);  // 底层开放参数开关状态更新
         if (data[FRAME_DATA_INDEX])
         {
             s_output_info_switch_flag = OUTPUT_SWTICH_ON;
@@ -478,6 +478,7 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
         {
             s_output_info_switch_flag = OUTPUT_SWTICH_OFF;
         }
+        this->underly_open_function_switch_.publish_state(data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x81) {
         this->custom_spatial_static_value_sensor_->publish_state(data[FRAME_DATA_INDEX]);
