@@ -116,7 +116,7 @@ void mr24hpc1Component::update() {
     else
     {
         sg_start_query_data = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
-        sg_start_query_data_max = STANDARD_FUNCTION_QUERY_HARDWARE_MODE;
+        sg_start_query_data_max = STANDARD_FUNCTION_QUERY_KEEPAWAY_STATUS;
     }
 }
 
