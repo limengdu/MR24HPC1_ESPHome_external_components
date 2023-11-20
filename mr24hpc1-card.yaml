@@ -30,8 +30,23 @@ views:
                 name: Motion Information
               - entity: sensor.seeedstudio_mmwave_kit_body_movement_parameter
                 name: Body Movement Parameter
-              - entity: sensor.seeedstudio_mmwave_kit_static_distance
-                name: Static Distance
               - entity: sensor.seeedstudio_mmwave_kit_active_reporting_of_proximity
                 name: Active Reporting Of Proximity
             title: Unsolicited Information
+      - type: horizontal-stack
+        cards:
+          - type: entities
+            entities:
+              - entity: switch.seeedstudio_mmwave_kit_underlying_open_function_info_output_switch
+                name: Underlying Open Function Info Output Switch
+              - entity: sensor.seeedstudio_mmwave_kit_existence_energy_value_proactive_reporting
+                name: Existence Energy Value (Proactive Reporting)
+              - entity: sensor.seeedstudio_mmwave_kit_motion_energy_value_proactive_reporting
+                name: Motion Energy Value (Proactive Reporting)
+              - entity: sensor.seeedstudio_mmwave_kit_static_distance
+                name: Static Distance
+              - entity: sensor.seeedstudio_mmwave_kit_motion_distance_proactive_reporting
+                name: Motion Distance
+              - entity: sensor.seeedstudio_mmwave_kit_motion_speed
+                name: Motion Speed
+            title: Underlying Open Function

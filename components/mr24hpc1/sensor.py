@@ -35,6 +35,7 @@ CONFIG_SCHEMA = cv.Schema(
             icon="mdi:human-greeting-variant",
         ),
         cv.Optional(CONF_CUSTOMMOTIONDISTANCE): sensor.sensor_schema(
+            unit_of_measurement=UNIT_METER,
             icon="mdi:signal-distance-variant",
         ),
         cv.Optional(CONF_CUSTOMSPATIALSTATICVALUE): sensor.sensor_schema(

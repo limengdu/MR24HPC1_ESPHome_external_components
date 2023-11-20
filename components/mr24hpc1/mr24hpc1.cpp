@@ -395,10 +395,10 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x01)
     {
         this->custom_spatial_static_value_sensor_->publish_state(data[FRAME_DATA_INDEX]);
-        this->custom_presence_of_detection_sensor_->publish_state(data[FRAME_DATA_INDEX + 1] * 0.5);
+        this->custom_presence_of_detection_sensor_->publish_state(data[FRAME_DATA_INDEX + 1] * 0.5f);
         this->custom_spatial_motion_value_sensor_->publish_state(data[FRAME_DATA_INDEX + 2]);
-        this->custom_motion_distance_sensor_->publish_state(data[FRAME_DATA_INDEX + 3] * 0.5);
-        this->custom_motion_speed_sensor_->publish_state((data[FRAME_DATA_INDEX + 4] - 10) * 0.5);
+        this->custom_motion_distance_sensor_->publish_state(data[FRAME_DATA_INDEX + 3] * 0.5f);
+        this->custom_motion_speed_sensor_->publish_state((data[FRAME_DATA_INDEX + 4] - 10) * 0.5f);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x06)
     {
@@ -478,7 +478,6 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
         {
             s_output_info_switch_flag = OUTPUT_SWTICH_OFF;
         }
-        // id(output_info_switch).publish_state(data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x81) {
         this->custom_spatial_static_value_sensor_->publish_state(data[FRAME_DATA_INDEX]);
@@ -491,10 +490,10 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
         this->custom_presence_of_detection_sensor_->publish_state(s_presence_of_detection_range_str[data[FRAME_DATA_INDEX]]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x84) { 
-        this->custom_motion_distance_sensor_->publish_state(data[FRAME_DATA_INDEX] * 0.5);
+        this->custom_motion_distance_sensor_->publish_state(data[FRAME_DATA_INDEX] * 0.5f);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x85) {  
-        this->custom_motion_speed_sensor_->publish_state((data[FRAME_DATA_INDEX] - 10) * 0.5);
+        this->custom_motion_speed_sensor_->publish_state((data[FRAME_DATA_INDEX] - 10) * 0.5f);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x86)
     {
@@ -830,6 +829,7 @@ void mr24hpc1Component::set_underlying_open_function(bool enable)
     this->custom_spatial_static_value_sensor_->publish_state(0.0f);
     this->custom_spatial_motion_value_sensor_->publish_state(0.0f);
     this->custom_motion_distance_sensor_->publish_state(0.0f);
+    this->custom_static_distance_sensor_->publish_state(0.0f);
     this->custom_motion_speed_sensor_->publish_state(0.0f);
 }
 
