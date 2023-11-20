@@ -819,5 +819,19 @@ void mr24hpc1Component::get_firmware_version(void)
     this->send_query(send_data, send_data_len);
 }
 
+void mr24hpc1Component::set_underlying_open_function(bool enable)
+{
+    uint8_t underlyswitch_on[] = {0x53, 0x59, 0x08, 0x00, 0x00, 0x01, 0x01, 0xB6, 0x54, 0x43};
+    uint8_t underlyswitch_off[] = {0x53, 0x59, 0x08, 0x00, 0x00, 0x01, 0x00, 0xB5, 0x54, 0x43};
+    if(enable) send_query(underlyswitch_on, sizeof(underlyswitch_on));
+    else send_query(underlyswitch_off, sizeof(underlyswitch_off));
+    this->keep_away_text_sensor_->publish_state("");
+    this->motion_status_text_sensor_->publish_state("");
+    this->custom_spatial_static_value_sensor_->publish_state(0.0f);
+    this->custom_spatial_motion_value_sensor_->publish_state(0.0f);
+    this->custom_motion_distance_sensor_->publish_state(0.0f);
+    this->custom_motion_speed_sensor_->publish_state(0.0f);
+}
+
 }  // namespace empty_text_sensor
 }  // namespace esphome
