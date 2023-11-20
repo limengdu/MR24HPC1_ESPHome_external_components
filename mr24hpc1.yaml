@@ -93,3 +93,16 @@ sensor:
       name: "Initialization Status"
     movementsigns:
       name: "Body Movement Parameter"
+    custommotiondistance:
+      name: "Motion Distance (Proactive Reporting)"
+    customspatialstaticvalue:
+      name: "Existence Energy Value (Proactive Reporting)"
+    customspatialmotionvalue:
+      name: "Motion Energy Value (Proactive Reporting)"
+    custommotionspeed:
+      name: "Motion Speed"
+
+switch:
+  - platform: mr24hpc1
+    underly_open_function:
+      name: Underlying Open Function Info Output Switch
