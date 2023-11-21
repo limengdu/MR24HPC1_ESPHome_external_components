@@ -1,8 +1,9 @@
 # mmwave-kit-external-components
 
+The master branch is now available!
 
-
-Under development, do not use until released.
+New firmware build page:
+https://limengdu.github.io/mmwave-kit-external-components/
 
 
 
