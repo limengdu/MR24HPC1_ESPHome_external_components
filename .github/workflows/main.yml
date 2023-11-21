@@ -23,7 +23,7 @@ jobs:
       - uses: esphome/build-action@v1.8.0
         id: esphome-build
         with:
-          yaml_file: mr24hpc1.yaml
+          yaml_file: example/mr24hpc1.yaml
           version: latest
       - name: Move generated files to output
         run: |
