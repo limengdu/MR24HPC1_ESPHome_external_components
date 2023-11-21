@@ -1,4 +1,4 @@
-#include "distance_resolution_select.h"
+#include "scene_mode_select.h"
 
 namespace esphome {
 namespace mr24hpc1 {
