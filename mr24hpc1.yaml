@@ -104,3 +104,8 @@ switch:
   - platform: mr24hpc1
     underly_open_function:
       name: Underlying Open Function Info Output Switch
+
+button:
+  - platform: mr24hpc1
+    reset:
+      name: "Module Reset"
