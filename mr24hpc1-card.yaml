@@ -7,6 +7,8 @@ views:
         cards:
           - type: entities
             entities:
+              - entity: button.seeedstudio_mmwave_kit_module_reset
+                name: Module Reset
               - entity: sensor.seeedstudio_mmwave_kit_hardware_model
                 name: Hardware Model
               - entity: sensor.seeedstudio_mmwave_kit_hardware_version

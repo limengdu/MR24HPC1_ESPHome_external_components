@@ -142,6 +142,9 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
 #ifdef USE_SWITCH
   SUB_SWITCH(underly_open_function)
 #endif
+#ifdef USE_BUTTON
+  SUB_BUTTON(reset)
+#endif
 
   private:
     char c_product_mode[PRODUCT_BUF_MAX_SIZE + 1];

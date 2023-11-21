@@ -70,6 +70,9 @@ void mr24hpc1Component::dump_config() {
 #ifdef USE_SWITCH
     LOG_SWITCH(" ", "underly_open_function", this->underly_open_function_switch_);
 #endif
+#ifdef USE_BUTTON
+    LOG_BUTTON(" ", "ResetButton", this->reset_button_);
+#endif
 }
 
 // Initialisation functions
