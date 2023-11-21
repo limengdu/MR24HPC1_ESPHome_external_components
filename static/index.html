@@ -22,6 +22,7 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  filter: brightness(50%) opacity(80%);
 }
 
 .content {
@@ -37,9 +38,15 @@ h1 {
   font-size: 2.5em;
 }
 
-p {
+p, .tutorial-steps {
   color: #666;
   font-size: 1.2em;
+}
+
+.tutorial-steps {
+  text-align: left;
+  padding-left: 1.5em;
+  line-height: 1.6;
 }
 </style>
 
@@ -50,6 +57,11 @@ p {
     <p>
       <esp-web-install-button manifest="mmwave-kit/manifest.json"></esp-web-install-button>
     </p>
+    <ol class="tutorial-steps">
+      <li>Connect the kit to your computer via a USB-C type cable.</li>
+      <li>Click the Connect button and select the port number device that has a JTAG name.</li>
+      <li>Flash Firmware. Simply click on INSTALL SEEED STUDIO MMWAVE KIT.</li>
+    </ol>
   </div>
 </body>
 </html>
