@@ -106,3 +106,8 @@ button:
   - platform: mr24hpc1
     reset:
       name: "Module Reset"
+
+select:
+  - platform: mr24hpc1
+    scene_mode:
+      name: "Scene Settings"

@@ -92,8 +92,17 @@ enum
     OUTPUT_SWTICH_ON,
     OUTPUT_SWTICH_OFF,
 };
+
+static const std::map<std::string, uint8_t> SCENEMODE_ENUM_TO_INT{
+  {"None", 0x00},
+  {"Living Room", 0x01},
+  {"Bedroom", 0x02},
+  {"Washroom", 0x03},
+  {"Area Detection", 0x04}
+};
+
 static const char* s_heartbeat_str[2] = {"Abnormal", "Normal"};
-static const char* s_scene_str[5] = {"None", "Living Room", "Area Detection", "Washroom", "Bedroom"};
+static const char* s_scene_str[5] = {"None", "Living Room", "Bedroom", "Washroom", "Area Detection"};
 static bool s_someoneExists_str[2] = {false, true};
 static const char* s_motion_status_str[3] = {"None", "Motionless", "Active"};
 static const char* s_keep_away_str[3] = {"None", "Close", "Away"};
@@ -145,6 +154,9 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
 #ifdef USE_BUTTON
   SUB_BUTTON(reset)
 #endif
+#ifdef USE_SELECT
+  SUB_SELECT(scene_mode)
+#endif
 
   private:
     char c_product_mode[PRODUCT_BUF_MAX_SIZE + 1];
@@ -173,6 +185,7 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
     void get_firmware_version(void);
     void get_human_status(void);
     void get_keep_away(void);
+    void set_scene_mode(const std::string &state);
     void set_underlying_open_function(bool enable);
 };
 

@@ -73,6 +73,9 @@ void mr24hpc1Component::dump_config() {
 #ifdef USE_BUTTON
     LOG_BUTTON(" ", "ResetButton", this->reset_button_);
 #endif
+#ifdef USE_SELECT
+    LOG_SELECT(" ", "SceneModeSelect", this->scene_mode_select_);
+#endif
 }
 
 // Initialisation functions
@@ -603,10 +606,9 @@ void mr24hpc1Component::R24_frame_parse_work_status(uint8_t *data)
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x07)
     {
-
-        // if (id(scene_mode).has_index(data[FRAME_DATA_INDEX] - 1))
+        // if (this->scene_mode_select_->has_index(data[FRAME_DATA_INDEX] - 1))
         // {
-        //     id(scene_mode).publish_state(s_scene_str[data[FRAME_DATA_INDEX] - 1]);
+        //     this->scene_mode_select_->publish_state(s_scene_str[data[FRAME_DATA_INDEX] - 1]);
         // }
         // else
         // {
@@ -629,15 +631,14 @@ void mr24hpc1Component::R24_frame_parse_work_status(uint8_t *data)
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x87)
     {
-
-        // if (id(scene_mode).has_index(data[FRAME_DATA_INDEX] - 1))
-        // {
-        //     id(scene_mode).publish_state(s_scene_str[data[FRAME_DATA_INDEX] - 1]);
-        // }
-        // else
-        // {
-        //     ESP_LOGD(TAG, "Select has index offset %d Error", data[FRAME_DATA_INDEX]);
-        // }
+        if (this->scene_mode_select_->has_index(data[FRAME_DATA_INDEX] - 1))
+        {
+            this->scene_mode_select_->publish_state(s_scene_str[data[FRAME_DATA_INDEX] - 1]);
+        }
+        else
+        {
+            ESP_LOGD(TAG, "Select has index offset %d Error", data[FRAME_DATA_INDEX]);
+        }
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x88)
     {
@@ -818,6 +819,14 @@ void mr24hpc1Component::set_underlying_open_function(bool enable)
     this->custom_motion_distance_sensor_->publish_state(0.0f);
     this->custom_presence_of_detection_sensor_->publish_state(0.0f);
     this->custom_motion_speed_sensor_->publish_state(0.0f);
+}
+
+void mr24hpc1Component::set_scene_mode(const std::string &state){
+    uint8_t cmd_value = SCENEMODE_ENUM_TO_INT.at(state);
+    if(cmd_value == 0x00)return;
+    uint8_t scenemodeArr[10] = {0x53, 0x59, 0x05, 0x07, 0x00, 0x01, cmd_value, 0x00, 0x54, 0x43};
+    scenemodeArr[7] = get_frame_crc_sum(scenemodeArr, sizeof(scenemodeArr));
+    this->send_query(scenemodeArr, sizeof(scenemodeArr));
 }
 
 }  // namespace empty_text_sensor
