@@ -27,7 +27,8 @@ body::before {
   content: "";
   background: url('https://wdcdn.qpic.cn/MTY4ODg1NjQ3NTM4MTE0Nw_945045_itSk-bn_kXk_tzHw_1693381542?w=1200&h=967&type=image/gif') no-repeat center center fixed;
   background-size: cover;
-  filter: brightness(50%) opacity(80%);
+  filter: brightness(70%) opacity(80%);
+  backdrop-filter: blur(10px);
   position: absolute;
   top: 0;
   left: 0;
@@ -40,7 +41,8 @@ body::before {
   text-align: center;
   box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.1);
   padding: 40px;
-  background: white;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
   position: relative;
 }
 
@@ -71,7 +73,7 @@ p, .tutorial-steps {
     <ol class="tutorial-steps">
       <li>Connect the kit to your computer via a USB-C type cable.</li>
       <li>Click the Connect button and select the port number device that has a JTAG name.</li>
-      <li>Flash Firmware. Simply click on INSTALL SEEED STUDIO MMWAVE KIT.</li>
+      <li>Flash Firmware. Simply click on <strong>INSTALL SEEED STUDIO MMWAVE KIT</strong>.</li>
     </ol>
   </div>
 </body>
