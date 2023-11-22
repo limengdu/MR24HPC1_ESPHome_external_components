@@ -76,6 +76,9 @@ void mr24hpc1Component::dump_config() {
 #ifdef USE_SELECT
     LOG_SELECT(" ", "SceneModeSelect", this->scene_mode_select_);
 #endif
+#ifdef USE_NUMBER
+    LOG_NUMBER(" ", "SensitivityNumber", this->sensitivity_number_);
+#endif
 }
 
 // Initialisation functions
@@ -122,7 +125,7 @@ void mr24hpc1Component::update() {
     else
     {
         sg_start_query_data = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
-        sg_start_query_data_max = STANDARD_FUNCTION_QUERY_KEEPAWAY_STATUS;
+        sg_start_query_data_max = STANDARD_FUNCTION_MAX;
     }
 }
 
@@ -195,8 +198,28 @@ void mr24hpc1Component::loop() {
             case STANDARD_FUNCTION_QUERY_KEEPAWAY_STATUS:
                 this->get_keep_away();
                 break;
+            case STANDARD_FUNCTION_QUERY_SCENE_MODE:
+                this->get_scene_mode();
+                break;
+            case STANDARD_FUNCTION_QUERY_SENSITIVITY:
+                this->get_sensitivity();
+                break;
+            // case STANDARD_FUNCTION_QUERY_MOV_TARGET_DETECTION_MAX_DISTANCE:
+            //     this->get_movingTargetDetectionMaxDistance();
+            //     break;
+            // case STANDARD_FUNCTION_QUERY_STATIC_TARGET_DETECTION_MAX_DISTANCE:
+            //     this->get_staticTargetDetectionMaxDistance();
+            //     break;
+            // case STANDARD_FUNCTION_QUERY_UNMANNED_TIME:
+            //     this->get_unmanned_time();
+            //     break;
+            // case STANDARD_FUNCTION_QUERY_RADAR_OUITPUT_INFORMATION_SWITCH:
+            //     this->get_radar_output_information_switch();
+            //     break;
             case STANDARD_FUNCTION_MAX:
                 this->get_heartbeat_packet();
+                break;
+            default:
                 break;
         }
         sg_start_query_data++;
@@ -606,19 +629,19 @@ void mr24hpc1Component::R24_frame_parse_work_status(uint8_t *data)
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x07)
     {
-        // if (this->scene_mode_select_->has_index(data[FRAME_DATA_INDEX] - 1))
-        // {
-        //     this->scene_mode_select_->publish_state(s_scene_str[data[FRAME_DATA_INDEX] - 1]);
-        // }
-        // else
-        // {
-        //     ESP_LOGD(TAG, "Select has index offset %d Error", data[FRAME_DATA_INDEX]);
-        // }
+        if (this->scene_mode_select_->has_index(data[FRAME_DATA_INDEX] - 1))
+        {
+            this->scene_mode_select_->publish_state(s_scene_str[data[FRAME_DATA_INDEX] - 1]);
+        }
+        else
+        {
+            ESP_LOGD(TAG, "Select has index offset %d Error", data[FRAME_DATA_INDEX]);
+        }
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x08)
     {
         // 1-3
-        // id(sensitivity).publish_state(data[FRAME_DATA_INDEX]);
+        this->sensitivity_number_->publish_state(data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x09)
     {
@@ -642,7 +665,7 @@ void mr24hpc1Component::R24_frame_parse_work_status(uint8_t *data)
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x88)
     {
-        // id(sensitivity).publish_state(data[FRAME_DATA_INDEX]);
+        this->sensitivity_number_->publish_state(data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x89)
     {
@@ -829,5 +852,27 @@ void mr24hpc1Component::set_scene_mode(const std::string &state){
     this->send_query(scenemodeArr, sizeof(scenemodeArr));
 }
 
-}  // namespace empty_text_sensor
+void mr24hpc1Component::set_sensitivity(int value) {
+    if(value == 0x00)return;
+    unsigned char send_data_len = 10;
+    unsigned char send_data[10] = {0x53, 0x59, 0x05, 0x08, 0x00, 0x01, value, 0x00, 0x54, 0x43};
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
+    this->send_query(send_data, send_data_len);
+}
+
+void mr24hpc1Component::get_scene_mode(void){
+    unsigned char send_data_len = 10;
+    unsigned char send_data[10] = {0x53, 0x59, 0x05, 0x87, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+    send_data[FRAME_DATA_INDEX + 1] = get_frame_crc_sum(send_data, send_data_len);
+    this->send_query(send_data, send_data_len);
+}
+
+void UartReadLineSensor::get_sensitivity(void){
+    unsigned char send_data_len = 10;
+    unsigned char send_data[10] = {0x53, 0x59, 0x05, 0x88, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+    send_data[FRAME_DATA_INDEX + 1] = get_frame_crc_sum(send_data, send_data_len);
+    this->send_query(send_data, send_data_len);
+}
+
+}  // namespace mr24hpc1
 }  // namespace esphome

@@ -67,7 +67,6 @@ enum
     STANDARD_FUNCTION_QUERY_KEEPAWAY_STATUS,
     STANDARD_FUNCTION_QUERY_SCENE_MODE,
     STANDARD_FUNCTION_QUERY_SENSITIVITY,
-    STANDARD_FUNCTION_QUERY_RADAR_INIT_STATUS,
     STANDARD_FUNCTION_QUERY_MOV_TARGET_DETECTION_MAX_DISTANCE,
     STANDARD_FUNCTION_QUERY_STATIC_TARGET_DETECTION_MAX_DISTANCE,
     STANDARD_FUNCTION_QUERY_UNMANNED_TIME,
@@ -157,6 +156,9 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
 #ifdef USE_SELECT
   SUB_SELECT(scene_mode)
 #endif
+#ifdef USE_NUMBER
+  SUB_NUMBER(sensitivity)
+#endif
 
   private:
     char c_product_mode[PRODUCT_BUF_MAX_SIZE + 1];
@@ -187,6 +189,9 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
     void get_keep_away(void);
     void set_scene_mode(const std::string &state);
     void set_underlying_open_function(bool enable);
+    void set_sensitivity(int value);
+    void get_scene_mode(void);
+    void get_sensitivity(void);
 };
 
 }  // namespace mr24hpc1
