@@ -11,7 +11,7 @@ class SensitivityNumber : public number::Number, public Parented<mr24hpc1Compone
         SensitivityNumber() = default;
 
     protected:
-        void control(int value) override;
+        void control(uint8_t value) override;
 };
 
 }  // namespace mr24hpc1

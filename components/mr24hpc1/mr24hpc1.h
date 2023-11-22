@@ -189,7 +189,7 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
     void get_keep_away(void);
     void set_scene_mode(const std::string &state);
     void set_underlying_open_function(bool enable);
-    void set_sensitivity(int value);
+    void set_sensitivity(uint8_t value);
     void get_scene_mode(void);
     void get_sensitivity(void);
 };

@@ -3,7 +3,7 @@
 namespace esphome {
 namespace mr24hpc1 {
 
-void SensitivityNumber::control(int value) {
+void SensitivityNumber::control(uint8_t value) {
   this->publish_state(value);
   this->parent_->set_sensitivity(value);
 }

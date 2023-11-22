@@ -845,17 +845,17 @@ void mr24hpc1Component::set_underlying_open_function(bool enable)
 }
 
 void mr24hpc1Component::set_scene_mode(const std::string &state){
-    uint8_t cmd_value = SCENEMODE_ENUM_TO_INT.at(state);
     if(cmd_value == 0x00)return;
+    uint8_t cmd_value = SCENEMODE_ENUM_TO_INT.at(state);
     uint8_t scenemodeArr[10] = {0x53, 0x59, 0x05, 0x07, 0x00, 0x01, cmd_value, 0x00, 0x54, 0x43};
     scenemodeArr[7] = get_frame_crc_sum(scenemodeArr, sizeof(scenemodeArr));
     this->send_query(scenemodeArr, sizeof(scenemodeArr));
 }
 
-void mr24hpc1Component::set_sensitivity(int value) {
+void mr24hpc1Component::set_sensitivity(uint8_t value) {
     if(value == 0x00)return;
-    unsigned char send_data_len = 10;
-    unsigned char send_data[10] = {0x53, 0x59, 0x05, 0x08, 0x00, 0x01, value, 0x00, 0x54, 0x43};
+    uint8_t send_data_len = 10;
+    uint8_t send_data[10] = {0x53, 0x59, 0x05, 0x08, 0x00, 0x01, value, 0x00, 0x54, 0x43};
     send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
 }
@@ -868,7 +868,7 @@ void mr24hpc1Component::get_scene_mode(void){
 }
 
 void UartReadLineSensor::get_sensitivity(void){
-    unsigned char send_data_len = 10;
+    unsigned int send_data_len = 10;
     unsigned char send_data[10] = {0x53, 0x59, 0x05, 0x88, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
     send_data[FRAME_DATA_INDEX + 1] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
