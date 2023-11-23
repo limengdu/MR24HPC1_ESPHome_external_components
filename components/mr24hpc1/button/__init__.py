@@ -9,7 +9,7 @@ from esphome.const import (
 from .. import CONF_MR24HPC1_ID, mr24hpc1Component, mr24hpc1_ns
 
 ResetButton = mr24hpc1_ns.class_("ResetButton", button.Button)
-CustomSetEnd = mr24hpc1_ns.class_("CustomSetEnd", button.Button)
+CustomSetEndButton = mr24hpc1_ns.class_("CustomSetEndButton", button.Button)
 
 CONF_RESET = "reset"
 CONF_CUSTOMSETEND = "customsetend"
@@ -23,7 +23,7 @@ CONFIG_SCHEMA = {
         icon=ICON_RESTART_ALERT,
     ),
     cv.Optional(CONF_CUSTOMSETEND): button.button_schema(
-        CustomSetEnd,
+        CustomSetEndButton,
         entity_category=ENTITY_CATEGORY_CONFIG,
         icon="mdi:cog",
     ),

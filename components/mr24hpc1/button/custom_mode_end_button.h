@@ -6,9 +6,9 @@
 namespace esphome {
 namespace mr24hpc1 {
 
-class CustomModeEndButton : public button::Button, public Parented<mr24hpc1Component> {
+class CustomSetEndButton : public button::Button, public Parented<mr24hpc1Component> {
     public:
-        CustomModeEndButton() = default;
+        CustomSetEndButton() = default;
 
     protected:
         void press_action() override;

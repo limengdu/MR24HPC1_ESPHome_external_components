@@ -3,7 +3,7 @@
 namespace esphome {
 namespace mr24hpc1 {
 
-void CustomModeEndButton::press_action() {
+void CustomSetEndButton::press_action() {
     this->parent_->set_custom_end_mode();
 }
 
