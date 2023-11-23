@@ -75,6 +75,7 @@ void mr24hpc1Component::dump_config() {
 #endif
 #ifdef USE_SELECT
     LOG_SELECT(" ", "SceneModeSelect", this->scene_mode_select_);
+    LOG_SELECT(" ", "UnmanTimeSelect", this->unman_time_select_);
 #endif
 #ifdef USE_NUMBER
     LOG_NUMBER(" ", "SensitivityNumber", this->sensitivity_number_);
@@ -204,15 +205,16 @@ void mr24hpc1Component::loop() {
             case STANDARD_FUNCTION_QUERY_SENSITIVITY:
                 this->get_sensitivity();
                 break;
+            case STANDARD_FUNCTION_QUERY_UNMANNED_TIME:
+                this->get_unmanned_time();
+                break;
             // case STANDARD_FUNCTION_QUERY_MOV_TARGET_DETECTION_MAX_DISTANCE:
             //     this->get_movingTargetDetectionMaxDistance();
             //     break;
             // case STANDARD_FUNCTION_QUERY_STATIC_TARGET_DETECTION_MAX_DISTANCE:
             //     this->get_staticTargetDetectionMaxDistance();
             //     break;
-            // case STANDARD_FUNCTION_QUERY_UNMANNED_TIME:
-            //     this->get_unmanned_time();
-            //     break;
+            
             // case STANDARD_FUNCTION_QUERY_RADAR_OUITPUT_INFORMATION_SWITCH:
             //     this->get_radar_output_information_switch();
             //     break;
@@ -698,10 +700,10 @@ void mr24hpc1Component::R24_frame_parse_human_information(uint8_t *data)
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0A)
     {
         // none:0x00  1s:0x01 30s:0x02 1min:0x03 2min:0x04 5min:0x05 10min:0x06 30min:0x07 1hour:0x08
-        // if (data[FRAME_DATA_INDEX] < 9 && data[FRAME_DATA_INDEX] >= 0)
-        // {
-        //     id(unmanned_time).publish_state(s_unmanned_time_str[data[FRAME_DATA_INDEX]]);
-        // }
+        if (data[FRAME_DATA_INDEX] < 9 && data[FRAME_DATA_INDEX] >= 0)
+        {
+            this->unman_time_select_->publish_state(s_unmanned_time_str[data[FRAME_DATA_INDEX]]);
+        }
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0B)
     {
@@ -729,10 +731,10 @@ void mr24hpc1Component::R24_frame_parse_human_information(uint8_t *data)
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x8A)
     {
         // none:0x00  1s:0x01 30s:0x02 1min:0x03 2min:0x04 5min:0x05 10min:0x06 30min:0x07 1hour:0x08
-        // if (data[FRAME_DATA_INDEX] < 9 && data[FRAME_DATA_INDEX] >= 0)
-        // {
-        //     id(unmanned_time).publish_state(s_unmanned_time_str[data[FRAME_DATA_INDEX]]);
-        // }
+        if (data[FRAME_DATA_INDEX] < 9 && data[FRAME_DATA_INDEX] >= 0)
+        {
+            this->unman_time_select_->publish_state(s_unmanned_time_str[data[FRAME_DATA_INDEX]]);
+        }
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x8B)
     {
@@ -829,6 +831,28 @@ void mr24hpc1Component::get_keep_away(void)
     this->send_query(send_data, send_data_len);
 }
 
+void mr24hpc1Component::get_scene_mode(void){
+    unsigned char send_data_len = 10;
+    unsigned char send_data[10] = {0x53, 0x59, 0x05, 0x87, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+    send_data[FRAME_DATA_INDEX + 1] = get_frame_crc_sum(send_data, send_data_len);
+    this->send_query(send_data, send_data_len);
+}
+
+void mr24hpc1Component::get_sensitivity(void){
+    unsigned int send_data_len = 10;
+    unsigned char send_data[10] = {0x53, 0x59, 0x05, 0x88, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+    send_data[FRAME_DATA_INDEX + 1] = get_frame_crc_sum(send_data, send_data_len);
+    this->send_query(send_data, send_data_len);
+}
+
+void mr24hpc1Component::get_unmanned_time(void)
+{
+    unsigned char send_data_len = 10;
+    unsigned char send_data[10] = {0x53, 0x59, 0x80, 0x8a, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+    send_data[FRAME_DATA_INDEX + 1] = get_frame_crc_sum(send_data, send_data_len);
+    this->send_query(send_data, send_data_len);
+}
+
 void mr24hpc1Component::set_underlying_open_function(bool enable)
 {
     uint8_t underlyswitch_on[] = {0x53, 0x59, 0x08, 0x00, 0x00, 0x01, 0x01, 0xB6, 0x54, 0x43};
@@ -860,17 +884,11 @@ void mr24hpc1Component::set_sensitivity(uint8_t value) {
     this->send_query(send_data, send_data_len);
 }
 
-void mr24hpc1Component::get_scene_mode(void){
-    unsigned char send_data_len = 10;
-    unsigned char send_data[10] = {0x53, 0x59, 0x05, 0x87, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
-    send_data[FRAME_DATA_INDEX + 1] = get_frame_crc_sum(send_data, send_data_len);
-    this->send_query(send_data, send_data_len);
-}
-
-void mr24hpc1Component::get_sensitivity(void){
-    unsigned int send_data_len = 10;
-    unsigned char send_data[10] = {0x53, 0x59, 0x05, 0x88, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
-    send_data[FRAME_DATA_INDEX + 1] = get_frame_crc_sum(send_data, send_data_len);
+void mr24hpc1Component::set_unman_time(const std::string &time){
+    uint8_t cmd_value = UNMANDTIME_ENUM_TO_INT.at(time);
+    uint8_t send_data_len = 10;
+    uint8_t send_data[10] = {0x53, 0x59, 0x80, 0x0a, 0x00, 0x01, cmd_value, 0x00, 0x54, 0x43};
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
 }
 

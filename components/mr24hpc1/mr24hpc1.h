@@ -67,9 +67,9 @@ enum
     STANDARD_FUNCTION_QUERY_KEEPAWAY_STATUS,
     STANDARD_FUNCTION_QUERY_SCENE_MODE,
     STANDARD_FUNCTION_QUERY_SENSITIVITY,
+    STANDARD_FUNCTION_QUERY_UNMANNED_TIME,
     STANDARD_FUNCTION_QUERY_MOV_TARGET_DETECTION_MAX_DISTANCE,
     STANDARD_FUNCTION_QUERY_STATIC_TARGET_DETECTION_MAX_DISTANCE,
-    STANDARD_FUNCTION_QUERY_UNMANNED_TIME,
     STANDARD_FUNCTION_QUERY_RADAR_OUITPUT_INFORMATION_SWITCH,
     STANDARD_FUNCTION_MAX,
 
@@ -100,12 +100,24 @@ static const std::map<std::string, uint8_t> SCENEMODE_ENUM_TO_INT{
   {"Area Detection", 0x04}
 };
 
+static const std::map<std::string, uint8_t> UNMANDTIME_ENUM_TO_INT{
+  {"None", 0x00},
+  {"10s", 0x01},
+  {"30s", 0x02},
+  {"1min", 0x03},
+  {"2min", 0x04},
+  {"5min", 0x05},
+  {"10min", 0x06},
+  {"30min", 0x07},
+  {"60min", 0x08}
+};
+
 static const char* s_heartbeat_str[2] = {"Abnormal", "Normal"};
 static const char* s_scene_str[5] = {"None", "Living Room", "Bedroom", "Washroom", "Area Detection"};
 static bool s_someoneExists_str[2] = {false, true};
 static const char* s_motion_status_str[3] = {"None", "Motionless", "Active"};
 static const char* s_keep_away_str[3] = {"None", "Close", "Away"};
-static int s_unmanned_time_str[9] = {0, 10, 30, 60, 120, 300, 600, 1800, 3600};   // unit: s
+static const char* s_unmanned_time_str[9] = {"None", "10s", "30s", "1min", "2min", "5min", "10min", "30min", "60min"};
 static float s_motion_trig_boundary_str[10] = {0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0};  // unit: m
 static float s_presence_of_perception_boundary_str[10] = {0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0}; // uint: m
 static float s_presence_of_detection_range_str[7] = {0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0};  // uint: m
@@ -155,6 +167,7 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
 #endif
 #ifdef USE_SELECT
   SUB_SELECT(scene_mode)
+  SUB_SELECT(unman_time)
 #endif
 #ifdef USE_NUMBER
   SUB_NUMBER(sensitivity)
@@ -187,11 +200,13 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
     void get_firmware_version(void);
     void get_human_status(void);
     void get_keep_away(void);
+    void get_scene_mode(void);
+    void get_sensitivity(void);
+    void get_unmanned_time(void);
     void set_scene_mode(const std::string &state);
     void set_underlying_open_function(bool enable);
     void set_sensitivity(uint8_t value);
-    void get_scene_mode(void);
-    void get_sensitivity(void);
+    void set_unman_time(const std::string &time);
 };
 
 }  // namespace mr24hpc1
