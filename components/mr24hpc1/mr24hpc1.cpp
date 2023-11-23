@@ -77,6 +77,8 @@ void mr24hpc1Component::dump_config() {
 #ifdef USE_SELECT
     LOG_SELECT(" ", "SceneModeSelect", this->scene_mode_select_);
     LOG_SELECT(" ", "UnmanTimeSelect", this->unman_time_select_);
+    LOG_SELECT(" ", "ExistenceBoundarySelect", this->existence_boundary_select_);
+    LOG_SELECT(" ", "MotionBoundarySelect", this->motion_boundary_select_);
 #endif
 #ifdef USE_NUMBER
     LOG_NUMBER(" ", "SensitivityNumber", this->sensitivity_number_);
@@ -457,17 +459,17 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0a)
     {
-        // if (id(custom_presence_of_perception_boundary).has_index(data[FRAME_DATA_INDEX] - 1))
-        // {
-        //     id(custom_presence_of_perception_boundary).publish_state(s_presence_of_perception_boundary_str[data[FRAME_DATA_INDEX] - 1]);
-        // }
+        if (this->existence_boundary_select_->has_index(data[FRAME_DATA_INDEX] - 1))
+        {
+            this->existence_boundary_select_->publish_state(s_boundary_str[data[FRAME_DATA_INDEX] - 1]);
+        }
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0b)
     {
-        // if (id(custom_motion_trigger_boundary).has_index(data[FRAME_DATA_INDEX] - 1))
-        // {
-        //     id(custom_motion_trigger_boundary).publish_state(s_motion_trig_boundary_str[data[FRAME_DATA_INDEX] - 1]);
-        // }
+        if (this->motion_boundary_select_->has_index(data[FRAME_DATA_INDEX] - 1))
+        {
+            this->motion_boundary_select_->publish_state(s_boundary_str[data[FRAME_DATA_INDEX] - 1]);
+        }
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0c)
     {
@@ -542,17 +544,17 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x8a)
     {
-        // if (id(custom_presence_of_perception_boundary).has_index(data[FRAME_DATA_INDEX] - 1))
-        // {
-        //     id(custom_presence_of_perception_boundary).publish_state(s_presence_of_perception_boundary_str[data[FRAME_DATA_INDEX] - 1]);
-        // }
+        if (this->existence_boundary_select_->has_index(data[FRAME_DATA_INDEX] - 1))
+        {
+            this->existence_boundary_select_->publish_state(s_boundary_str[data[FRAME_DATA_INDEX] - 1]);
+        }
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x8b)
     {
-        // if (id(custom_motion_trigger_boundary).has_index(data[FRAME_DATA_INDEX] - 1))
-        // {
-        //     id(custom_motion_trigger_boundary).publish_state(s_motion_trig_boundary_str[data[FRAME_DATA_INDEX] - 1]);
-        // }
+        if (this->motion_boundary_select_->has_index(data[FRAME_DATA_INDEX] - 1))
+        {
+            this->motion_boundary_select_->publish_state(s_boundary_str[data[FRAME_DATA_INDEX] - 1]);
+        }
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x8c)
     {
@@ -908,6 +910,22 @@ void mr24hpc1Component::set_custom_end_mode(void){
     uint8_t send_data[10] = {0x53, 0x59, 0x05, 0x0a, 0x00, 0x01, 0x0F, 0xCB, 0x54, 0x43};
     this->send_query(send_data, send_data_len);
     this->custom_mode_number_->publish_state(0);
+}
+
+void mr24hpc1Component::set_existence_boundary(const std::string &value){
+    uint8_t cmd_value = BOUNDARY_ENUM_TO_INT.at(value);
+    uint8_t send_data_len = 10;
+    uint8_t send_data[10] = {0x53, 0x59, 0x08, 0x08, 0x00, 0x01, cmd_value, 0x00, 0x54, 0x43};
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
+    this->send_query(send_data, send_data_len);
+}
+
+void mr24hpc1Component::set_motion_boundary(const std::string &value){
+    uint8_t cmd_value = BOUNDARY_ENUM_TO_INT.at(value);
+    uint8_t send_data_len = 10;
+    uint8_t send_data[10] = {0x53, 0x59, 0x08, 0x09, 0x00, 0x01, cmd_value, 0x00, 0x54, 0x43};
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
+    this->send_query(send_data, send_data_len);
 }
 
 }  // namespace mr24hpc1

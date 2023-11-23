@@ -112,14 +112,26 @@ static const std::map<std::string, uint8_t> UNMANDTIME_ENUM_TO_INT{
   {"60min", 0x08}
 };
 
+static const std::map<std::string, uint8_t> BOUNDARY_ENUM_TO_INT{
+  {"0.5m", 0x01},
+  {"1.0m", 0x02},
+  {"1.5m", 0x03},
+  {"2.0m", 0x04},
+  {"2.5m", 0x05},
+  {"3.0m", 0x06},
+  {"3.5m", 0x07},
+  {"4.0m", 0x08},
+  {"4.5m", 0x09},
+  {"5.0m", 0x0a},
+};
+
 static const char* s_heartbeat_str[2] = {"Abnormal", "Normal"};
 static const char* s_scene_str[5] = {"None", "Living Room", "Bedroom", "Washroom", "Area Detection"};
 static bool s_someoneExists_str[2] = {false, true};
 static const char* s_motion_status_str[3] = {"None", "Motionless", "Active"};
 static const char* s_keep_away_str[3] = {"None", "Close", "Away"};
 static const char* s_unmanned_time_str[9] = {"None", "10s", "30s", "1min", "2min", "5min", "10min", "30min", "60min"};
-static float s_motion_trig_boundary_str[10] = {0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0};  // unit: m
-static float s_presence_of_perception_boundary_str[10] = {0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0}; // uint: m
+static const char* s_boundary_str[10] = {"0.5m", "1.0m", "1.5m", "2.0m", "2.5m", "3.0m", "3.5m", "4.0m", "4.5m", "5.0m"}; // uint: m
 static float s_presence_of_detection_range_str[7] = {0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0};  // uint: m
 
 static uint8_t s_output_info_switch_flag = OUTPUT_SWITCH_INIT;
@@ -169,6 +181,8 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
 #ifdef USE_SELECT
   SUB_SELECT(scene_mode)
   SUB_SELECT(unman_time)
+  SUB_SELECT(existence_boundary)
+  SUB_SELECT(motion_boundary)
 #endif
 #ifdef USE_NUMBER
   SUB_NUMBER(sensitivity)
@@ -211,6 +225,8 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
     void set_unman_time(const std::string &time);
     void set_custom_mode(uint8_t mode);
     void set_custom_end_mode(void);
+    void set_existence_boundary(const std::string &value);
+    void set_motion_boundary(const std::string &value);
 };
 
 }  // namespace mr24hpc1

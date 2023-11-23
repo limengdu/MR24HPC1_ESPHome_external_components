@@ -6,9 +6,9 @@
 namespace esphome {
 namespace mr24hpc1 {
 
-class SceneModeSelect : public select::Select, public Parented<mr24hpc1Component> {
+class MotionBoundarySelect : public select::Select, public Parented<mr24hpc1Component> {
     public:
-        SceneModeSelect() = default;
+        MotionBoundarySelect() = default;
 
     protected:
         void control(const std::string &value) override;

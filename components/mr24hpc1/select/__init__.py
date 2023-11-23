@@ -8,9 +8,13 @@ from .. import CONF_MR24HPC1_ID, mr24hpc1Component, mr24hpc1_ns
 
 SceneModeSelect = mr24hpc1_ns.class_("SceneModeSelect", select.Select)
 UnmanTimeSelect = mr24hpc1_ns.class_("UnmanTimeSelect", select.Select)
+ExistenceBoundarySelect = mr24hpc1_ns.class_("ExistenceBoundarySelect", select.Select)
+MotionBoundarySelect = mr24hpc1_ns.class_("MotionBoundarySelect", select.Select)
 
 CONF_SCENEMODE = "scene_mode"
 CONF_UNMANTIME = "unman_time"
+CONF_EXISTENCEBOUNDARY = "existence_boundary"
+CONF_MOTIONBOUNDARY = "motion_boundary"
 
 CONFIG_SCHEMA = {
     cv.GenerateID(CONF_MR24HPC1_ID): cv.use_id(mr24hpc1Component),
@@ -23,7 +27,15 @@ CONFIG_SCHEMA = {
         UnmanTimeSelect,
         entity_category=ENTITY_CATEGORY_CONFIG,
         icon="mdi:timeline-clock",
-    )
+    ),
+    cv.Optional(CONF_EXISTENCEBOUNDARY): select.select_schema(
+        ExistenceBoundarySelect,
+        entity_category=ENTITY_CATEGORY_CONFIG,
+    ),
+    cv.Optional(CONF_MOTIONBOUNDARY): select.select_schema(
+        MotionBoundarySelect,
+        entity_category=ENTITY_CATEGORY_CONFIG,
+    ),
 }
 
 
@@ -41,3 +53,15 @@ async def to_code(config):
         )
         await cg.register_parented(s, config[CONF_MR24HPC1_ID])
         cg.add(mr24hpc1_component.set_unman_time_select(s))
+    if existence_boundary_config := config.get(CONF_EXISTENCEBOUNDARY):
+        s = await select.new_select(
+            existence_boundary_config, options=["0.5m", "1.0m", "1.5m", "2.0m", "2.5m", "3.0m", "3.5m", "4.0m", "4.5m", "5.0m"]
+        )
+        await cg.register_parented(s, config[CONF_MR24HPC1_ID])
+        cg.add(mr24hpc1_component.set_existence_boundary_select(s))
+    if motion_boundary_config := config.get(CONF_MOTIONBOUNDARY):
+        s = await select.new_select(
+            motion_boundary_config, options=["0.5m", "1.0m", "1.5m", "2.0m", "2.5m", "3.0m", "3.5m", "4.0m", "4.5m", "5.0m"]
+        )
+        await cg.register_parented(s, config[CONF_MR24HPC1_ID])
+        cg.add(mr24hpc1_component.set_motion_boundary_select(s))
