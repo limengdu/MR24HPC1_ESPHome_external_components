@@ -111,3 +111,10 @@ select:
   - platform: mr24hpc1
     scene_mode:
       name: "Scene Settings"
+    unman_time:
+      name: "Time For Entering No Person State Setting (Standard Function)"
+
+number:
+  - platform: mr24hpc1
+    sensitivity:
+      name: "Sensitivity Settings"
