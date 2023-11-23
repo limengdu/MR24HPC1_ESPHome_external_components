@@ -90,7 +90,7 @@ void mr24hpc1Component::setup() {
     sg_init_flag = true;
     ESP_LOGCONFIG(TAG, "uart_settings is 115200");
     this->check_uart_settings(115200);
-    this->custom_mode_number_->public_state(0);
+    this->custom_mode_number_->publish_state(0);
 
     memset(this->c_product_mode, 0, PRODUCT_BUF_MAX_SIZE);
     memset(this->c_product_id, 0, PRODUCT_BUF_MAX_SIZE);
