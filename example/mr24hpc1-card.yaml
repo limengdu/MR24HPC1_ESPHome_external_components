@@ -26,6 +26,8 @@ views:
             entities:
               - entity: select.seeedstudio_mmwave_kit_scene_settings
                 name: Scene Settings
+              - entity: number.seeedstudio_mmwave_kit_sensitivity_settings
+                name: Sensitivity Settings
               - entity: binary_sensor.seeedstudio_mmwave_kit_presence_information
                 name: Presence Information
               - entity: sensor.seeedstudio_mmwave_kit_motion_information
