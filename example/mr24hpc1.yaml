@@ -106,6 +106,8 @@ button:
   - platform: mr24hpc1
     reset:
       name: "Module Reset"
+    customsetend:
+      name: "End Of Custom Mode Settings"
 
 select:
   - platform: mr24hpc1
@@ -118,3 +120,5 @@ number:
   - platform: mr24hpc1
     sensitivity:
       name: "Sensitivity Settings"
+    custommode:
+      name: "Custom Mode Settings"

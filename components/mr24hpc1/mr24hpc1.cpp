@@ -72,6 +72,7 @@ void mr24hpc1Component::dump_config() {
 #endif
 #ifdef USE_BUTTON
     LOG_BUTTON(" ", "ResetButton", this->reset_button_);
+    LOG_BUTTON(" ", "CustomSetEnd", this->custom_set_end_button_);
 #endif
 #ifdef USE_SELECT
     LOG_SELECT(" ", "SceneModeSelect", this->scene_mode_select_);
@@ -79,6 +80,7 @@ void mr24hpc1Component::dump_config() {
 #endif
 #ifdef USE_NUMBER
     LOG_NUMBER(" ", "SensitivityNumber", this->sensitivity_number_);
+    LOG_NUMBER(" ", "CustomModeNumber", this->custom_mode_number_);
 #endif
 }
 
@@ -108,7 +110,7 @@ void mr24hpc1Component::update() {
     {
         if (s_output_info_switch_flag == OUTPUT_SWITCH_INIT)  // Power-up status check first item
         {
-            sg_start_query_data = CUSTOM_FUNCTION_QUERY_RADAR_OUITPUT_INFORMATION_SWITCH;  // Custom function to query radar output information switch
+            sg_start_query_data = CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH;  // Custom function to query radar output information switch
             sg_start_query_data_max = CUSTOM_FUNCTION_MAX;
         }
         else if (s_output_info_switch_flag == OUTPUT_SWTICH_OFF)  // When the bottom open parameter button is closed, the power-up status checks the second item
@@ -118,7 +120,7 @@ void mr24hpc1Component::update() {
         }
         else if (s_output_info_switch_flag == OUTPUT_SWTICH_ON)   // When the bottom open parameter button is on, the power-up state checks the second item
         {
-            sg_start_query_data = CUSTOM_FUNCTION_QUERY_RADAR_OUITPUT_INFORMATION_SWITCH;
+            sg_start_query_data = CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH;
             sg_start_query_data_max = CUSTOM_FUNCTION_MAX;
         }
         s_power_on_status++;  // There are a total of four inspections
@@ -142,7 +144,7 @@ void mr24hpc1Component::loop() {
     }
 
     // !s_output_info_switch_flag = !OUTPUT_SWITCH_INIT = !0 = 1  (Power-up check first item - check if the underlying open parameters are turned on)
-    if (!s_output_info_switch_flag && sg_start_query_data == CUSTOM_FUNCTION_QUERY_RADAR_OUITPUT_INFORMATION_SWITCH)
+    if (!s_output_info_switch_flag && sg_start_query_data == CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH)
     {
         // Check if the button for the underlying open parameter is on, if so
         this->get_radar_output_information_switch();  // This function in conjunction with R24_split_data_frame changes the state of the s_output_info_switch_flag, ON or OFF.
@@ -648,7 +650,7 @@ void mr24hpc1Component::R24_frame_parse_work_status(uint8_t *data)
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x09)
     {
         // 1-4
-        // id(custom_mode_settings).publish_state(data[FRAME_DATA_INDEX]);
+        this->custom_mode_number_->publish_state(data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x81)
     {
@@ -672,7 +674,7 @@ void mr24hpc1Component::R24_frame_parse_work_status(uint8_t *data)
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x89)
     {
         // 1-4
-        // id(custom_mode_settings).publish_state(data[FRAME_DATA_INDEX]);
+        this->custom_mode_number_->publish_state(data[FRAME_DATA_INDEX]);
     }
     else
     {
@@ -890,6 +892,20 @@ void mr24hpc1Component::set_unman_time(const std::string &time){
     uint8_t send_data[10] = {0x53, 0x59, 0x80, 0x0a, 0x00, 0x01, cmd_value, 0x00, 0x54, 0x43};
     send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
+}
+
+void mr24hpc1Component::set_custom_mode(uint8_t mode){
+    uint8_t send_data_len = 10;
+    uint8_t send_data[10] = {0x53, 0x59, 0x05, 0x09, 0x00, 0x01, mode, 0x00, 0x54, 0x43};
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
+    this->send_query(send_data, send_data_len);
+}
+
+void mr24hpc1Component::set_custom_end_mode(void){
+    uint8_t send_data_len = 10;
+    uint8_t send_data[10] = {0x53, 0x59, 0x05, 0x0a, 0x00, 0x01, 0x0F, 0xCB, 0x54, 0x43};
+    this->send_query(send_data, send_data_len);
+    this->custom_mode_number_->publish_state(0);
 }
 
 }  // namespace mr24hpc1

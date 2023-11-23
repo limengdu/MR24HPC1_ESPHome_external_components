@@ -73,7 +73,7 @@ enum
     STANDARD_FUNCTION_QUERY_RADAR_OUITPUT_INFORMATION_SWITCH,
     STANDARD_FUNCTION_MAX,
 
-    CUSTOM_FUNCTION_QUERY_RADAR_OUITPUT_INFORMATION_SWITCH,
+    CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH,
     CUSTOM_FUNCTION_QUERY_PRESENCE_OF_DETECTION_RANGE,
     CUSTOM_FUNCTION_QUERY_JUDGMENT_THRESHOLD_EXISTS,
     CUSTOM_FUNCTION_QUERY_MOTION_AMPLITUDE_TRIGGER_THRESHOLD,
@@ -164,6 +164,7 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
 #endif
 #ifdef USE_BUTTON
   SUB_BUTTON(reset)
+  SUB_BUTTON(custom_set_end)
 #endif
 #ifdef USE_SELECT
   SUB_SELECT(scene_mode)
@@ -171,6 +172,7 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
 #endif
 #ifdef USE_NUMBER
   SUB_NUMBER(sensitivity)
+  SUB_NUMBER(custom_mode)
 #endif
 
   private:
@@ -207,6 +209,8 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
     void set_underlying_open_function(bool enable);
     void set_sensitivity(uint8_t value);
     void set_unman_time(const std::string &time);
+    void set_custom_mode(uint8_t mode);
+    void set_custom_end_mode(void);
 };
 
 }  // namespace mr24hpc1

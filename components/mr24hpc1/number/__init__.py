@@ -7,8 +7,10 @@ from esphome.const import (
 from .. import CONF_MR24HPC1_ID, mr24hpc1Component, mr24hpc1_ns
 
 SensitivityNumber = mr24hpc1_ns.class_("SensitivityNumber", number.Number)
+CustomModeNumber = mr24hpc1_ns.class_("CustomModeNumber", number.Number)
 
 CONF_SENSITIVE = "sensitivity"
+CONF_CUSTOMMODE = "custommode"
 
 CONFIG_SCHEMA = cv.Schema(
     {
@@ -17,6 +19,11 @@ CONFIG_SCHEMA = cv.Schema(
             SensitivityNumber,
             entity_category=ENTITY_CATEGORY_CONFIG,
             icon="mdi:archive-check-outline",
+        ),
+        cv.Optional(CONF_CUSTOMMODE): number.number_schema(
+            CustomModeNumber,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+            icon="mdi:cog",
         ),
     }
 )
@@ -30,3 +37,9 @@ async def to_code(config):
         )
         await cg.register_parented(n, config[CONF_MR24HPC1_ID])
         cg.add(mr24hpc1_component.set_sensitivity_number(n))
+    if custom_mode_config := config.get(CONF_CUSTOMMODE):
+        n = await number.nwe_number(
+            custom_mode_config, min_value=0, max_value=4, step=1,
+        )
+        await cg.register_parented(n, config[CONF_MR24HPC1_ID])
+        cg.add(mr24hpc1_component.set_custom_mode_number(n))
