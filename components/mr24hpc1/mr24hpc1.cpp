@@ -90,6 +90,7 @@ void mr24hpc1Component::setup() {
     sg_init_flag = true;
     ESP_LOGCONFIG(TAG, "uart_settings is 115200");
     this->check_uart_settings(115200);
+    this->custom_mode_number_->public_state(0);
 
     memset(this->c_product_mode, 0, PRODUCT_BUF_MAX_SIZE);
     memset(this->c_product_id, 0, PRODUCT_BUF_MAX_SIZE);
@@ -895,6 +896,7 @@ void mr24hpc1Component::set_unman_time(const std::string &time){
 }
 
 void mr24hpc1Component::set_custom_mode(uint8_t mode){
+    if(mode == 0)return;
     uint8_t send_data_len = 10;
     uint8_t send_data[10] = {0x53, 0x59, 0x05, 0x09, 0x00, 0x01, mode, 0x00, 0x54, 0x43};
     send_data[7] = get_frame_crc_sum(send_data, send_data_len);

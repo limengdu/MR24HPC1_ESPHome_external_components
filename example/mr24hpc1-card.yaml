@@ -56,3 +56,12 @@ views:
               - entity: sensor.seeedstudio_mmwave_kit_motion_speed
                 name: Motion Speed
             title: Underlying Open Function
+      - type: horizontal-stack
+        cards:
+          - type: entities
+            entities: 
+              - entity: number.seeedstudio_mmwave_kit_custom_mode_settings
+                name: "Custom Mode Settings"
+              - entity: button.seeedstudio_mmwave_kit_end_of_custom_mode_settings
+                name: "End Of Custom Mode Settings"
+            title: Custom Settings
