@@ -28,6 +28,8 @@ views:
                 name: Scene Settings
               - entity: number.seeedstudio_mmwave_kit_sensitivity_settings
                 name: Sensitivity Settings
+              - entity: select.seeedstudio_mmwave_kit_time_for_entering_no_person_state_setting_standard_function
+                name: Time For Entering No Person State Setting (Standard Function)
               - entity: binary_sensor.seeedstudio_mmwave_kit_presence_information
                 name: Presence Information
               - entity: sensor.seeedstudio_mmwave_kit_motion_information
