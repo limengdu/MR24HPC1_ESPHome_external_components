@@ -149,7 +149,7 @@ static uint32_t sg_move_to_rest_time_bak;
 static uint32_t sg_enter_unmanned_time_bak;
 static uint8_t sg_heartbeat_flag = 255;
 static uint8_t s_power_on_status = 0;
-bool check_dev_inf_sign = true;
+static bool check_dev_inf_sign = true;
 
 class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {      // The class name must be the name defined by text_sensor.py
 #ifdef USE_TEXT_SENSOR
