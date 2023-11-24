@@ -88,19 +88,19 @@ void mr24hpc1Component::loop() {
     if(check_dev_inf_sign){                // 首次信息轮询
         switch(sg_start_query_data){
             case STANDARD_FUNCTION_QUERY_PRODUCT_MODE:
-                if (strlen(this->c_product_mode) > 0) sg_start_query_data++;
+                if (this->product_model_text_sensor_ != nullptr) sg_start_query_data++;
                 else this->get_product_mode();
                 break;
             case STANDARD_FUNCTION_QUERY_PRODUCT_ID:
-                if (strlen(this->c_product_id) > 0) sg_start_query_data++;
+                if (this->product_id_text_sensor_ != nullptr) sg_start_query_data++;
                 else this->get_product_id();
                 break;
             case STANDARD_FUNCTION_QUERY_FIRMWARE_VERDION:
-                if (strlen(this->c_firmware_version) > 0) sg_start_query_data++;
+                if (this->firware_version_text_sensor_ != nullptr) sg_start_query_data++;
                 else this->get_firmware_version();
                 break;
             case STANDARD_FUNCTION_QUERY_HARDWARE_MODE:
-                if (strlen(this->c_hardware_model) > 0) sg_start_query_data++;
+                if (this->hardware_model_text_sensor_ != nullptr) sg_start_query_data++;
                 else this->get_hardware_model();
                 break;
             case STANDARD_FUNCTION_QUERY_HEARTBEAT_STATE:
