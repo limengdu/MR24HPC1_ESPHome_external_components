@@ -148,7 +148,7 @@ void mr24hpc1Component::loop() {
     }
 
     // 首次轮询结束之后，如果底层开放参数的开关是关闭的，则只轮询基础功能
-    if (s_output_info_switch_flag == OUTPUT_SWTICH_OFF && sg_start_query_data >= CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH){
+    if ((s_output_info_switch_flag == OUTPUT_SWTICH_OFF) && (sg_start_query_data >= CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH)){
         s_output_info_switch_flag = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;
     }
 
@@ -180,7 +180,7 @@ void mr24hpc1Component::loop() {
     }
 
     // 如果底层开放参数开关是打开的，则轮询自定义功能
-    if (s_output_info_switch_flag == OUTPUT_SWTICH_ON && !check_dev_inf_sign && sg_start_query_data >= CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH){
+    if ((s_output_info_switch_flag == OUTPUT_SWTICH_ON) && !check_dev_inf_sign && (sg_start_query_data >= CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH)){
         switch(s_output_info_switch_flag){
             case CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH:
                 this->get_radar_output_information_switch();
@@ -634,7 +634,7 @@ void mr24hpc1Component::R24_parse_data_frame(uint8_t *data, uint8_t len)
         break;
         case 0x08:
         {
-            this->R24_frame_parse_open_underlying_information(data);
+            // this->R24_frame_parse_open_underlying_information(data);
         }
         break;
         case 0x80:
@@ -707,21 +707,21 @@ void mr24hpc1Component::R24_frame_parse_work_status(uint8_t *data)
 
 void mr24hpc1Component::R24_frame_parse_human_information(uint8_t *data)
 {
-    if (data[FRAME_COMMAND_WORD_INDEX] == 0x01)
-    {
-        this->someoneExists_binary_sensor_->publish_state(s_someoneExists_str[data[FRAME_DATA_INDEX]]);
-    }
-    else if (data[FRAME_COMMAND_WORD_INDEX] == 0x02)
-    {
-        if (data[FRAME_DATA_INDEX] < 3 && data[FRAME_DATA_INDEX] >= 0)
-        {
-            this->motion_status_text_sensor_->publish_state(s_motion_status_str[data[FRAME_DATA_INDEX]]);
-        }
-    }
-    else if (data[FRAME_COMMAND_WORD_INDEX] == 0x03)
-    {
-        this->movementSigns_sensor_->publish_state(data[FRAME_DATA_INDEX]);
-    }
+    // if (data[FRAME_COMMAND_WORD_INDEX] == 0x01)
+    // {
+    //     this->someoneExists_binary_sensor_->publish_state(s_someoneExists_str[data[FRAME_DATA_INDEX]]);
+    // }
+    // else if (data[FRAME_COMMAND_WORD_INDEX] == 0x02)
+    // {
+    //     if (data[FRAME_DATA_INDEX] < 3 && data[FRAME_DATA_INDEX] >= 0)
+    //     {
+    //         this->motion_status_text_sensor_->publish_state(s_motion_status_str[data[FRAME_DATA_INDEX]]);
+    //     }
+    // }
+    // else if (data[FRAME_COMMAND_WORD_INDEX] == 0x03)
+    // {
+    //     this->movementSigns_sensor_->publish_state(data[FRAME_DATA_INDEX]);
+    // }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0A)
     {
         // none:0x00  1s:0x01 30s:0x02 1min:0x03 2min:0x04 5min:0x05 10min:0x06 30min:0x07 1hour:0x08
@@ -730,14 +730,14 @@ void mr24hpc1Component::R24_frame_parse_human_information(uint8_t *data)
             this->unman_time_select_->publish_state(s_unmanned_time_str[data[FRAME_DATA_INDEX]]);
         }
     }
-    else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0B)
-    {
-        // none:0x00  close_to:0x01  far_away:0x02
-        if (data[FRAME_DATA_INDEX] < 3 && data[FRAME_DATA_INDEX] >= 0)
-        {
-            this->keep_away_text_sensor_->publish_state(s_keep_away_str[data[FRAME_DATA_INDEX]]);
-        }
-    }
+    // else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0B)
+    // {
+    //     // none:0x00  close_to:0x01  far_away:0x02
+    //     if (data[FRAME_DATA_INDEX] < 3 && data[FRAME_DATA_INDEX] >= 0)
+    //     {
+    //         this->keep_away_text_sensor_->publish_state(s_keep_away_str[data[FRAME_DATA_INDEX]]);
+    //     }
+    // }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x81)
     {
         this->someoneExists_binary_sensor_->publish_state(s_someoneExists_str[data[FRAME_DATA_INDEX]]);
