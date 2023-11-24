@@ -153,7 +153,7 @@ void mr24hpc1Component::loop() {
     }
 
     // 轮询基础功能
-    if (s_output_info_switch_flag == OUTPUT_SWTICH_OFF && !check_dev_inf_sign && s_output_info_switch_flag = STANDARD_FUNCTION_QUERY_HUMAN_STATUS){
+    if (s_output_info_switch_flag == OUTPUT_SWTICH_OFF && !check_dev_inf_sign && s_output_info_switch_flag == STANDARD_FUNCTION_QUERY_HUMAN_STATUS){
         switch(s_output_info_switch_flag){
             case STANDARD_FUNCTION_QUERY_HUMAN_STATUS:
                 this->get_human_status();
@@ -233,6 +233,14 @@ void mr24hpc1Component::loop() {
 
     // 超出范围归位
     if (sg_start_query_data > CUSTOM_FUNCTION_MAX) sg_start_query_data = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
+}
+
+// Check that the check digit is correct
+static int get_frame_check_status(uint8_t *data, int len)
+{
+    uint8_t crc_sum = get_frame_crc_sum(data, len);
+    uint8_t verified = data[len - 3];
+    return (verified == crc_sum) ? 1 : 0;
 }
 
 // split data frame
@@ -787,14 +795,6 @@ static uint8_t get_frame_crc_sum(uint8_t *data, int len)
         crc_sum += data[i];
     }
     return crc_sum & 0xff;
-}
-
-// Check that the check digit is correct
-static int get_frame_check_status(uint8_t *data, int len)
-{
-    uint8_t crc_sum = get_frame_crc_sum(data, len);
-    uint8_t verified = data[len - 3];
-    return (verified == crc_sum) ? 1 : 0;
 }
 
 // Send Heartbeat Packet Command
