@@ -858,6 +858,27 @@ void mr24hpc1Component::get_unmanned_time(void)
     this->send_query(send_data, send_data_len);
 }
 
+void mr24hpc1Component::get_custom_mode(void)
+{
+    unsigned char send_data_len = 10;
+    unsigned char send_data[10] = {0x53, 0x59, 0x05, 0x89, 0x00, 0x01, 0x0F, 0x4A, 0x54, 0x43};
+    this->send_query(send_data, send_data_len);
+}
+
+void mr24hpc1Component::get_existence_boundary(void)
+{
+    unsigned char send_data_len = 10;
+    unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x81, 0x00, 0x01, 0x0F, 0x45, 0x54, 0x43};
+    this->send_query(send_data, send_data_len);
+}
+
+void mr24hpc1Component::get_motion_boundary(void)
+{
+    unsigned char send_data_len = 10;
+    unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x82, 0x00, 0x01, 0x0F, 0x46, 0x54, 0x43};
+    this->send_query(send_data, send_data_len);
+}
+
 void mr24hpc1Component::set_underlying_open_function(bool enable)
 {
     uint8_t underlyswitch_on[] = {0x53, 0x59, 0x08, 0x00, 0x00, 0x01, 0x01, 0xB6, 0x54, 0x43};
@@ -903,6 +924,7 @@ void mr24hpc1Component::set_custom_mode(uint8_t mode){
     uint8_t send_data[10] = {0x53, 0x59, 0x05, 0x09, 0x00, 0x01, mode, 0x00, 0x54, 0x43};
     send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
+    this->get_custom_mode();
 }
 
 void mr24hpc1Component::set_custom_end_mode(void){
@@ -918,6 +940,7 @@ void mr24hpc1Component::set_existence_boundary(const std::string &value){
     uint8_t send_data[10] = {0x53, 0x59, 0x08, 0x08, 0x00, 0x01, cmd_value, 0x00, 0x54, 0x43};
     send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
+    this->get_existence_boundary();
 }
 
 void mr24hpc1Component::set_motion_boundary(const std::string &value){
@@ -926,6 +949,7 @@ void mr24hpc1Component::set_motion_boundary(const std::string &value){
     uint8_t send_data[10] = {0x53, 0x59, 0x08, 0x09, 0x00, 0x01, cmd_value, 0x00, 0x54, 0x43};
     send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
+    this->get_motion_boundary();
 }
 
 }  // namespace mr24hpc1

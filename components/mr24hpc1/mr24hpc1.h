@@ -219,6 +219,9 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
     void get_scene_mode(void);
     void get_sensitivity(void);
     void get_unmanned_time(void);
+    void get_custom_mode(void);
+    void get_existence_boundary(void);
+    void get_motion_boundary(void);
     void set_scene_mode(const std::string &state);
     void set_underlying_open_function(bool enable);
     void set_sensitivity(uint8_t value);
