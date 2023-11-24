@@ -707,10 +707,10 @@ void mr24hpc1Component::R24_frame_parse_work_status(uint8_t *data)
 
 void mr24hpc1Component::R24_frame_parse_human_information(uint8_t *data)
 {
-    // if (data[FRAME_COMMAND_WORD_INDEX] == 0x01)
-    // {
+    if (data[FRAME_COMMAND_WORD_INDEX] == 0x01)
+    {
     //     this->someoneExists_binary_sensor_->publish_state(s_someoneExists_str[data[FRAME_DATA_INDEX]]);
-    // }
+    }
     // else if (data[FRAME_COMMAND_WORD_INDEX] == 0x02)
     // {
     //     if (data[FRAME_DATA_INDEX] < 3 && data[FRAME_DATA_INDEX] >= 0)
