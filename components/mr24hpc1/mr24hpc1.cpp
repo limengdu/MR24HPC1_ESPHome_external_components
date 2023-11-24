@@ -235,6 +235,17 @@ void mr24hpc1Component::loop() {
     if (sg_start_query_data > CUSTOM_FUNCTION_MAX) sg_start_query_data = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
 }
 
+// Calculate CRC check digit
+static uint8_t get_frame_crc_sum(uint8_t *data, int len)
+{
+    unsigned int crc_sum = 0;
+    for (int i = 0; i < len - 3; i++)
+    {
+        crc_sum += data[i];
+    }
+    return crc_sum & 0xff;
+}
+
 // Check that the check digit is correct
 static int get_frame_check_status(uint8_t *data, int len)
 {
@@ -784,17 +795,6 @@ void mr24hpc1Component::send_query(uint8_t *query, size_t string_length)
         write(query[i]);
     }
     show_frame_data(query, i);
-}
-
-// Calculate CRC check digit
-static uint8_t get_frame_crc_sum(uint8_t *data, int len)
-{
-    unsigned int crc_sum = 0;
-    for (int i = 0; i < len - 3; i++)
-    {
-        crc_sum += data[i];
-    }
-    return crc_sum & 0xff;
 }
 
 // Send Heartbeat Packet Command
