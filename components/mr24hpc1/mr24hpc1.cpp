@@ -153,7 +153,7 @@ void mr24hpc1Component::loop() {
     }
 
     // 轮询基础功能
-    if (s_output_info_switch_flag == OUTPUT_SWTICH_OFF && !check_dev_inf_sign && s_output_info_switch_flag == STANDARD_FUNCTION_QUERY_HUMAN_STATUS){
+    if ((s_output_info_switch_flag == OUTPUT_SWTICH_OFF) && !check_dev_inf_sign && (s_output_info_switch_flag == STANDARD_FUNCTION_QUERY_HUMAN_STATUS)){
         switch(s_output_info_switch_flag){
             case STANDARD_FUNCTION_QUERY_HUMAN_STATUS:
                 this->get_human_status();
