@@ -14,36 +14,6 @@ namespace mr24hpc1 {
 
 static const char *TAG = "mr24hpc1";
 
-// Calculate CRC check digit
-static uint8_t get_frame_crc_sum(uint8_t *data, int len)
-{
-    unsigned int crc_sum = 0;
-    for (int i = 0; i < len - 3; i++)
-    {
-        crc_sum += data[i];
-    }
-    return crc_sum & 0xff;
-}
-
-// Check that the check digit is correct
-static int get_frame_check_status(uint8_t *data, int len)
-{
-    uint8_t crc_sum = get_frame_crc_sum(data, len);
-    uint8_t verified = data[len - 3];
-    return (verified == crc_sum) ? 1 : 0;
-}
-
-// Print data frame
-static void show_frame_data(uint8_t *data, int len)
-{
-    printf("[%s] FRAME: %d, ", __FUNCTION__, len);
-    for (int i = 0; i < len; i++)
-    {
-        printf("%02X ", data[i] & 0xff);
-    }
-    printf("\r\n");
-}
-
 // Prints the component's configuration data. dump_config() prints all of the component's configuration items in an easy-to-read format, including the configuration key-value pairs.
 void mr24hpc1Component::dump_config() { 
     ESP_LOGCONFIG(TAG, "MR24HPC1:");
@@ -88,8 +58,7 @@ void mr24hpc1Component::dump_config() {
 
 // Initialisation functions
 void mr24hpc1Component::setup() {
-    s_power_on_status = 0;
-    sg_init_flag = true;
+    static int sg_start_query_data = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
     ESP_LOGCONFIG(TAG, "uart_settings is 115200");
     this->check_uart_settings(115200);
     this->custom_mode_number_->publish_state(0);
@@ -102,37 +71,7 @@ void mr24hpc1Component::setup() {
 
 // component callback function, which is called every time the loop is called
 void mr24hpc1Component::update() {
-    if (!sg_init_flag)                // The setup function is complete.
-        return;
-    if (sg_init_flag && (255 != sg_heartbeat_flag))  // The initial value of sg_heartbeat_flag is 255, so it is not executed for the first time, and the power-up check is executed first
-    {
-        sg_heartbeat_flag = 1;
-        this->heartbeat_state_text_sensor_->publish_state(s_heartbeat_str[sg_heartbeat_flag]);
-    }
-    if (s_power_on_status < 4)  // Post power-up status check
-    {
-        if (s_output_info_switch_flag == OUTPUT_SWITCH_INIT)  // Power-up status check first item
-        {
-            sg_start_query_data = CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH;  // Custom function to query radar output information switch
-            sg_start_query_data_max = CUSTOM_FUNCTION_MAX;
-        }
-        else if (s_output_info_switch_flag == OUTPUT_SWTICH_OFF)  // When the bottom open parameter button is closed, the power-up status checks the second item
-        {
-            sg_start_query_data = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
-            sg_start_query_data_max = STANDARD_FUNCTION_MAX;
-        }
-        else if (s_output_info_switch_flag == OUTPUT_SWTICH_ON)   // When the bottom open parameter button is on, the power-up state checks the second item
-        {
-            sg_start_query_data = CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH;
-            sg_start_query_data_max = CUSTOM_FUNCTION_MAX;
-        }
-        s_power_on_status++;  // There are a total of four inspections
-    }
-    else
-    {
-        sg_start_query_data = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
-        sg_start_query_data_max = STANDARD_FUNCTION_MAX;
-    }
+    
 }
 
 // main loop
@@ -146,58 +85,76 @@ void mr24hpc1Component::loop() {
         this->R24_split_data_frame(byte);  // split data frame
     }
 
-    // !s_output_info_switch_flag = !OUTPUT_SWITCH_INIT = !0 = 1  (Power-up check first item - check if the underlying open parameters are turned on)
-    if (!s_output_info_switch_flag && sg_start_query_data == CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH)
-    {
-        // Check if the button for the underlying open parameter is on, if so
-        this->get_radar_output_information_switch();  // This function in conjunction with R24_split_data_frame changes the state of the s_output_info_switch_flag, ON or OFF.
-        sg_start_query_data++;    // now: sg_start_query_data = CUSTOM_FUNCTION_QUERY_PRESENCE_OF_DETECTION_RANGE  sg_start_query_data_max = CUSTOM_FUNCTION_MAX
-    }
-    // When the switch for the underlying open parameter is off, the value of sg_start_query_data should be within limits
-    if ((s_output_info_switch_flag == OUTPUT_SWTICH_OFF) && (sg_start_query_data <= sg_start_query_data_max) && (sg_start_query_data >= STANDARD_FUNCTION_QUERY_PRODUCT_MODE))
-    {
-        switch (sg_start_query_data)
-        {
+    if(check_dev_inf_sign){                // 首次信息轮询
+        switch(sg_start_query_data){
             case STANDARD_FUNCTION_QUERY_PRODUCT_MODE:
-                if (strlen(this->c_product_mode) > 0)
-                {
-                    this->product_model_text_sensor_->publish_state(this->c_product_mode);  // Release Product Model
-                }
-                else
-                {
-                    this->get_product_mode();  // Check Product Model
-                }
+                if (strlen(this->c_product_mode) > 0) sg_start_query_data++;
+                else this->get_product_mode();
                 break;
             case STANDARD_FUNCTION_QUERY_PRODUCT_ID:
-                if (strlen(this->c_product_id) > 0)
-                {
-                    this->product_id_text_sensor_->publish_state(this->c_product_id);  // Publish Product ID
-                }
-                else
-                {
-                    this->get_product_id();  // Check Product ID
-                }
+                if (strlen(this->c_product_id) > 0) sg_start_query_data++;
+                else this->get_product_id();
                 break;
             case STANDARD_FUNCTION_QUERY_FIRMWARE_VERDION:
-                if (strlen(this->c_firmware_version) > 0)
-                {
-                    this->firware_version_text_sensor_->publish_state(this->c_firmware_version);  // Release Firmware Version Number
-                }
-                else
-                {
-                    this->get_firmware_version();  // check firmware version number
-                }
+                if (strlen(this->c_firmware_version) > 0) sg_start_query_data++;
+                else this->get_firmware_version();
                 break;
             case STANDARD_FUNCTION_QUERY_HARDWARE_MODE:
-                if (strlen(this->c_hardware_model) > 0)
-                {
-                    this->hardware_model_text_sensor_->publish_state(this->c_hardware_model);  // Release Hardware Models
-                }
-                else
-                {
-                    this->get_hardware_model();  // check Hardware Model
-                }
+                if (strlen(this->c_hardware_model) > 0) sg_start_query_data++;
+                else this->get_hardware_model();
                 break;
+            case STANDARD_FUNCTION_QUERY_HEARTBEAT_STATE:
+                if (this->heartbeat_state_text_sensor_ != nullptr) sg_start_query_data++;
+                else this->get_heartbeat_packet();
+                break;
+            case STANDARD_FUNCTION_QUERY_HUMAN_STATUS:
+                if (this->someoneExists_binary_sensor_ != nullptr) sg_start_query_data++;
+                else this->get_human_status();
+                break;
+            case STANDARD_FUNCTION_QUERY_KEEPAWAY_STATUS:
+                if (this->keep_away_text_sensor_ != nullptr) sg_start_query_data++;
+                else this->get_keep_away();
+                break;
+            case STANDARD_FUNCTION_QUERY_SCENE_MODE:
+                if (this->scene_mode_select_ != nullptr) sg_start_query_data++;
+                else this->get_scene_mode();
+                break;
+            case STANDARD_FUNCTION_QUERY_SENSITIVITY:
+                if (this->sensitivity_number_ != nullptr) sg_start_query_data++;
+                else this->get_sensitivity();
+                break;
+            case STANDARD_FUNCTION_QUERY_UNMANNED_TIME:
+                if (this->unman_time_select_ != nullptr) sg_start_query_data++;
+                else this->get_unmanned_time();
+                break;
+            // case STANDARD_FUNCTION_QUERY_MOV_TARGET_DETECTION_MAX_DISTANCE:
+            //     if () sg_start_query_data++;
+            //     else this->get_movingTargetDetectionMaxDistance();
+            //     break;
+            // case STANDARD_FUNCTION_QUERY_STATIC_TARGET_DETECTION_MAX_DISTANCE:
+            //     if () sg_start_query_data++;
+            //     else this->get_staticTargetDetectionMaxDistance();
+            //     break;
+            case STANDARD_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH:
+                if (this->underly_open_function_switch_ != nullptr){
+                    sg_start_query_data++;
+                    check_dev_inf_sign = false;
+                }
+                else this->get_radar_output_information_switch();
+                break;
+            default:
+                break;
+        }
+    }
+
+    // 首次轮询结束之后，如果底层开放参数的开关是关闭的，则只轮询基础功能
+    if (s_output_info_switch_flag == OUTPUT_SWTICH_OFF && sg_start_query_data >= CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH){
+        s_output_info_switch_flag = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;
+    }
+
+    // 轮询基础功能
+    if (s_output_info_switch_flag == OUTPUT_SWTICH_OFF && !check_dev_inf_sign && s_output_info_switch_flag = STANDARD_FUNCTION_QUERY_HUMAN_STATUS){
+        switch(s_output_info_switch_flag){
             case STANDARD_FUNCTION_QUERY_HUMAN_STATUS:
                 this->get_human_status();
                 break;
@@ -213,24 +170,68 @@ void mr24hpc1Component::loop() {
             case STANDARD_FUNCTION_QUERY_UNMANNED_TIME:
                 this->get_unmanned_time();
                 break;
-            // case STANDARD_FUNCTION_QUERY_MOV_TARGET_DETECTION_MAX_DISTANCE:
-            //     this->get_movingTargetDetectionMaxDistance();
-            //     break;
-            // case STANDARD_FUNCTION_QUERY_STATIC_TARGET_DETECTION_MAX_DISTANCE:
-            //     this->get_staticTargetDetectionMaxDistance();
-            //     break;
-            
-            // case STANDARD_FUNCTION_QUERY_RADAR_OUITPUT_INFORMATION_SWITCH:
-            //     this->get_radar_output_information_switch();
-            //     break;
-            case STANDARD_FUNCTION_MAX:
-                this->get_heartbeat_packet();
+            case STANDARD_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH:
+                this->get_radar_output_information_switch();
                 break;
             default:
                 break;
         }
         sg_start_query_data++;
     }
+
+    // 如果底层开放参数开关是打开的，则轮询自定义功能
+    if (s_output_info_switch_flag == OUTPUT_SWTICH_ON && !check_dev_inf_sign && sg_start_query_data >= CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH){
+        switch(s_output_info_switch_flag){
+            case CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH:
+                this->get_radar_output_information_switch();
+                sg_start_query_data++;
+                break;
+            // case CUSTOM_FUNCTION_QUERY_SPATIAL_STATIC_VALUE:
+            //     this->get_spatial_static_value();
+            //     break;
+            // case CUSTOM_FUNCTION_QUERY_SPATIAL_MOTION_AMPLITUDE:
+            //     this->get_spatial_motion_amplitude();
+            //     break;
+            // case CUSTOM_FUNCTION_QUERY_PRESENCE_OF_DETECTION_RANGE:
+            //     this->get_presence_of_detection_range();
+            //     break;
+            // case CUSTOM_FUNCTION_QUERY_DISTANCE_OF_MOVING_OBJECT:
+            //     this->get_distance_of_moving_object();
+            //     break;
+            // case CUSTOM_FUNCTION_QUERY_TARGET_MOVEMENT_SPEED:
+            //     this->get_target_movement_speed();
+            //     break;
+            // case CUSTOM_FUNCTION_QUERY_JUDGMENT_THRESHOLD_EXISTS:
+            //     this->get_judgment_threshold_exists();
+            //     break;
+            // case CUSTOM_FUNCTION_QUERY_MOTION_AMPLITUDE_TRIGGER_THRESHOLD:
+            //     this->get_motion_amplitude_trigger_threshold();
+            //     break;
+            // case CUSTOM_FUNCTION_QUERY_PRESENCE_OF_PERCEPTION_BOUNDARY:
+            //     this->get_presence_of_perception_boundary();
+            //     break;
+            // case CUSTOM_FUNCTION_QUERY_MOTION_TRIGGER_BOUNDARY:
+            //     this->get_motion_trigger_boundary();
+            //     break;
+            // case CUSTOM_FUNCTION_QUERY_MOTION_TRIGGER_TIME:
+            //     this->get_motion_trigger_time();
+            //     break;
+            // case CUSTOM_FUNCTION_QUERY_MOVEMENT_TO_REST_TIME:
+            //     this->get_movement_to_rest_time();
+            //     break;
+            // case CUSTOM_FUNCTION_QUERY_TIME_OF_ENTER_UNMANNED:
+            //     this->get_time_of_enter_unmanned();
+            //     break;
+            // case CUSTOM_FUNCTION_MAX:
+            //     this->get_heartbeat_packet();
+            //     break;
+            default:
+                break;
+        }
+        sg_start_query_data++;
+    }
+
+    // 超出范围归位
     if (sg_start_query_data > CUSTOM_FUNCTION_MAX) sg_start_query_data = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
 }
 
@@ -755,6 +756,17 @@ void mr24hpc1Component::R24_frame_parse_human_information(uint8_t *data)
     }
 }
 
+// Print data frame
+static void show_frame_data(uint8_t *data, int len)
+{
+    printf("[%s] FRAME: %d, ", __FUNCTION__, len);
+    for (int i = 0; i < len; i++)
+    {
+        printf("%02X ", data[i] & 0xff);
+    }
+    printf("\r\n");
+}
+
 // Sending data frames
 void mr24hpc1Component::send_query(uint8_t *query, size_t string_length)
 {
@@ -764,6 +776,25 @@ void mr24hpc1Component::send_query(uint8_t *query, size_t string_length)
         write(query[i]);
     }
     show_frame_data(query, i);
+}
+
+// Calculate CRC check digit
+static uint8_t get_frame_crc_sum(uint8_t *data, int len)
+{
+    unsigned int crc_sum = 0;
+    for (int i = 0; i < len - 3; i++)
+    {
+        crc_sum += data[i];
+    }
+    return crc_sum & 0xff;
+}
+
+// Check that the check digit is correct
+static int get_frame_check_status(uint8_t *data, int len)
+{
+    uint8_t crc_sum = get_frame_crc_sum(data, len);
+    uint8_t verified = data[len - 3];
+    return (verified == crc_sum) ? 1 : 0;
 }
 
 // Send Heartbeat Packet Command
