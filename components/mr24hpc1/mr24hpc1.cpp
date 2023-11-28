@@ -159,10 +159,13 @@ void mr24hpc1Component::loop() {
     // 首次轮询结束之后，如果底层开放参数的开关是关闭的，则只轮询基础功能
     if ((s_output_info_switch_flag == OUTPUT_SWTICH_OFF) && (sg_start_query_data == CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH)){
         s_output_info_switch_flag = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;
+        ESP_LOGD(TAG, "Setting success!");
     }
 
+    ESP_LOGD(TAG, "s_output_info_switch_flag value is %d", s_output_info_switch_flag);
+
     // 轮询基础功能
-    if ((s_output_info_switch_flag == OUTPUT_SWTICH_OFF) && !check_dev_inf_sign && (s_output_info_switch_flag >= STANDARD_FUNCTION_QUERY_HUMAN_STATUS)){
+    if ((s_output_info_switch_flag == OUTPUT_SWTICH_OFF) && (!check_dev_inf_sign) && (s_output_info_switch_flag >= STANDARD_FUNCTION_QUERY_HUMAN_STATUS)){
         switch(s_output_info_switch_flag){
             case STANDARD_FUNCTION_QUERY_HUMAN_STATUS:
                 this->get_human_status();
@@ -252,7 +255,7 @@ void mr24hpc1Component::loop() {
     // }
 
     // 超出范围归位
-    if (sg_start_query_data > CUSTOM_FUNCTION_MAX) sg_start_query_data = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
+    // if (sg_start_query_data > CUSTOM_FUNCTION_MAX) sg_start_query_data = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
     
 }
 
@@ -726,7 +729,7 @@ void mr24hpc1Component::R24_frame_parse_work_status(uint8_t *data)
     }
     else
     {
-        ESP_LOGD(TAG, "[%s] No found COMMAND_WORD(%02X) in Frame", __FUNCTION__, data[FRAME_COMMAND_WORD_INDEX]);
+        // ESP_LOGD(TAG, "[%s] No found COMMAND_WORD(%02X) in Frame", __FUNCTION__, data[FRAME_COMMAND_WORD_INDEX]);
     }
 }
 
