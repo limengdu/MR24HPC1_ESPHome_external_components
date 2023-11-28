@@ -158,15 +158,13 @@ void mr24hpc1Component::loop() {
 
     // 首次轮询结束之后，如果底层开放参数的开关是关闭的，则只轮询基础功能
     if ((s_output_info_switch_flag == OUTPUT_SWTICH_OFF) && (sg_start_query_data == CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH)){
-        s_output_info_switch_flag = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;
+        sg_start_query_data = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;
         ESP_LOGD(TAG, "Setting success!");
     }
 
-    ESP_LOGD(TAG, "s_output_info_switch_flag value is %d", s_output_info_switch_flag);
-
     // 轮询基础功能
-    if ((s_output_info_switch_flag == OUTPUT_SWTICH_OFF) && (!check_dev_inf_sign) && (s_output_info_switch_flag >= STANDARD_FUNCTION_QUERY_HUMAN_STATUS)){
-        switch(s_output_info_switch_flag){
+    if ((s_output_info_switch_flag == OUTPUT_SWTICH_OFF) && (!check_dev_inf_sign) && (sg_start_query_data >= STANDARD_FUNCTION_QUERY_HUMAN_STATUS)){
+        switch(sg_start_query_data){
             case STANDARD_FUNCTION_QUERY_HUMAN_STATUS:
                 this->get_human_status();
                 sg_start_query_data++;
@@ -193,13 +191,12 @@ void mr24hpc1Component::loop() {
                 ESP_LOGD(TAG, "16");
                 break;
             case STANDARD_FUNCTION_MAX:
-                s_output_info_switch_flag = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;
+                sg_start_query_data = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;
                 ESP_LOGD(TAG, "17");
                 break;
             default:
                 break;
         }
-        ESP_LOGD(TAG, "polling function %d", sg_start_query_data);
     }
 
     // 如果底层开放参数开关是打开的，则轮询自定义功能
