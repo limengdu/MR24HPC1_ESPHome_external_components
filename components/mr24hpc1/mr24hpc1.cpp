@@ -163,25 +163,31 @@ void mr24hpc1Component::loop() {
     }
 
     // 轮询基础功能
-    if ((s_output_info_switch_flag == OUTPUT_SWTICH_OFF) && !check_dev_inf_sign && (s_output_info_switch_flag == STANDARD_FUNCTION_QUERY_HUMAN_STATUS)){
+    if ((s_output_info_switch_flag == OUTPUT_SWTICH_OFF) && !check_dev_inf_sign && (s_output_info_switch_flag >= STANDARD_FUNCTION_QUERY_HUMAN_STATUS)){
         switch(s_output_info_switch_flag){
             case STANDARD_FUNCTION_QUERY_HUMAN_STATUS:
                 this->get_human_status();
+                ESP_LOGD(TAG, "12");
                 break;
             case STANDARD_FUNCTION_QUERY_KEEPAWAY_STATUS:
                 this->get_keep_away();
+                ESP_LOGD(TAG, "13");
                 break;
             case STANDARD_FUNCTION_QUERY_SCENE_MODE:
                 this->get_scene_mode();
+                ESP_LOGD(TAG, "14");
                 break;
             case STANDARD_FUNCTION_QUERY_SENSITIVITY:
                 this->get_sensitivity();
+                ESP_LOGD(TAG, "15");
                 break;
             case STANDARD_FUNCTION_QUERY_UNMANNED_TIME:
                 this->get_unmanned_time();
+                ESP_LOGD(TAG, "16");
                 break;
             case STANDARD_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH:
                 this->get_radar_output_information_switch();
+                ESP_LOGD(TAG, "17");
                 break;
             default:
                 break;
