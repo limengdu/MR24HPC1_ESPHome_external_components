@@ -164,8 +164,8 @@ void mr24hpc1Component::loop() {
                 break;
             default:
                 break;
-            ESP_LOGD(TAG, "sg_start_query_data value:%d", sg_start_query_data);
         }
+        ESP_LOGD(TAG, "sg_start_query_data value:%d", sg_start_query_data);
     }
 
     // 首次轮询结束之后，如果底层开放参数的开关是关闭的，则只轮询基础功能
