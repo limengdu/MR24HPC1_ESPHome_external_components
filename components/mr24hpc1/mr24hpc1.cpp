@@ -58,7 +58,7 @@ void mr24hpc1Component::dump_config() {
 
 // Initialisation functions
 void mr24hpc1Component::setup() {
-    static int sg_start_query_data = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
+    int sg_start_query_data = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
     ESP_LOGCONFIG(TAG, "uart_settings is 115200");
     this->check_uart_settings(115200);
     this->custom_mode_number_->publish_state(0);
@@ -67,8 +67,6 @@ void mr24hpc1Component::setup() {
     memset(this->c_product_id, 0, PRODUCT_BUF_MAX_SIZE);
     memset(this->c_firmware_version, 0, PRODUCT_BUF_MAX_SIZE);
     memset(this->c_hardware_model, 0, PRODUCT_BUF_MAX_SIZE);
-
-    int sg_start_query_data = -1;
 }
 
 // component callback function, which is called every time the loop is called
