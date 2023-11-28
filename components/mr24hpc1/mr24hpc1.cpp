@@ -14,6 +14,7 @@ namespace mr24hpc1 {
 
 static const char *TAG = "mr24hpc1";
 int sg_start_query_data = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
+bool check_dev_inf_sign = true;
 
 // Prints the component's configuration data. dump_config() prints all of the component's configuration items in an easy-to-read format, including the configuration key-value pairs.
 void mr24hpc1Component::dump_config() { 
@@ -176,6 +177,7 @@ void mr24hpc1Component::loop() {
                 break;
         }
         sg_start_query_data++;
+        ESP_LOGD(TAG, "polling function %d", sg_start_query_data);
     }
 
     // 如果底层开放参数开关是打开的，则轮询自定义功能
