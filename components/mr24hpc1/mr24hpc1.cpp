@@ -72,7 +72,7 @@ void mr24hpc1Component::setup() {
 
 // component callback function, which is called every time the loop is called
 void mr24hpc1Component::update() {
-    
+    this->get_radar_output_information_switch();
 }
 
 // main loop
@@ -146,8 +146,7 @@ void mr24hpc1Component::loop() {
             //     if () sg_start_query_data++;
             //     else this->get_staticTargetDetectionMaxDistance();
             //     break;
-            case STANDARD_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH:
-                this->get_radar_output_information_switch();
+            case STANDARD_FUNCTION_MAX:
                 sg_start_query_data++;
                 check_dev_inf_sign = false;
                 ESP_LOGD(TAG, "11");
@@ -158,7 +157,7 @@ void mr24hpc1Component::loop() {
     }
 
     // 首次轮询结束之后，如果底层开放参数的开关是关闭的，则只轮询基础功能
-    if ((s_output_info_switch_flag == OUTPUT_SWTICH_OFF) && (sg_start_query_data >= CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH)){
+    if ((s_output_info_switch_flag == OUTPUT_SWTICH_OFF) && (sg_start_query_data == CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH)){
         s_output_info_switch_flag = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;
     }
 
@@ -167,42 +166,46 @@ void mr24hpc1Component::loop() {
         switch(s_output_info_switch_flag){
             case STANDARD_FUNCTION_QUERY_HUMAN_STATUS:
                 this->get_human_status();
+                sg_start_query_data++;
                 ESP_LOGD(TAG, "12");
                 break;
             case STANDARD_FUNCTION_QUERY_KEEPAWAY_STATUS:
                 this->get_keep_away();
+                sg_start_query_data++;
                 ESP_LOGD(TAG, "13");
                 break;
             case STANDARD_FUNCTION_QUERY_SCENE_MODE:
                 this->get_scene_mode();
+                sg_start_query_data++;
                 ESP_LOGD(TAG, "14");
                 break;
             case STANDARD_FUNCTION_QUERY_SENSITIVITY:
                 this->get_sensitivity();
+                sg_start_query_data++;
                 ESP_LOGD(TAG, "15");
                 break;
             case STANDARD_FUNCTION_QUERY_UNMANNED_TIME:
                 this->get_unmanned_time();
+                sg_start_query_data++;
                 ESP_LOGD(TAG, "16");
                 break;
-            case STANDARD_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH:
-                this->get_radar_output_information_switch();
+            case STANDARD_FUNCTION_MAX:
+                s_output_info_switch_flag = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;
                 ESP_LOGD(TAG, "17");
                 break;
             default:
                 break;
         }
-        sg_start_query_data++;
         ESP_LOGD(TAG, "polling function %d", sg_start_query_data);
     }
 
     // 如果底层开放参数开关是打开的，则轮询自定义功能
-    if ((s_output_info_switch_flag == OUTPUT_SWTICH_ON) && !check_dev_inf_sign && (sg_start_query_data >= CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH)){
-        switch(s_output_info_switch_flag){
-            case CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH:
-                this->get_radar_output_information_switch();
-                sg_start_query_data++;
-                break;
+    // if ((s_output_info_switch_flag == OUTPUT_SWTICH_ON) && !check_dev_inf_sign && (sg_start_query_data >= CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH)){
+    //     switch(s_output_info_switch_flag){
+    //         case CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH:
+    //             this->get_radar_output_information_switch();
+    //             sg_start_query_data++;
+    //             break;
             // case CUSTOM_FUNCTION_QUERY_SPATIAL_STATIC_VALUE:
             //     this->get_spatial_static_value();
             //     break;
@@ -242,11 +245,11 @@ void mr24hpc1Component::loop() {
             // case CUSTOM_FUNCTION_MAX:
             //     this->get_heartbeat_packet();
             //     break;
-            default:
-                break;
-        }
-        sg_start_query_data++;
-    }
+    //         default:
+    //             break;
+    //     }
+    //     sg_start_query_data++;
+    // }
 
     // 超出范围归位
     if (sg_start_query_data > CUSTOM_FUNCTION_MAX) sg_start_query_data = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
