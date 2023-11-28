@@ -546,10 +546,12 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
         if (data[FRAME_DATA_INDEX])
         {
             s_output_info_switch_flag = OUTPUT_SWTICH_ON;
+            ESP_LOGD(TAG, "output switch on!");
         }
         else
         {
             s_output_info_switch_flag = OUTPUT_SWTICH_OFF;
+            ESP_LOGD(TAG, "output switch off!");
         }
         this->underly_open_function_switch_->publish_state(data[FRAME_DATA_INDEX]);
     }
