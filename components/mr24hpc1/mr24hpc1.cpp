@@ -253,6 +253,7 @@ void mr24hpc1Component::loop() {
 
     // 超出范围归位
     if (sg_start_query_data > CUSTOM_FUNCTION_MAX) sg_start_query_data = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
+    ESP_LOGD(TAG, "sg_start_query_data value:%d", sg_start_query_data);
 }
 
 // Calculate CRC check digit
