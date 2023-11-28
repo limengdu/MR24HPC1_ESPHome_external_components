@@ -88,64 +88,44 @@ void mr24hpc1Component::loop() {
     if(check_dev_inf_sign){                // 首次信息轮询
         switch(sg_start_query_data){
             case STANDARD_FUNCTION_QUERY_PRODUCT_MODE:
-                if (this->product_model_text_sensor_ != nullptr) sg_start_query_data++;
-                else 
                 this->get_product_mode();
-                // sg_start_query_data++;
+                sg_start_query_data++;
                 break;
             case STANDARD_FUNCTION_QUERY_PRODUCT_ID:
-                if (this->product_id_text_sensor_ != nullptr) sg_start_query_data++;
-                else 
                 this->get_product_id();
-                // sg_start_query_data++;
+                sg_start_query_data++;
                 break;
             case STANDARD_FUNCTION_QUERY_FIRMWARE_VERDION:
-                if (this->firware_version_text_sensor_ != nullptr) sg_start_query_data++;
-                else 
                 this->get_firmware_version();
-                // sg_start_query_data++;
+                sg_start_query_data++;
                 break;
             case STANDARD_FUNCTION_QUERY_HARDWARE_MODE:
-                if (this->hardware_model_text_sensor_ != nullptr) sg_start_query_data++;
-                else 
                 this->get_hardware_model();
-                // sg_start_query_data++;
+                sg_start_query_data++;
                 break;
             case STANDARD_FUNCTION_QUERY_HEARTBEAT_STATE:
-                if (this->heartbeat_state_text_sensor_ != nullptr) sg_start_query_data++;
-                else 
                 this->get_heartbeat_packet();
-                // sg_start_query_data++;
+                sg_start_query_data++;
                 break;
             case STANDARD_FUNCTION_QUERY_HUMAN_STATUS:
-                if (this->someoneExists_binary_sensor_ != nullptr) sg_start_query_data++;
-                else 
                 this->get_human_status();
-                // sg_start_query_data++;
+                sg_start_query_data++;
                 break;
             case STANDARD_FUNCTION_QUERY_KEEPAWAY_STATUS:
-                if (this->keep_away_text_sensor_ != nullptr) sg_start_query_data++;
-                else 
                 this->get_keep_away();
-                // sg_start_query_data++;
+                sg_start_query_data++;
                 break;
             case STANDARD_FUNCTION_QUERY_SCENE_MODE:
-                if (this->scene_mode_select_ != nullptr) sg_start_query_data++;
-                else 
                 this->get_scene_mode();
-                // sg_start_query_data++;
+                sg_start_query_data++;
                 break;
             case STANDARD_FUNCTION_QUERY_SENSITIVITY:
-                if (this->sensitivity_number_ != nullptr) sg_start_query_data++;
-                else 
                 this->get_sensitivity();
-                // sg_start_query_data++;
+                sg_start_query_data++;
                 break;
             case STANDARD_FUNCTION_QUERY_UNMANNED_TIME:
-                if (this->unman_time_select_ != nullptr) sg_start_query_data++;
-                else 
                 this->get_unmanned_time();
-                // sg_start_query_data++;
+                sg_start_query_data++;
                 break;
             // case STANDARD_FUNCTION_QUERY_MOV_TARGET_DETECTION_MAX_DISTANCE:
             //     if () sg_start_query_data++;
@@ -156,11 +136,9 @@ void mr24hpc1Component::loop() {
             //     else this->get_staticTargetDetectionMaxDistance();
             //     break;
             case STANDARD_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH:
-                if (this->underly_open_function_switch_ != nullptr){
-                    sg_start_query_data++;
-                    check_dev_inf_sign = false;
-                }
-                else this->get_radar_output_information_switch();
+                this->get_radar_output_information_switch();
+                sg_start_query_data++;
+                check_dev_inf_sign = false;
                 break;
             default:
                 break;
