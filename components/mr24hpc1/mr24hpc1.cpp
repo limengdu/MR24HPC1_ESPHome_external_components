@@ -13,6 +13,7 @@ namespace esphome {
 namespace mr24hpc1 {
 
 static const char *TAG = "mr24hpc1";
+int sg_start_query_data = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
 
 // Prints the component's configuration data. dump_config() prints all of the component's configuration items in an easy-to-read format, including the configuration key-value pairs.
 void mr24hpc1Component::dump_config() { 
@@ -58,7 +59,6 @@ void mr24hpc1Component::dump_config() {
 
 // Initialisation functions
 void mr24hpc1Component::setup() {
-    int sg_start_query_data = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
     ESP_LOGCONFIG(TAG, "uart_settings is 115200");
     this->check_uart_settings(115200);
     this->custom_mode_number_->publish_state(0);
