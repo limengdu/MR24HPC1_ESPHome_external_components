@@ -657,7 +657,7 @@ void mr24hpc1Component::R24_parse_data_frame(uint8_t *data, uint8_t len)
         break;
         case 0x08:
         {
-            // this->R24_frame_parse_open_underlying_information(data);
+            this->R24_frame_parse_open_underlying_information(data);
         }
         break;
         case 0x80:
