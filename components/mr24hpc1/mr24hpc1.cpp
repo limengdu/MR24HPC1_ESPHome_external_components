@@ -91,52 +91,42 @@ void mr24hpc1Component::loop() {
             case STANDARD_FUNCTION_QUERY_PRODUCT_MODE:
                 this->get_product_mode();
                 sg_start_query_data++;
-                ESP_LOGD(TAG, "1");
                 break;
             case STANDARD_FUNCTION_QUERY_PRODUCT_ID:
                 this->get_product_id();
                 sg_start_query_data++;
-                ESP_LOGD(TAG, "2");
                 break;
             case STANDARD_FUNCTION_QUERY_FIRMWARE_VERDION:
                 this->get_firmware_version();
                 sg_start_query_data++;
-                ESP_LOGD(TAG, "3");
                 break;
             case STANDARD_FUNCTION_QUERY_HARDWARE_MODE:
                 this->get_hardware_model();
                 sg_start_query_data++;
-                ESP_LOGD(TAG, "4");
                 break;
             case STANDARD_FUNCTION_QUERY_HEARTBEAT_STATE:
                 this->get_heartbeat_packet();
                 sg_start_query_data++;
-                ESP_LOGD(TAG, "5");
                 break;
             case STANDARD_FUNCTION_QUERY_HUMAN_STATUS:
                 this->get_human_status();
                 sg_start_query_data++;
-                ESP_LOGD(TAG, "6");
                 break;
             case STANDARD_FUNCTION_QUERY_KEEPAWAY_STATUS:
                 this->get_keep_away();
                 sg_start_query_data++;
-                ESP_LOGD(TAG, "7");
                 break;
             case STANDARD_FUNCTION_QUERY_SCENE_MODE:
                 this->get_scene_mode();
                 sg_start_query_data++;
-                ESP_LOGD(TAG, "8");
                 break;
             case STANDARD_FUNCTION_QUERY_SENSITIVITY:
                 this->get_sensitivity();
                 sg_start_query_data++;
-                ESP_LOGD(TAG, "9");
                 break;
             case STANDARD_FUNCTION_QUERY_UNMANNED_TIME:
                 this->get_unmanned_time();
                 sg_start_query_data++;
-                ESP_LOGD(TAG, "10");
                 break;
             // case STANDARD_FUNCTION_QUERY_MOV_TARGET_DETECTION_MAX_DISTANCE:
             //     if () sg_start_query_data++;
@@ -149,7 +139,6 @@ void mr24hpc1Component::loop() {
             case STANDARD_FUNCTION_MAX:
                 sg_start_query_data++;
                 check_dev_inf_sign = false;
-                ESP_LOGD(TAG, "11");
                 break;
             default:
                 break;
@@ -159,7 +148,6 @@ void mr24hpc1Component::loop() {
     // 首次轮询结束之后，如果底层开放参数的开关是关闭的，则只轮询基础功能
     if ((s_output_info_switch_flag == OUTPUT_SWTICH_OFF) && (sg_start_query_data == CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH)){
         sg_start_query_data = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;
-        ESP_LOGD(TAG, "Setting success!");
     }
 
     // 轮询基础功能
@@ -168,31 +156,25 @@ void mr24hpc1Component::loop() {
             case STANDARD_FUNCTION_QUERY_HUMAN_STATUS:
                 this->get_human_status();
                 sg_start_query_data++;
-                ESP_LOGD(TAG, "12");
                 break;
             case STANDARD_FUNCTION_QUERY_KEEPAWAY_STATUS:
                 this->get_keep_away();
                 sg_start_query_data++;
-                ESP_LOGD(TAG, "13");
                 break;
             case STANDARD_FUNCTION_QUERY_SCENE_MODE:
                 this->get_scene_mode();
                 sg_start_query_data++;
-                ESP_LOGD(TAG, "14");
                 break;
             case STANDARD_FUNCTION_QUERY_SENSITIVITY:
                 this->get_sensitivity();
                 sg_start_query_data++;
-                ESP_LOGD(TAG, "15");
                 break;
             case STANDARD_FUNCTION_QUERY_UNMANNED_TIME:
                 this->get_unmanned_time();
                 sg_start_query_data++;
-                ESP_LOGD(TAG, "16");
                 break;
             case STANDARD_FUNCTION_MAX:
                 sg_start_query_data = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;
-                ESP_LOGD(TAG, "17");
                 break;
             default:
                 break;
