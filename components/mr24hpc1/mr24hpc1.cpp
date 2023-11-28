@@ -67,6 +67,8 @@ void mr24hpc1Component::setup() {
     memset(this->c_product_id, 0, PRODUCT_BUF_MAX_SIZE);
     memset(this->c_firmware_version, 0, PRODUCT_BUF_MAX_SIZE);
     memset(this->c_hardware_model, 0, PRODUCT_BUF_MAX_SIZE);
+
+    int sg_start_query_data = -1;
 }
 
 // component callback function, which is called every time the loop is called

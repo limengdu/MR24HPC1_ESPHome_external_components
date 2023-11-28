@@ -142,7 +142,7 @@ static uint8_t sg_data_len = 0;
 static uint8_t sg_frame_buf[FRAME_BUF_MAX_SIZE] = {0};
 static uint8_t sg_frame_prase_buf[FRAME_BUF_MAX_SIZE] = {0};
 static bool sg_init_flag = false;
-extern int sg_start_query_data = -1;
+extern int sg_start_query_data;
 // static int sg_start_query_data_max = -1;
 static uint32_t sg_motion_trigger_time_bak;
 static uint32_t sg_move_to_rest_time_bak;
