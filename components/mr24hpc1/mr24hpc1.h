@@ -230,6 +230,7 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
     void get_custom_mode(void);
     void get_existence_boundary(void);
     void get_motion_boundary(void);
+    void get_spatial_static_value(void);
     void get_spatial_motion_value(void);
     void get_distance_of_static_object(void);
     void get_distance_of_moving_object(void);
