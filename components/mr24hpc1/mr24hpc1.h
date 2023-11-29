@@ -71,19 +71,24 @@ enum
     // STANDARD_FUNCTION_QUERY_STATIC_TARGET_DETECTION_MAX_DISTANCE, // 以上是设置的参数
     STANDARD_FUNCTION_QUERY_HUMAN_STATUS,
     STANDARD_FUNCTION_QUERY_HUMAN_MOTION_INF,
-    STANDARD_FUNCTION_QUERY_BODY_MOVE_PARAMETER,
+    // STANDARD_FUNCTION_QUERY_BODY_MOVE_PARAMETER,
     STANDARD_FUNCTION_QUERY_KEEPAWAY_STATUS,
     STANDARD_FUNCTION_MAX,                      // 以上是基础功能信息
 
-    CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH,
-    CUSTOM_FUNCTION_QUERY_PRESENCE_OF_DETECTION_RANGE,
-    CUSTOM_FUNCTION_QUERY_JUDGMENT_THRESHOLD_EXISTS,
-    CUSTOM_FUNCTION_QUERY_MOTION_AMPLITUDE_TRIGGER_THRESHOLD,
-    CUSTOM_FUNCTION_QUERY_PRESENCE_OF_PERCEPTION_BOUNDARY,
-    CUSTOM_FUNCTION_QUERY_MOTION_TRIGGER_BOUNDARY,
-    CUSTOM_FUNCTION_QUERY_MOTION_TRIGGER_TIME,
-    CUSTOM_FUNCTION_QUERY_MOVEMENT_TO_REST_TIME,
-    CUSTOM_FUNCTION_QUERY_TIME_OF_ENTER_UNMANNED,
+    
+    CUSTOM_FUNCTION_QUERY_SPATIAL_STATIC_VALUE,
+    CUSTOM_FUNCTION_QUERY_SPATIAL_MOTION_VALUE,
+    CUSTOM_FUNCTION_QUERY_DISTANCE_OF_STATIC_OBJECT,
+    CUSTOM_FUNCTION_QUERY_DISTANCE_OF_MOVING_OBJECT,
+    CUSTOM_FUNCTION_QUERY_TARGET_MOVEMENT_SPEED,
+
+    // CUSTOM_FUNCTION_QUERY_JUDGMENT_THRESHOLD_EXISTS,
+    // CUSTOM_FUNCTION_QUERY_MOTION_AMPLITUDE_TRIGGER_THRESHOLD,
+    // CUSTOM_FUNCTION_QUERY_PRESENCE_OF_PERCEPTION_BOUNDARY,
+    // CUSTOM_FUNCTION_QUERY_MOTION_TRIGGER_BOUNDARY,
+    // CUSTOM_FUNCTION_QUERY_MOTION_TRIGGER_TIME,
+    // CUSTOM_FUNCTION_QUERY_MOVEMENT_TO_REST_TIME,
+    // CUSTOM_FUNCTION_QUERY_TIME_OF_ENTER_UNMANNED,
     CUSTOM_FUNCTION_MAX,
 };
 
@@ -208,6 +213,7 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
     void R24_frame_parse_product_Information(uint8_t *data);
     void R24_frame_parse_human_information(uint8_t *data);
     void send_query(uint8_t *query, size_t string_length);
+
     void get_heartbeat_packet(void);
     void get_radar_output_information_switch(void);
     void get_product_mode(void);
@@ -224,6 +230,11 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
     void get_custom_mode(void);
     void get_existence_boundary(void);
     void get_motion_boundary(void);
+    void get_spatial_motion_value(void);
+    void get_distance_of_static_object(void);
+    void get_distance_of_moving_object(void);
+    void get_target_movement_speed(void);
+
     void set_scene_mode(const std::string &state);
     void set_underlying_open_function(bool enable);
     void set_sensitivity(uint8_t value);

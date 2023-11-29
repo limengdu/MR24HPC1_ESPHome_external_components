@@ -142,10 +142,10 @@ void mr24hpc1Component::loop() {
                 this->get_human_motion_info();
                 sg_start_query_data++;
                 break;
-            case STANDARD_FUNCTION_QUERY_BODY_MOVE_PARAMETER:   // 体动参数不建议开启查询，因为上报频率足够频繁
-                this->get_body_motion_params();
-                sg_start_query_data++;
-                break;
+            // case STANDARD_FUNCTION_QUERY_BODY_MOVE_PARAMETER:   // 体动参数不建议开启查询，因为上报频率足够频繁
+            //     this->get_body_motion_params();
+            //     sg_start_query_data++;
+            //     break;
             case STANDARD_FUNCTION_QUERY_KEEPAWAY_STATUS:  // 以上是基础功能信息
                 this->get_keep_away();
                 sg_start_query_data++;
@@ -160,8 +160,11 @@ void mr24hpc1Component::loop() {
     }
 
     // 首次轮询结束之后，如果底层开放参数的开关是关闭的，则只轮询基础功能
-    if ((s_output_info_switch_flag == OUTPUT_SWTICH_OFF) && (sg_start_query_data == CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH)){
+    if ((s_output_info_switch_flag == OUTPUT_SWTICH_OFF) && (sg_start_query_data == CUSTOM_FUNCTION_QUERY_SPATIAL_STATIC_VALUE)){
         sg_start_query_data = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;
+    }
+    else if ((s_output_info_switch_flag == OUTPUT_SWTICH_ON)  && (sg_start_query_data < CUSTOM_FUNCTION_QUERY_SPATIAL_STATIC_VALUE)){
+        sg_start_query_data = CUSTOM_FUNCTION_QUERY_SPATIAL_STATIC_VALUE;
     }
 
     // 轮询基础功能
@@ -175,45 +178,49 @@ void mr24hpc1Component::loop() {
                 this->get_human_motion_info();
                 sg_start_query_data++;
                 break;
-            case STANDARD_FUNCTION_QUERY_BODY_MOVE_PARAMETER:   // 体动参数不建议开启查询，因为上报频率足够频繁
-                this->get_body_motion_params();
-                sg_start_query_data++;
-                break;
+            // case STANDARD_FUNCTION_QUERY_BODY_MOVE_PARAMETER:   // 体动参数不建议开启查询，因为上报频率足够频繁
+            //     this->get_body_motion_params();
+            //     sg_start_query_data++;
+            //     break;
             case STANDARD_FUNCTION_QUERY_KEEPAWAY_STATUS:  // 以上是基础功能信息
                 this->get_keep_away();
                 sg_start_query_data++;
                 break;
             case STANDARD_FUNCTION_MAX:
-                sg_start_query_data = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;  // 等待下一次基础功能的轮询
+                if(s_output_info_switch_flag == OUTPUT_SWTICH_OFF) sg_start_query_data = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;  // 如果开关状态依旧为关，等待下一次基础功能的轮询
+                else sg_start_query_data = CUSTOM_FUNCTION_QUERY_SPATIAL_STATIC_VALUE;  // 如果开关状态为开，则进入自定义功能查询
                 poll_time_base_func_check = false;                           // 避免高速轮询导致设备卡死
                 break;
             default:
+                if(s_output_info_switch_flag == OUTPUT_SWTICH_OFF) sg_start_query_data = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;  // 如果开关状态依旧为关，等待下一次基础功能的轮询
+                // else sg_start_query_data = CUSTOM_FUNCTION_QUERY_SPATIAL_STATIC_VALUE;  // 如果开关状态为开，则进入自定义功能查询
                 break;
         }
     }
 
     // 如果底层开放参数开关是打开的，则轮询自定义功能
-    // if ((s_output_info_switch_flag == OUTPUT_SWTICH_ON) && !check_dev_inf_sign && (sg_start_query_data >= CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH)){
-    //     switch(s_output_info_switch_flag){
-    //         case CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH:
-    //             this->get_radar_output_information_switch();
-    //             sg_start_query_data++;
-    //             break;
-            // case CUSTOM_FUNCTION_QUERY_SPATIAL_STATIC_VALUE:
-            //     this->get_spatial_static_value();
-            //     break;
-            // case CUSTOM_FUNCTION_QUERY_SPATIAL_MOTION_AMPLITUDE:
-            //     this->get_spatial_motion_amplitude();
-            //     break;
-            // case CUSTOM_FUNCTION_QUERY_PRESENCE_OF_DETECTION_RANGE:
-            //     this->get_presence_of_detection_range();
-            //     break;
-            // case CUSTOM_FUNCTION_QUERY_DISTANCE_OF_MOVING_OBJECT:
-            //     this->get_distance_of_moving_object();
-            //     break;
-            // case CUSTOM_FUNCTION_QUERY_TARGET_MOVEMENT_SPEED:
-            //     this->get_target_movement_speed();
-            //     break;
+    if ((s_output_info_switch_flag == OUTPUT_SWTICH_ON) && (!check_dev_inf_sign) && (sg_start_query_data >= CUSTOM_FUNCTION_QUERY_SPATIAL_STATIC_VALUE) && poll_time_base_func_check ){
+        switch(sg_start_query_data){
+            case CUSTOM_FUNCTION_QUERY_SPATIAL_STATIC_VALUE:
+                this->get_spatial_static_value();
+                sg_start_query_data++;
+                break;
+            case CUSTOM_FUNCTION_QUERY_SPATIAL_MOTION_VALUE:
+                this->get_spatial_motion_value();
+                sg_start_query_data++;
+                break;
+            case CUSTOM_FUNCTION_QUERY_DISTANCE_OF_STATIC_OBJECT:
+                this->get_distance_of_static_object();
+                sg_start_query_data++;
+                break;
+            case CUSTOM_FUNCTION_QUERY_DISTANCE_OF_MOVING_OBJECT:
+                this->get_distance_of_moving_object();
+                sg_start_query_data++;
+                break;
+            case CUSTOM_FUNCTION_QUERY_TARGET_MOVEMENT_SPEED:
+                this->get_target_movement_speed();
+                sg_start_query_data++;
+                break;
             // case CUSTOM_FUNCTION_QUERY_JUDGMENT_THRESHOLD_EXISTS:
             //     this->get_judgment_threshold_exists();
             //     break;
@@ -235,18 +242,15 @@ void mr24hpc1Component::loop() {
             // case CUSTOM_FUNCTION_QUERY_TIME_OF_ENTER_UNMANNED:
             //     this->get_time_of_enter_unmanned();
             //     break;
-            // case CUSTOM_FUNCTION_MAX:
-            //     this->get_heartbeat_packet();
-            //     break;
-    //         default:
-    //             break;
-    //     }
-    //     sg_start_query_data++;
-    // }
-
-    // 超出范围归位
-    // if (sg_start_query_data > CUSTOM_FUNCTION_MAX) sg_start_query_data = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
-    
+            case CUSTOM_FUNCTION_MAX:
+                if(s_output_info_switch_flag == OUTPUT_SWTICH_OFF) sg_start_query_data = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;  // 如果开关状态依旧为关，等待下一次基础功能的轮询
+                else sg_start_query_data = CUSTOM_FUNCTION_QUERY_SPATIAL_STATIC_VALUE;  // 如果开关状态为开，则进入自定义功能查询
+                poll_time_base_func_check = false;                           // 避免高速轮询导致设备卡死
+                break;
+            default:
+                break;
+        }
+    }
 }
 
 // Calculate CRC check digit
@@ -457,12 +461,10 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
         if (data[FRAME_DATA_INDEX])
         {
             s_output_info_switch_flag = OUTPUT_SWTICH_ON;
-            ESP_LOGD(TAG, "output switch on!");
         }
         else
         {
             s_output_info_switch_flag = OUTPUT_SWTICH_OFF;
-            ESP_LOGD(TAG, "output switch off!");
         }
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x01)
@@ -539,12 +541,10 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
         if (data[FRAME_DATA_INDEX])
         {
             s_output_info_switch_flag = OUTPUT_SWTICH_ON;
-            ESP_LOGD(TAG, "output switch on!");
         }
         else
         {
             s_output_info_switch_flag = OUTPUT_SWTICH_OFF;
-            ESP_LOGD(TAG, "output switch off!");
         }
         this->underly_open_function_switch_->publish_state(data[FRAME_DATA_INDEX]);
     }
@@ -719,7 +719,7 @@ void mr24hpc1Component::R24_frame_parse_work_status(uint8_t *data)
     }
     else
     {
-        // ESP_LOGD(TAG, "[%s] No found COMMAND_WORD(%02X) in Frame", __FUNCTION__, data[FRAME_COMMAND_WORD_INDEX]);
+        ESP_LOGD(TAG, "[%s] No found COMMAND_WORD(%02X) in Frame", __FUNCTION__, data[FRAME_COMMAND_WORD_INDEX]);
     }
 }
 
@@ -727,19 +727,19 @@ void mr24hpc1Component::R24_frame_parse_human_information(uint8_t *data)
 {
     if (data[FRAME_COMMAND_WORD_INDEX] == 0x01)
     {
-    //     this->someoneExists_binary_sensor_->publish_state(s_someoneExists_str[data[FRAME_DATA_INDEX]]);
+        this->someoneExists_binary_sensor_->publish_state(s_someoneExists_str[data[FRAME_DATA_INDEX]]);
     }
-    // else if (data[FRAME_COMMAND_WORD_INDEX] == 0x02)
-    // {
-    //     if (data[FRAME_DATA_INDEX] < 3 && data[FRAME_DATA_INDEX] >= 0)
-    //     {
-    //         this->motion_status_text_sensor_->publish_state(s_motion_status_str[data[FRAME_DATA_INDEX]]);
-    //     }
-    // }
-    // else if (data[FRAME_COMMAND_WORD_INDEX] == 0x03)
-    // {
-    //     this->movementSigns_sensor_->publish_state(data[FRAME_DATA_INDEX]);
-    // }
+    else if (data[FRAME_COMMAND_WORD_INDEX] == 0x02)
+    {
+        if (data[FRAME_DATA_INDEX] < 3 && data[FRAME_DATA_INDEX] >= 0)
+        {
+            this->motion_status_text_sensor_->publish_state(s_motion_status_str[data[FRAME_DATA_INDEX]]);
+        }
+    }
+    else if (data[FRAME_COMMAND_WORD_INDEX] == 0x03)
+    {
+        this->movementSigns_sensor_->publish_state(data[FRAME_DATA_INDEX]);
+    }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0A)
     {
         // none:0x00  1s:0x01 30s:0x02 1min:0x03 2min:0x04 5min:0x05 10min:0x06 30min:0x07 1hour:0x08
@@ -748,14 +748,14 @@ void mr24hpc1Component::R24_frame_parse_human_information(uint8_t *data)
             this->unman_time_select_->publish_state(s_unmanned_time_str[data[FRAME_DATA_INDEX]]);
         }
     }
-    // else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0B)
-    // {
-    //     // none:0x00  close_to:0x01  far_away:0x02
-    //     if (data[FRAME_DATA_INDEX] < 3 && data[FRAME_DATA_INDEX] >= 0)
-    //     {
-    //         this->keep_away_text_sensor_->publish_state(s_keep_away_str[data[FRAME_DATA_INDEX]]);
-    //     }
-    // }
+    else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0B)
+    {
+        // none:0x00  close_to:0x01  far_away:0x02
+        if (data[FRAME_DATA_INDEX] < 3 && data[FRAME_DATA_INDEX] >= 0)
+        {
+            this->keep_away_text_sensor_->publish_state(s_keep_away_str[data[FRAME_DATA_INDEX]]);
+        }
+    }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x81)
     {
         this->someoneExists_binary_sensor_->publish_state(s_someoneExists_str[data[FRAME_DATA_INDEX]]);
@@ -944,6 +944,40 @@ void mr24hpc1Component::get_motion_boundary(void)
     this->send_query(send_data, send_data_len);
 }
 
+void mr24hpc1Component::get_spatial_motion_value(void)
+{
+    unsigned char send_data_len = 10;
+    unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x82, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
+    this->send_query(send_data, send_data_len);
+}
+
+void mr24hpc1Component::get_distance_of_static_object(void)
+{
+    unsigned char send_data_len = 10;
+    unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x83, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
+    this->send_query(send_data, send_data_len);
+}
+
+void mr24hpc1Component::get_distance_of_moving_object(void)
+{
+    unsigned char send_data_len = 10;
+    unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x84, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
+    this->send_query(send_data, send_data_len);
+}
+
+void mr24hpc1Component::get_target_movement_speed(void)
+{
+    unsigned char send_data_len = 10;
+    unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x85, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
+    this->send_query(send_data, send_data_len);
+}
+
+// 设置的逻辑：设置之后查询设置是否成功！
+
 void mr24hpc1Component::set_underlying_open_function(bool enable)
 {
     uint8_t underlyswitch_on[] = {0x53, 0x59, 0x08, 0x00, 0x00, 0x01, 0x01, 0xB6, 0x54, 0x43};
@@ -989,6 +1023,7 @@ void mr24hpc1Component::set_unman_time(const std::string &time){
     uint8_t send_data[10] = {0x53, 0x59, 0x80, 0x0a, 0x00, 0x01, cmd_value, 0x00, 0x54, 0x43};
     send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
+    this->get_unmanned_time();
 }
 
 void mr24hpc1Component::set_custom_mode(uint8_t mode){
