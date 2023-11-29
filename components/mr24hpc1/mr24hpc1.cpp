@@ -157,13 +157,13 @@ void mr24hpc1Component::loop() {
             default:
                 break;
         }
-        ESP_LOGD(TAG, "first end!!!!!!!!!!!!!!!", value);
+        ESP_LOGD(TAG, "first end!!!!!!!!!!!!!!!");
     }
 
     // 首次轮询结束之后，如果底层开放参数的开关是关闭的，则只轮询基础功能
     if ((s_output_info_switch_flag == OUTPUT_SWTICH_OFF) && (sg_start_query_data == CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH)){
         sg_start_query_data = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;
-        ESP_LOGD(TAG, "setting success!!!!!!!!!!!!!!!!!", value);
+        ESP_LOGD(TAG, "setting success!!!!!!!!!!!!!!!!!");
     }
 
     // 轮询基础功能
@@ -192,7 +192,7 @@ void mr24hpc1Component::loop() {
             default:
                 break;
         }
-        ESP_LOGD(TAG, "cycle!!!!!!!!!!!!!!!", value);
+        ESP_LOGD(TAG, "cycle!!!!!!!!!!!!!!!");
     }
 
     // 如果底层开放参数开关是打开的，则轮询自定义功能
