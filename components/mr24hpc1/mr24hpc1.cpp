@@ -15,6 +15,7 @@ namespace mr24hpc1 {
 static const char *TAG = "mr24hpc1";
 int sg_start_query_data = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
 bool check_dev_inf_sign = true;
+bool poll_time_base_func_check;
 
 // Prints the component's configuration data. dump_config() prints all of the component's configuration items in an easy-to-read format, including the configuration key-value pairs.
 void mr24hpc1Component::dump_config() { 
@@ -73,6 +74,7 @@ void mr24hpc1Component::setup() {
 // component callback function, which is called every time the loop is called
 void mr24hpc1Component::update() {
     this->get_radar_output_information_switch();
+    poll_time_base_func_check = true;
 }
 
 // main loop
@@ -86,8 +88,8 @@ void mr24hpc1Component::loop() {
         this->R24_split_data_frame(byte);  // split data frame
     }
 
-    if(check_dev_inf_sign){                // 首次信息轮询
-        switch(sg_start_query_data){
+    if(check_dev_inf_sign){                // 首次上电信息轮询
+        switch(sg_start_query_data){       // 查询设备基础信息：设备固件、ID等
             case STANDARD_FUNCTION_QUERY_PRODUCT_MODE:
                 this->get_product_mode();
                 sg_start_query_data++;
@@ -96,7 +98,7 @@ void mr24hpc1Component::loop() {
                 this->get_product_id();
                 sg_start_query_data++;
                 break;
-            case STANDARD_FUNCTION_QUERY_FIRMWARE_VERDION:
+            case STANDARD_FUNCTION_QUERY_FIRMWARE_VERSION:
                 this->get_firmware_version();
                 sg_start_query_data++;
                 break;
@@ -104,16 +106,8 @@ void mr24hpc1Component::loop() {
                 this->get_hardware_model();
                 sg_start_query_data++;
                 break;
-            case STANDARD_FUNCTION_QUERY_HEARTBEAT_STATE:
+            case STANDARD_FUNCTION_QUERY_HEARTBEAT_STATE:  // 以上是设备信息
                 this->get_heartbeat_packet();
-                sg_start_query_data++;
-                break;
-            case STANDARD_FUNCTION_QUERY_HUMAN_STATUS:
-                this->get_human_status();
-                sg_start_query_data++;
-                break;
-            case STANDARD_FUNCTION_QUERY_KEEPAWAY_STATUS:
-                this->get_keep_away();
                 sg_start_query_data++;
                 break;
             case STANDARD_FUNCTION_QUERY_SCENE_MODE:
@@ -132,11 +126,27 @@ void mr24hpc1Component::loop() {
             //     if () sg_start_query_data++;
             //     else this->get_movingTargetDetectionMaxDistance();
             //     break;
-            // case STANDARD_FUNCTION_QUERY_STATIC_TARGET_DETECTION_MAX_DISTANCE:
+            // case STANDARD_FUNCTION_QUERY_STATIC_TARGET_DETECTION_MAX_DISTANCE:  // 以上是设置的参数
             //     if () sg_start_query_data++;
             //     else this->get_staticTargetDetectionMaxDistance();
             //     break;
-            case STANDARD_FUNCTION_MAX:
+            case STANDARD_FUNCTION_QUERY_HUMAN_STATUS:
+                this->get_human_status();
+                sg_start_query_data++;
+                break;
+            case STANDARD_FUNCTION_QUERY_HUMAN_MOTION_INF:
+                this->get_human_motion_info();
+                sg_start_query_data++;
+                break;
+            // case STANDARD_FUNCTION_QUERY_BODY_MOVE_PARAMETER:   // 体动参数不建议开启查询，因为上报频率足够频繁
+            //     this->get_body_motion_params();
+            //     sg_start_query_data++;
+            //     break;
+            case STANDARD_FUNCTION_QUERY_KEEPAWAY_STATUS:  // 以上是基础功能信息
+                this->get_keep_away();
+                sg_start_query_data++;
+                break;
+            case STANDARD_FUNCTION_MAX:                // 首次上电轮询结束
                 sg_start_query_data++;
                 check_dev_inf_sign = false;
                 break;
@@ -151,30 +161,27 @@ void mr24hpc1Component::loop() {
     }
 
     // 轮询基础功能
-    if ((s_output_info_switch_flag == OUTPUT_SWTICH_OFF) && (!check_dev_inf_sign) && (sg_start_query_data >= STANDARD_FUNCTION_QUERY_HUMAN_STATUS)){
+    if ( (s_output_info_switch_flag == OUTPUT_SWTICH_OFF) && (!check_dev_inf_sign) && (sg_start_query_data >= STANDARD_FUNCTION_QUERY_HUMAN_STATUS) && poll_time_base_func_check ){
         switch(sg_start_query_data){
             case STANDARD_FUNCTION_QUERY_HUMAN_STATUS:
                 this->get_human_status();
                 sg_start_query_data++;
                 break;
-            case STANDARD_FUNCTION_QUERY_KEEPAWAY_STATUS:
+            case STANDARD_FUNCTION_QUERY_HUMAN_MOTION_INF:
+                this->get_human_motion_info();
+                sg_start_query_data++;
+                break;
+            // case STANDARD_FUNCTION_QUERY_BODY_MOVE_PARAMETER:   // 体动参数不建议开启查询，因为上报频率足够频繁
+            //     this->get_body_motion_params();
+            //     sg_start_query_data++;
+            //     break;
+            case STANDARD_FUNCTION_QUERY_KEEPAWAY_STATUS:  // 以上是基础功能信息
                 this->get_keep_away();
                 sg_start_query_data++;
                 break;
-            case STANDARD_FUNCTION_QUERY_SCENE_MODE:
-                this->get_scene_mode();
-                sg_start_query_data++;
-                break;
-            case STANDARD_FUNCTION_QUERY_SENSITIVITY:
-                this->get_sensitivity();
-                sg_start_query_data++;
-                break;
-            case STANDARD_FUNCTION_QUERY_UNMANNED_TIME:
-                this->get_unmanned_time();
-                sg_start_query_data++;
-                break;
             case STANDARD_FUNCTION_MAX:
-                sg_start_query_data = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;
+                sg_start_query_data = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;  // 等待下一次基础功能的轮询
+                poll_time_base_func_check = false;                           // 避免高速轮询导致设备卡死
                 break;
             default:
                 break;
@@ -862,6 +869,22 @@ void mr24hpc1Component::get_human_status(void)
 {
     unsigned char send_data_len = 10;
     unsigned char send_data[10] = {0x53, 0x59, 0x80, 0x81, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+    send_data[FRAME_DATA_INDEX + 1] = get_frame_crc_sum(send_data, send_data_len);
+    this->send_query(send_data, send_data_len);
+}
+
+void mr24hpc1Component::get_human_motion_info(void)
+{
+    unsigned char send_data_len = 10;
+    unsigned char send_data[10] = {0x53, 0x59, 0x80, 0x82, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+    send_data[FRAME_DATA_INDEX + 1] = get_frame_crc_sum(send_data, send_data_len);
+    this->send_query(send_data, send_data_len);
+}
+
+void mr24hpc1Component::get_body_motion_params(void)
+{
+    unsigned char send_data_len = 10;
+    unsigned char send_data[10] = {0x53, 0x59, 0x80, 0x83, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
     send_data[FRAME_DATA_INDEX + 1] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
 }
