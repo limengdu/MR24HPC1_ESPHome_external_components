@@ -142,10 +142,10 @@ void mr24hpc1Component::loop() {
                 this->get_human_motion_info();
                 sg_start_query_data++;
                 break;
-            // case STANDARD_FUNCTION_QUERY_BODY_MOVE_PARAMETER:   // 体动参数不建议开启查询，因为上报频率足够频繁
-            //     this->get_body_motion_params();
-            //     sg_start_query_data++;
-            //     break;
+            case STANDARD_FUNCTION_QUERY_BODY_MOVE_PARAMETER:   // 体动参数不建议开启查询，因为上报频率足够频繁
+                this->get_body_motion_params();
+                sg_start_query_data++;
+                break;
             case STANDARD_FUNCTION_QUERY_KEEPAWAY_STATUS:  // 以上是基础功能信息
                 this->get_keep_away();
                 sg_start_query_data++;
@@ -157,13 +157,11 @@ void mr24hpc1Component::loop() {
             default:
                 break;
         }
-        ESP_LOGD(TAG, "first end!!!!!!!!!!!!!!!");
     }
 
     // 首次轮询结束之后，如果底层开放参数的开关是关闭的，则只轮询基础功能
     if ((s_output_info_switch_flag == OUTPUT_SWTICH_OFF) && (sg_start_query_data == CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH)){
         sg_start_query_data = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;
-        ESP_LOGD(TAG, "setting success!!!!!!!!!!!!!!!!!");
     }
 
     // 轮询基础功能
@@ -177,10 +175,10 @@ void mr24hpc1Component::loop() {
                 this->get_human_motion_info();
                 sg_start_query_data++;
                 break;
-            // case STANDARD_FUNCTION_QUERY_BODY_MOVE_PARAMETER:   // 体动参数不建议开启查询，因为上报频率足够频繁
-            //     this->get_body_motion_params();
-            //     sg_start_query_data++;
-            //     break;
+            case STANDARD_FUNCTION_QUERY_BODY_MOVE_PARAMETER:   // 体动参数不建议开启查询，因为上报频率足够频繁
+                this->get_body_motion_params();
+                sg_start_query_data++;
+                break;
             case STANDARD_FUNCTION_QUERY_KEEPAWAY_STATUS:  // 以上是基础功能信息
                 this->get_keep_away();
                 sg_start_query_data++;
@@ -192,7 +190,6 @@ void mr24hpc1Component::loop() {
             default:
                 break;
         }
-        ESP_LOGD(TAG, "cycle!!!!!!!!!!!!!!!");
     }
 
     // 如果底层开放参数开关是打开的，则轮询自定义功能
