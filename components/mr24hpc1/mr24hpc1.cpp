@@ -13,8 +13,8 @@ namespace esphome {
 namespace mr24hpc1 {
 
 static const char *TAG = "mr24hpc1";
-int sg_start_query_data = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
-bool check_dev_inf_sign = true;
+int sg_start_query_data;
+bool check_dev_inf_sign;
 bool poll_time_base_func_check;
 
 // Prints the component's configuration data. dump_config() prints all of the component's configuration items in an easy-to-read format, including the configuration key-value pairs.
@@ -63,7 +63,11 @@ void mr24hpc1Component::dump_config() {
 void mr24hpc1Component::setup() {
     ESP_LOGCONFIG(TAG, "uart_settings is 115200");
     this->check_uart_settings(115200);
-    this->custom_mode_number_->publish_state(0);
+    this->custom_mode_number_->publish_state(0);           // 将自定义模式归位
+    this->set_custom_end_mode();
+    poll_time_base_func_check = true;
+    check_dev_inf_sign = true;
+    sg_start_query_data = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
 
     memset(this->c_product_mode, 0, PRODUCT_BUF_MAX_SIZE);
     memset(this->c_product_id, 0, PRODUCT_BUF_MAX_SIZE);
@@ -73,8 +77,8 @@ void mr24hpc1Component::setup() {
 
 // component callback function, which is called every time the loop is called
 void mr24hpc1Component::update() {
-    this->get_radar_output_information_switch();
-    poll_time_base_func_check = true;
+    this->get_radar_output_information_switch();   // 每隔一段时间查询一下按键状态
+    poll_time_base_func_check = true;              // 每隔一段时间查询一下基础功能信息
 }
 
 // main loop
@@ -861,7 +865,7 @@ void mr24hpc1Component::get_firmware_version(void)
 {
     unsigned char send_data_len = 10;
     unsigned char send_data[10] = {0x53, 0x59, 0x02, 0xA4, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
-    send_data[FRAME_DATA_INDEX + 1] = get_frame_crc_sum(send_data, send_data_len);
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
 }
 
@@ -869,7 +873,7 @@ void mr24hpc1Component::get_human_status(void)
 {
     unsigned char send_data_len = 10;
     unsigned char send_data[10] = {0x53, 0x59, 0x80, 0x81, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
-    send_data[FRAME_DATA_INDEX + 1] = get_frame_crc_sum(send_data, send_data_len);
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
 }
 
@@ -877,7 +881,7 @@ void mr24hpc1Component::get_human_motion_info(void)
 {
     unsigned char send_data_len = 10;
     unsigned char send_data[10] = {0x53, 0x59, 0x80, 0x82, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
-    send_data[FRAME_DATA_INDEX + 1] = get_frame_crc_sum(send_data, send_data_len);
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
 }
 
@@ -885,7 +889,7 @@ void mr24hpc1Component::get_body_motion_params(void)
 {
     unsigned char send_data_len = 10;
     unsigned char send_data[10] = {0x53, 0x59, 0x80, 0x83, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
-    send_data[FRAME_DATA_INDEX + 1] = get_frame_crc_sum(send_data, send_data_len);
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
 }
 
@@ -893,21 +897,21 @@ void mr24hpc1Component::get_keep_away(void)
 {
     unsigned char send_data_len = 10;
     unsigned char send_data[10] = {0x53, 0x59, 0x80, 0x8B, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
-    send_data[FRAME_DATA_INDEX + 1] = get_frame_crc_sum(send_data, send_data_len);
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
 }
 
 void mr24hpc1Component::get_scene_mode(void){
     unsigned char send_data_len = 10;
     unsigned char send_data[10] = {0x53, 0x59, 0x05, 0x87, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
-    send_data[FRAME_DATA_INDEX + 1] = get_frame_crc_sum(send_data, send_data_len);
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
 }
 
 void mr24hpc1Component::get_sensitivity(void){
     unsigned int send_data_len = 10;
     unsigned char send_data[10] = {0x53, 0x59, 0x05, 0x88, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
-    send_data[FRAME_DATA_INDEX + 1] = get_frame_crc_sum(send_data, send_data_len);
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
 }
 
@@ -915,7 +919,7 @@ void mr24hpc1Component::get_unmanned_time(void)
 {
     unsigned char send_data_len = 10;
     unsigned char send_data[10] = {0x53, 0x59, 0x80, 0x8a, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
-    send_data[FRAME_DATA_INDEX + 1] = get_frame_crc_sum(send_data, send_data_len);
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
 }
 
@@ -969,6 +973,14 @@ void mr24hpc1Component::set_sensitivity(uint8_t value) {
     uint8_t send_data[10] = {0x53, 0x59, 0x05, 0x08, 0x00, 0x01, value, 0x00, 0x54, 0x43};
     send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
+}
+
+void mr24hpc1Component::set_reset(void) {
+    unsigned char send_data_len = 10;
+    unsigned char send_data[10] = {0x53, 0x59, 0x01, 0x02, 0x00, 0x01, 0x0F, 0xBF, 0x54, 0x43};
+    this->send_query(send_data, send_data_len);
+    check_dev_inf_sign = true;
+    sg_start_query_data = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
 }
 
 void mr24hpc1Component::set_unman_time(const std::string &time){

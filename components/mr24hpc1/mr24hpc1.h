@@ -73,8 +73,6 @@ enum
     STANDARD_FUNCTION_QUERY_HUMAN_MOTION_INF,
     // STANDARD_FUNCTION_QUERY_BODY_MOVE_PARAMETER,
     STANDARD_FUNCTION_QUERY_KEEPAWAY_STATUS,
-    
-    // STANDARD_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH,
     STANDARD_FUNCTION_MAX,                      // 以上是基础功能信息
 
     CUSTOM_FUNCTION_QUERY_RADAR_OUTPUT_INFORMATION_SWITCH,
@@ -197,7 +195,7 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
     char c_hardware_model[PRODUCT_BUF_MAX_SIZE + 1];
     char c_firmware_version[PRODUCT_BUF_MAX_SIZE + 1];
   public:
-    mr24hpc1Component() : PollingComponent(8000) {}
+    mr24hpc1Component() : PollingComponent(8000) {}  // 每隔8秒调用update()函数一次
     float get_setup_priority() const override { return esphome::setup_priority::LATE; }
     void setup() override;
     void update() override;
@@ -229,6 +227,7 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
     void set_scene_mode(const std::string &state);
     void set_underlying_open_function(bool enable);
     void set_sensitivity(uint8_t value);
+    void set_reset(void);
     void set_unman_time(const std::string &time);
     void set_custom_mode(uint8_t mode);
     void set_custom_end_mode(void);
