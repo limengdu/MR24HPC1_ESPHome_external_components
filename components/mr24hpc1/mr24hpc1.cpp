@@ -1061,10 +1061,13 @@ void mr24hpc1Component::set_custom_end_mode(void){
     uint8_t send_data_len = 10;
     uint8_t send_data[10] = {0x53, 0x59, 0x05, 0x0a, 0x00, 0x01, 0x0F, 0xCB, 0x54, 0x43};
     this->send_query(send_data, send_data_len);
-    this->custom_mode_number_->publish_state(0);
+    this->custom_mode_number_->publish_state(0);                        // 清空设定值
+    this->existence_boundary_select_->publish_state(0);
+    this->motion_boundary_select_->publish_state(0);
 }
 
 void mr24hpc1Component::set_existence_boundary(const std::string &value){
+    if(this->custom_mode_number_->state == 0)return;                    // 你得检查在自定义模式下才能进行设置
     uint8_t cmd_value = BOUNDARY_ENUM_TO_INT.at(value);
     uint8_t send_data_len = 10;
     uint8_t send_data[10] = {0x53, 0x59, 0x08, 0x0A, 0x00, 0x01, cmd_value, 0x00, 0x54, 0x43};
@@ -1074,6 +1077,7 @@ void mr24hpc1Component::set_existence_boundary(const std::string &value){
 }
 
 void mr24hpc1Component::set_motion_boundary(const std::string &value){
+    if(this->custom_mode_number_->state == 0)return;                     // 你得检查在自定义模式下才能进行设置
     uint8_t cmd_value = BOUNDARY_ENUM_TO_INT.at(value);
     uint8_t send_data_len = 10;
     uint8_t send_data[10] = {0x53, 0x59, 0x08, 0x0B, 0x00, 0x01, cmd_value, 0x00, 0x54, 0x43};
