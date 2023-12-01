@@ -820,7 +820,7 @@ void mr24hpc1Component::get_heartbeat_packet(void)
 {
     uint8_t send_data_len = 10;
     uint8_t send_data[10] = {0x53, 0x59, 0x01, 0x01, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
-    send_data[FRAME_DATA_INDEX + 1] = get_frame_crc_sum(send_data, send_data_len);
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
 }
 
@@ -829,7 +829,7 @@ void mr24hpc1Component::get_radar_output_information_switch(void)
 {
     unsigned char send_data_len = 10;
     unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x80, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
-    send_data[FRAME_DATA_INDEX + 1] = get_frame_crc_sum(send_data, send_data_len);
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
 }
 
@@ -838,7 +838,7 @@ void mr24hpc1Component::get_product_mode(void)
 {
     unsigned char send_data_len = 10;
     unsigned char send_data[10] = {0x53, 0x59, 0x02, 0xA1, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
-    send_data[FRAME_DATA_INDEX + 1] = get_frame_crc_sum(send_data, send_data_len);
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
 }
 
@@ -847,7 +847,7 @@ void mr24hpc1Component::get_product_id(void)
 {
     unsigned char send_data_len = 10;
     unsigned char send_data[10] = {0x53, 0x59, 0x02, 0xA2, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
-    send_data[FRAME_DATA_INDEX + 1] = get_frame_crc_sum(send_data, send_data_len);
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
 }
 
@@ -856,7 +856,7 @@ void mr24hpc1Component::get_hardware_model(void)
 {
     unsigned char send_data_len = 10;
     unsigned char send_data[10] = {0x53, 0x59, 0x02, 0xA3, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
-    send_data[FRAME_DATA_INDEX + 1] = get_frame_crc_sum(send_data, send_data_len);
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
 }
 
@@ -1003,10 +1003,11 @@ void mr24hpc1Component::set_underlying_open_function(bool enable)
 
 void mr24hpc1Component::set_scene_mode(const std::string &state){
     uint8_t cmd_value = SCENEMODE_ENUM_TO_INT.at(state);
-    if(cmd_value == 0x00)return;
-    uint8_t scenemodeArr[10] = {0x53, 0x59, 0x05, 0x07, 0x00, 0x01, cmd_value, 0x00, 0x54, 0x43};
-    scenemodeArr[7] = get_frame_crc_sum(scenemodeArr, sizeof(scenemodeArr));
-    this->send_query(scenemodeArr, sizeof(scenemodeArr));
+    uint8_t send_data_len = 10;
+    uint8_t send_data[10] = {0x53, 0x59, 0x05, 0x07, 0x00, 0x01, cmd_value, 0x00, 0x54, 0x43};
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
+    this->send_query(send_data, send_data_len);
+    this->get_scene_mode();
 }
 
 void mr24hpc1Component::set_sensitivity(uint8_t value) {
@@ -1015,6 +1016,7 @@ void mr24hpc1Component::set_sensitivity(uint8_t value) {
     uint8_t send_data[10] = {0x53, 0x59, 0x05, 0x08, 0x00, 0x01, value, 0x00, 0x54, 0x43};
     send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
+    this->get_sensitivity();
 }
 
 void mr24hpc1Component::set_reset(void) {
