@@ -106,12 +106,8 @@ void mr24hpc1Component::loop() {
                 this->get_firmware_version();
                 sg_start_query_data++;
                 break;
-            case STANDARD_FUNCTION_QUERY_HARDWARE_MODE:
+            case STANDARD_FUNCTION_QUERY_HARDWARE_MODE:  // 以上是设备信息
                 this->get_hardware_model();
-                sg_start_query_data++;
-                break;
-            case STANDARD_FUNCTION_QUERY_HEARTBEAT_STATE:  // 以上是设备信息
-                this->get_heartbeat_packet();
                 sg_start_query_data++;
                 break;
             case STANDARD_FUNCTION_QUERY_SCENE_MODE:
@@ -150,6 +146,10 @@ void mr24hpc1Component::loop() {
                 this->get_keep_away();
                 sg_start_query_data++;
                 break;
+            case STANDARD_FUNCTION_QUERY_HEARTBEAT_STATE:
+                this->get_heartbeat_packet();
+                sg_start_query_data++;
+                break;
             case STANDARD_FUNCTION_MAX:                // 首次上电轮询结束
                 sg_start_query_data++;
                 check_dev_inf_sign = false;
@@ -184,6 +184,10 @@ void mr24hpc1Component::loop() {
             //     break;
             case STANDARD_FUNCTION_QUERY_KEEPAWAY_STATUS:  // 以上是基础功能信息
                 this->get_keep_away();
+                sg_start_query_data++;
+                break;
+            case STANDARD_FUNCTION_QUERY_HEARTBEAT_STATE:
+                this->get_heartbeat_packet();
                 sg_start_query_data++;
                 break;
             case STANDARD_FUNCTION_MAX:
@@ -242,6 +246,10 @@ void mr24hpc1Component::loop() {
             // case CUSTOM_FUNCTION_QUERY_TIME_OF_ENTER_UNMANNED:
             //     this->get_time_of_enter_unmanned();
             //     break;
+            case CUSTOM_FUNCTION_QUERY_HEARTBEAT_STATE:
+                this->get_heartbeat_packet();
+                sg_start_query_data++;
+                break;
             case CUSTOM_FUNCTION_MAX:
                 if(s_output_info_switch_flag == OUTPUT_SWTICH_OFF) sg_start_query_data = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;  // 如果开关状态依旧为关，等待下一次基础功能的轮询
                 else sg_start_query_data = CUSTOM_FUNCTION_QUERY_SPATIAL_STATIC_VALUE;  // 如果开关状态为开，则进入自定义功能查询
@@ -699,9 +707,9 @@ void mr24hpc1Component::R24_frame_parse_work_status(uint8_t *data)
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x87)
     {
-        if (this->scene_mode_select_->has_index(data[FRAME_DATA_INDEX] - 1))
+        if (this->scene_mode_select_->has_index(data[FRAME_DATA_INDEX]))
         {
-            this->scene_mode_select_->publish_state(s_scene_str[data[FRAME_DATA_INDEX] - 1]);
+            this->scene_mode_select_->publish_state(s_scene_str[data[FRAME_DATA_INDEX]]);
         }
         else
         {
