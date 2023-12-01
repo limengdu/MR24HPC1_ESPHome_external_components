@@ -160,11 +160,11 @@ void mr24hpc1Component::loop() {
     }
 
     // 首次轮询结束之后，如果底层开放参数的开关是关闭的，则只轮询基础功能
-    if ((s_output_info_switch_flag == OUTPUT_SWTICH_OFF) && (sg_start_query_data == CUSTOM_FUNCTION_QUERY_SPATIAL_STATIC_VALUE)){
+    if ((s_output_info_switch_flag == OUTPUT_SWTICH_OFF) && (sg_start_query_data == CUSTOM_FUNCTION_QUERY_HUMAN_STATUS)){
         sg_start_query_data = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;
     }
-    else if ((s_output_info_switch_flag == OUTPUT_SWTICH_ON)  && (sg_start_query_data < CUSTOM_FUNCTION_QUERY_SPATIAL_STATIC_VALUE)){
-        sg_start_query_data = CUSTOM_FUNCTION_QUERY_SPATIAL_STATIC_VALUE;
+    else if ((s_output_info_switch_flag == OUTPUT_SWTICH_ON)  && (sg_start_query_data < CUSTOM_FUNCTION_QUERY_HUMAN_STATUS)){
+        sg_start_query_data = CUSTOM_FUNCTION_QUERY_HUMAN_STATUS;
     }
 
     // 轮询基础功能
@@ -192,37 +192,44 @@ void mr24hpc1Component::loop() {
                 break;
             case STANDARD_FUNCTION_MAX:
                 if(s_output_info_switch_flag == OUTPUT_SWTICH_OFF) sg_start_query_data = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;  // 如果开关状态依旧为关，等待下一次基础功能的轮询
-                else sg_start_query_data = CUSTOM_FUNCTION_QUERY_SPATIAL_STATIC_VALUE;  // 如果开关状态为开，则进入自定义功能查询
+                else sg_start_query_data = CUSTOM_FUNCTION_QUERY_HUMAN_STATUS;  // 如果开关状态为开，则进入自定义功能查询
                 poll_time_base_func_check = false;                           // 避免高速轮询导致设备卡死
                 break;
             default:
                 if(s_output_info_switch_flag == OUTPUT_SWTICH_OFF) sg_start_query_data = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;  // 如果开关状态依旧为关，等待下一次基础功能的轮询
-                // else sg_start_query_data = CUSTOM_FUNCTION_QUERY_SPATIAL_STATIC_VALUE;  // 如果开关状态为开，则进入自定义功能查询
                 break;
         }
     }
 
     // 如果底层开放参数开关是打开的，则轮询自定义功能
-    if ((s_output_info_switch_flag == OUTPUT_SWTICH_ON) && (!check_dev_inf_sign) && (sg_start_query_data >= CUSTOM_FUNCTION_QUERY_SPATIAL_STATIC_VALUE) && poll_time_base_func_check ){
+    if ((s_output_info_switch_flag == OUTPUT_SWTICH_ON) && (!check_dev_inf_sign) && (sg_start_query_data >= CUSTOM_FUNCTION_QUERY_HUMAN_STATUS) && poll_time_base_func_check ){
         switch(sg_start_query_data){
-            case CUSTOM_FUNCTION_QUERY_SPATIAL_STATIC_VALUE:
-                this->get_spatial_static_value();
+            case CUSTOM_FUNCTION_QUERY_HEARTBEAT_STATE:
+                this->get_heartbeat_packet();
                 sg_start_query_data++;
                 break;
-            case CUSTOM_FUNCTION_QUERY_SPATIAL_MOTION_VALUE:
-                this->get_spatial_motion_value();
-                sg_start_query_data++;
-                break;
-            case CUSTOM_FUNCTION_QUERY_DISTANCE_OF_STATIC_OBJECT:
-                this->get_distance_of_static_object();
-                sg_start_query_data++;
-                break;
-            case CUSTOM_FUNCTION_QUERY_DISTANCE_OF_MOVING_OBJECT:
-                this->get_distance_of_moving_object();
-                sg_start_query_data++;
-                break;
-            case CUSTOM_FUNCTION_QUERY_TARGET_MOVEMENT_SPEED:
-                this->get_target_movement_speed();
+            // case CUSTOM_FUNCTION_QUERY_SPATIAL_STATIC_VALUE:
+            //     this->get_spatial_static_value();                      // 这些值是定时上报的，所以没必要开启查询
+            //     sg_start_query_data++;
+            //     break;
+            // case CUSTOM_FUNCTION_QUERY_SPATIAL_MOTION_VALUE:
+            //     this->get_spatial_motion_value();
+            //     sg_start_query_data++;
+            //     break;
+            // case CUSTOM_FUNCTION_QUERY_DISTANCE_OF_STATIC_OBJECT:
+            //     this->get_distance_of_static_object();
+            //     sg_start_query_data++;
+            //     break;
+            // case CUSTOM_FUNCTION_QUERY_DISTANCE_OF_MOVING_OBJECT:
+            //     this->get_distance_of_moving_object();
+            //     sg_start_query_data++;
+            //     break;
+            // case CUSTOM_FUNCTION_QUERY_TARGET_MOVEMENT_SPEED:
+            //     this->get_target_movement_speed();
+            //     sg_start_query_data++;
+            //     break;
+            case CUSTOM_FUNCTION_QUERY_HUMAN_STATUS:
+                this->get_human_status();
                 sg_start_query_data++;
                 break;
             // case CUSTOM_FUNCTION_QUERY_JUDGMENT_THRESHOLD_EXISTS:
@@ -246,13 +253,9 @@ void mr24hpc1Component::loop() {
             // case CUSTOM_FUNCTION_QUERY_TIME_OF_ENTER_UNMANNED:
             //     this->get_time_of_enter_unmanned();
             //     break;
-            case CUSTOM_FUNCTION_QUERY_HEARTBEAT_STATE:
-                this->get_heartbeat_packet();
-                sg_start_query_data++;
-                break;
             case CUSTOM_FUNCTION_MAX:
                 if(s_output_info_switch_flag == OUTPUT_SWTICH_OFF) sg_start_query_data = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;  // 如果开关状态依旧为关，等待下一次基础功能的轮询
-                else sg_start_query_data = CUSTOM_FUNCTION_QUERY_SPATIAL_STATIC_VALUE;  // 如果开关状态为开，则进入自定义功能查询
+                else sg_start_query_data = CUSTOM_FUNCTION_QUERY_HUMAN_STATUS;  // 如果开关状态为开，则进入自定义功能查询
                 poll_time_base_func_check = false;                           // 避免高速轮询导致设备卡死
                 break;
             default:
@@ -942,14 +945,14 @@ void mr24hpc1Component::get_custom_mode(void)
 void mr24hpc1Component::get_existence_boundary(void)
 {
     unsigned char send_data_len = 10;
-    unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x81, 0x00, 0x01, 0x0F, 0x45, 0x54, 0x43};
+    unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x8A, 0x00, 0x01, 0x0F, 0x45, 0x54, 0x43};
     this->send_query(send_data, send_data_len);
 }
 
 void mr24hpc1Component::get_motion_boundary(void)
 {
     unsigned char send_data_len = 10;
-    unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x82, 0x00, 0x01, 0x0F, 0x46, 0x54, 0x43};
+    unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x8B, 0x00, 0x01, 0x0F, 0x46, 0x54, 0x43};
     this->send_query(send_data, send_data_len);
 }
 
@@ -1064,7 +1067,7 @@ void mr24hpc1Component::set_custom_end_mode(void){
 void mr24hpc1Component::set_existence_boundary(const std::string &value){
     uint8_t cmd_value = BOUNDARY_ENUM_TO_INT.at(value);
     uint8_t send_data_len = 10;
-    uint8_t send_data[10] = {0x53, 0x59, 0x08, 0x08, 0x00, 0x01, cmd_value, 0x00, 0x54, 0x43};
+    uint8_t send_data[10] = {0x53, 0x59, 0x08, 0x0A, 0x00, 0x01, cmd_value, 0x00, 0x54, 0x43};
     send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
     this->get_existence_boundary();
@@ -1073,7 +1076,7 @@ void mr24hpc1Component::set_existence_boundary(const std::string &value){
 void mr24hpc1Component::set_motion_boundary(const std::string &value){
     uint8_t cmd_value = BOUNDARY_ENUM_TO_INT.at(value);
     uint8_t send_data_len = 10;
-    uint8_t send_data[10] = {0x53, 0x59, 0x08, 0x09, 0x00, 0x01, cmd_value, 0x00, 0x54, 0x43};
+    uint8_t send_data[10] = {0x53, 0x59, 0x08, 0x0B, 0x00, 0x01, cmd_value, 0x00, 0x54, 0x43};
     send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
     this->get_motion_boundary();
