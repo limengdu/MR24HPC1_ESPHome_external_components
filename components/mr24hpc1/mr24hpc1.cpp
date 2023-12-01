@@ -640,12 +640,13 @@ void mr24hpc1Component::R24_parse_data_frame(uint8_t *data, uint8_t len)
         {
             if (data[FRAME_COMMAND_WORD_INDEX] == 0x01)
             {
-                sg_heartbeat_flag = 0;
+                this->heartbeat_state_text_sensor_->publish_state("Equipment Normal");
             }
             else if (data[FRAME_COMMAND_WORD_INDEX] == 0x02)
             {
                 ESP_LOGD(TAG, "Reply: query reset packet");
             }
+            else this->heartbeat_state_text_sensor_->publish_state("Equipment Abnormal");
         }
         break;
         case 0x02:
@@ -682,9 +683,9 @@ void mr24hpc1Component::R24_frame_parse_work_status(uint8_t *data)
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x07)
     {
-        if (this->scene_mode_select_->has_index(data[FRAME_DATA_INDEX] - 1))
+        if (this->scene_mode_select_->has_index(data[FRAME_DATA_INDEX]))
         {
-            this->scene_mode_select_->publish_state(s_scene_str[data[FRAME_DATA_INDEX] - 1]);
+            this->scene_mode_select_->publish_state(s_scene_str[data[FRAME_DATA_INDEX]]);
         }
         else
         {
