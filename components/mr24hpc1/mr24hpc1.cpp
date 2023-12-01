@@ -79,10 +79,6 @@ void mr24hpc1Component::setup() {
 void mr24hpc1Component::update() {
     this->get_radar_output_information_switch();   // 每隔一段时间查询一下按键状态
     poll_time_base_func_check = true;              // 每隔一段时间查询一下基础功能信息
-    if(this->custom_mode_number_->state == 0){
-        this->existence_boundary_select_->publish_state("");  // 清空设定值
-        this->motion_boundary_select_->publish_state("");
-    }
 }
 
 // main loop
