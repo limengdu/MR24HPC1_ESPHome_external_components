@@ -4,7 +4,6 @@ namespace esphome {
 namespace mr24hpc1 {
 
 void SceneModeSelect::control(const std::string &value) {
-  this->publish_state(value);
   this->parent_->set_scene_mode(value);
 }
 
