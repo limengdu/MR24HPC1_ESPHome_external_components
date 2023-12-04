@@ -526,9 +526,9 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0a)
     {
-        if (this->existence_boundary_select_->has_index(data[FRAME_DATA_INDEX]))
+        if (this->existence_boundary_select_->has_index(data[FRAME_DATA_INDEX] - 1))
         {
-            this->existence_boundary_select_->publish_state(s_boundary_str[data[FRAME_DATA_INDEX]]);
+            this->existence_boundary_select_->publish_state(s_boundary_str[data[FRAME_DATA_INDEX]] - 1);
         }
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0b)
@@ -599,9 +599,9 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x8a)
     {
-        if (this->existence_boundary_select_->has_index(data[FRAME_DATA_INDEX]))
+        if (this->existence_boundary_select_->has_index(data[FRAME_DATA_INDEX] - 1))
         {
-            this->existence_boundary_select_->publish_state(s_boundary_str[data[FRAME_DATA_INDEX]]);
+            this->existence_boundary_select_->publish_state(s_boundary_str[data[FRAME_DATA_INDEX]] - 1);
         }
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x8b)
