@@ -64,8 +64,8 @@ views:
                 name: "Custom Mode Settings"
               - entity: button.seeedstudio_mmwave_kit_end_of_custom_mode_settings
                 name: "End Of Custom Mode Settings"
-              - entity: select.seeedstudio_mmwave_kit_existence_judgment_threshold_settings
-                name: Existence Judgment Threshold Settings
-              - entity: select.seeedstudio_mmwave_kit_motion_trigger_threshold_settings
-                name: Motion Trigger Threshold Settings
+              - entity: select.seeedstudio_mmwave_kit_existence_boundary_settings
+                name: Existence Boundary Settings
+              - entity: select.seeedstudio_mmwave_kit_motion_boundary_settings
+                name: Motion Boundary Settings
             title: Custom Settings

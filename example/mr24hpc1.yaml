@@ -116,9 +116,9 @@ select:
     unman_time:
       name: "Time For Entering No Person State Setting (Standard Function)"
     existence_boundary:
-      name: "Existence Judgment Threshold Settings"
+      name: "Existence Boundary Settings"
     motion_boundary:
-      name: "Motion Trigger Threshold Settings"
+      name: "Motion Boundary Settings"
 
 number:
   - platform: mr24hpc1
