@@ -91,11 +91,11 @@ sensor:
     movementsigns:
       name: "Body Movement Parameter"
     custommotiondistance:
-      name: "Motion Distance (Proactive Reporting)"
+      name: "Motion Distance"
     customspatialstaticvalue:
-      name: "Existence Energy Value (Proactive Reporting)"
+      name: "Existence Energy"
     customspatialmotionvalue:
-      name: "Motion Energy Value (Proactive Reporting)"
+      name: "Motion Energy"
     custommotionspeed:
       name: "Motion Speed"
 

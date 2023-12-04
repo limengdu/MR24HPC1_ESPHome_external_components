@@ -57,6 +57,11 @@ void mr24hpc1Component::dump_config() {
 #ifdef USE_NUMBER
     LOG_NUMBER(" ", "SensitivityNumber", this->sensitivity_number_);
     LOG_NUMBER(" ", "CustomModeNumber", this->custom_mode_number_);
+    LOG_NUMBER(" ", "ExistenceThresholdNumber", this->existence_threshold_number_);
+    LOG_NUMBER(" ", "MotionThresholdNumber", this->motion_threshold_number_);
+    LOG_NUMBER(" ", "MotionTriggerTimeNumber", this->motion_trigger_number_);
+    LOG_NUMBER(" ", "Motion2RestTimeNumber", this->motion_to_rest_number_);
+    LOG_NUMBER(" ", "CustomUnmanTimeNumber", this->custom_unman_time_number_);
 #endif
 }
 
@@ -210,8 +215,8 @@ void mr24hpc1Component::loop() {
     // 如果底层开放参数开关是打开的，则轮询自定义功能
     if ((s_output_info_switch_flag == OUTPUT_SWTICH_ON) && (!check_dev_inf_sign) && (sg_start_query_data >= CUSTOM_FUNCTION_QUERY_HUMAN_STATUS) && poll_time_base_func_check ){
         switch(sg_start_query_data){
-            case CUSTOM_FUNCTION_QUERY_HEARTBEAT_STATE:
-                this->get_heartbeat_packet();
+            case CUSTOM_FUNCTION_QUERY_HUMAN_STATUS:
+                this->get_human_status();
                 sg_start_query_data++;
                 break;
             // case CUSTOM_FUNCTION_QUERY_SPATIAL_STATIC_VALUE:
@@ -234,31 +239,38 @@ void mr24hpc1Component::loop() {
             //     this->get_target_movement_speed();
             //     sg_start_query_data++;
             //     break;
-            case CUSTOM_FUNCTION_QUERY_HUMAN_STATUS:
-                this->get_human_status();
+            case CUSTOM_FUNCTION_QUERY_EXISTENCE_BOUNDARY:
+                this->get_existence_boundary();
                 sg_start_query_data++;
                 break;
-            // case CUSTOM_FUNCTION_QUERY_JUDGMENT_THRESHOLD_EXISTS:
-            //     this->get_judgment_threshold_exists();
-            //     break;
-            // case CUSTOM_FUNCTION_QUERY_MOTION_AMPLITUDE_TRIGGER_THRESHOLD:
-            //     this->get_motion_amplitude_trigger_threshold();
-            //     break;
-            // case CUSTOM_FUNCTION_QUERY_PRESENCE_OF_PERCEPTION_BOUNDARY:
-            //     this->get_presence_of_perception_boundary();
-            //     break;
-            // case CUSTOM_FUNCTION_QUERY_MOTION_TRIGGER_BOUNDARY:
-            //     this->get_motion_trigger_boundary();
-            //     break;
-            // case CUSTOM_FUNCTION_QUERY_MOTION_TRIGGER_TIME:
-            //     this->get_motion_trigger_time();
-            //     break;
-            // case CUSTOM_FUNCTION_QUERY_MOVEMENT_TO_REST_TIME:
-            //     this->get_movement_to_rest_time();
-            //     break;
-            // case CUSTOM_FUNCTION_QUERY_TIME_OF_ENTER_UNMANNED:
-            //     this->get_time_of_enter_unmanned();
-            //     break;
+            case CUSTOM_FUNCTION_QUERY_MOTION_BOUNDARY:
+                this->get_motion_boundary();
+                sg_start_query_data++;
+                break;
+            case CUSTOM_FUNCTION_QUERY_EXISTENCE_THRESHOLD:
+                this->get_existence_threshold();
+                sg_start_query_data++;
+                break;
+            case CUSTOM_FUNCTION_QUERY_MOTION_THRESHOLD:
+                this->get_motion_threshold();
+                sg_start_query_data++;
+                break;
+            case CUSTOM_FUNCTION_QUERY_MOTION_TRIGGER_TIME:
+                this->get_motion_trigger_time();
+                sg_start_query_data++;
+                break;
+            case CUSTOM_FUNCTION_QUERY_MOTION_TO_REST_TIME:
+                this->get_motion_to_rest_time();
+                sg_start_query_data++;
+                break;
+            case CUSTOM_FUNCTION_QUERY_TIME_OF_ENTER_UNMANNED:
+                this->get_custom_unman_time();
+                sg_start_query_data++;
+                break;
+            case CUSTOM_FUNCTION_QUERY_HEARTBEAT_STATE:
+                this->get_heartbeat_packet();
+                sg_start_query_data++;
+                break;
             case CUSTOM_FUNCTION_MAX:
                 if(s_output_info_switch_flag == OUTPUT_SWTICH_OFF) sg_start_query_data = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;  // 如果开关状态依旧为关，等待下一次基础功能的轮询
                 else sg_start_query_data = CUSTOM_FUNCTION_QUERY_HUMAN_STATUS;  // 如果开关状态为开，则进入自定义功能查询
@@ -506,11 +518,11 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x08)
     {
-        // id(custom_judgment_threshold_exists).publish_state(data[FRAME_DATA_INDEX]);
+        this->existence_threshold_number_->.publish_state(data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x09)
     {
-        // id(custom_motion_amplitude_trigger_threshold).publish_state(data[FRAME_DATA_INDEX]);
+        this->motion_threshold_number_->publish_state(data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0a)
     {
@@ -528,30 +540,18 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0c)
     {
-        // uint32_t motion_trigger_time = (uint32_t)(data[FRAME_DATA_INDEX] << 24) + (uint32_t)(data[FRAME_DATA_INDEX + 1] << 16) + (uint32_t)(data[FRAME_DATA_INDEX + 2] << 8) + data[FRAME_DATA_INDEX + 3];
-        // if (sg_motion_trigger_time_bak != motion_trigger_time)
-        // {
-        //     sg_motion_trigger_time_bak = motion_trigger_time;
-        //     id(custom_motion_trigger_time).publish_state(motion_trigger_time);
-        // }
+        uint32_t motion_trigger_time = (uint32_t)(data[FRAME_DATA_INDEX] << 24) + (uint32_t)(data[FRAME_DATA_INDEX + 1] << 16) + (uint32_t)(data[FRAME_DATA_INDEX + 2] << 8) + data[FRAME_DATA_INDEX + 3];
+        this->motion_trigger_number_->publish_state(motion_trigger_time);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0d)
     {
-        // uint32_t move_to_rest_time = (uint32_t)(data[FRAME_DATA_INDEX] << 24) + (uint32_t)(data[FRAME_DATA_INDEX + 1] << 16) + (uint32_t)(data[FRAME_DATA_INDEX + 2] << 8) + data[FRAME_DATA_INDEX + 3];
-        // if (sg_move_to_rest_time_bak != move_to_rest_time)
-        // {
-        //     id(custom_movement_to_rest_time).publish_state(move_to_rest_time);
-        //     sg_move_to_rest_time_bak = move_to_rest_time;
-        // }
+        uint32_t move_to_rest_time = (uint32_t)(data[FRAME_DATA_INDEX] << 24) + (uint32_t)(data[FRAME_DATA_INDEX + 1] << 16) + (uint32_t)(data[FRAME_DATA_INDEX + 2] << 8) + data[FRAME_DATA_INDEX + 3];
+        this->motion_to_rest_number_->publish_state(move_to_rest_time);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0e)
     {
-        // uint32_t enter_unmanned_time = (uint32_t)(data[FRAME_DATA_INDEX] << 24) + (uint32_t)(data[FRAME_DATA_INDEX + 1] << 16) + (uint32_t)(data[FRAME_DATA_INDEX + 2] << 8) + data[FRAME_DATA_INDEX + 3];
-        // if (sg_enter_unmanned_time_bak != enter_unmanned_time)
-        // {
-        //     id(custom_time_of_enter_unmanned).publish_state(enter_unmanned_time);
-        //     sg_enter_unmanned_time_bak = enter_unmanned_time;
-        // }
+        uint32_t enter_unmanned_time = (uint32_t)(data[FRAME_DATA_INDEX] << 24) + (uint32_t)(data[FRAME_DATA_INDEX + 1] << 16) + (uint32_t)(data[FRAME_DATA_INDEX + 2] << 8) + data[FRAME_DATA_INDEX + 3];
+        this->custom_unman_time_number_->publish_state(enter_unmanned_time);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x80)
     {
@@ -591,11 +591,11 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x88)
     {
-        // id(custom_judgment_threshold_exists).publish_state(data[FRAME_DATA_INDEX]);
+        this->existence_threshold_number_->publish_state(data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x89)
     {
-        // id(custom_motion_amplitude_trigger_threshold).publish_state(data[FRAME_DATA_INDEX]);
+        this->motion_threshold_number_->publish_state(data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x8a)
     {
@@ -613,30 +613,18 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x8c)
     {
-        // uint32_t motion_trigger_time = (uint32_t)(data[FRAME_DATA_INDEX] << 24) + (uint32_t)(data[FRAME_DATA_INDEX + 1] << 16) + (uint32_t)(data[FRAME_DATA_INDEX + 2] << 8) + data[FRAME_DATA_INDEX + 3];
-        // if (sg_motion_trigger_time_bak != motion_trigger_time)
-        // {
-        //     id(custom_motion_trigger_time).publish_state(motion_trigger_time);
-        //     sg_motion_trigger_time_bak = motion_trigger_time;
-        // }
+        uint32_t motion_trigger_time = (uint32_t)(data[FRAME_DATA_INDEX] << 24) + (uint32_t)(data[FRAME_DATA_INDEX + 1] << 16) + (uint32_t)(data[FRAME_DATA_INDEX + 2] << 8) + data[FRAME_DATA_INDEX + 3];
+        this->motion_trigger_number_->publish_state(motion_trigger_time);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x8d)
     {
-        // uint32_t move_to_rest_time = (uint32_t)(data[FRAME_DATA_INDEX] << 24) + (uint32_t)(data[FRAME_DATA_INDEX + 1] << 16) + (uint32_t)(data[FRAME_DATA_INDEX + 2] << 8) + data[FRAME_DATA_INDEX + 3];
-        // if (sg_move_to_rest_time_bak != move_to_rest_time)
-        // {
-        //     id(custom_movement_to_rest_time).publish_state(move_to_rest_time);
-        //     sg_move_to_rest_time_bak = move_to_rest_time;
-        // }
+        uint32_t move_to_rest_time = (uint32_t)(data[FRAME_DATA_INDEX] << 24) + (uint32_t)(data[FRAME_DATA_INDEX + 1] << 16) + (uint32_t)(data[FRAME_DATA_INDEX + 2] << 8) + data[FRAME_DATA_INDEX + 3];
+        this->motion_to_rest_number_->publish_state(move_to_rest_time);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x8e)
     {
-        // uint32_t enter_unmanned_time = (uint32_t)(data[FRAME_DATA_INDEX] << 24) + (uint32_t)(data[FRAME_DATA_INDEX + 1] << 16) + (uint32_t)(data[FRAME_DATA_INDEX + 2] << 8) + data[FRAME_DATA_INDEX + 3];
-        // if (sg_enter_unmanned_time_bak != enter_unmanned_time)
-        // {
-        //     id(custom_time_of_enter_unmanned).publish_state(enter_unmanned_time);
-        //     sg_enter_unmanned_time_bak = enter_unmanned_time;
-        // }
+        uint32_t enter_unmanned_time = (uint32_t)(data[FRAME_DATA_INDEX] << 24) + (uint32_t)(data[FRAME_DATA_INDEX + 1] << 16) + (uint32_t)(data[FRAME_DATA_INDEX + 2] << 8) + data[FRAME_DATA_INDEX + 3];
+        this->custom_unman_time_number_->publish_state(enter_unmanned_time);
     }
 }
 
@@ -1007,6 +995,46 @@ void mr24hpc1Component::get_target_movement_speed(void)
     this->send_query(send_data, send_data_len);
 }
 
+void mr24hpc1Component::get_existence_threshold(void)
+{
+    unsigned char send_data_len = 10;
+    unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x88, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
+    this->send_query(send_data, send_data_len);
+}
+
+void mr24hpc1Component::get_motion_threshold(void)
+{
+    unsigned char send_data_len = 10;
+    unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x89, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
+    this->send_query(send_data, send_data_len);
+}
+
+void mr24hpc1Component::get_motion_trigger_time(void)
+{
+    unsigned char send_data_len = 10;
+    unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x8C, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
+    this->send_query(send_data, send_data_len);
+}
+
+void mr24hpc1Component::get_motion_to_rest_time(void)
+{
+    unsigned char send_data_len = 10;
+    unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x8D, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
+    this->send_query(send_data, send_data_len);
+}
+
+void mr24hpc1Component::get_custom_unman_time(void)
+{
+    unsigned char send_data_len = 10;
+    unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x8E, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
+    this->send_query(send_data, send_data_len);
+}
+
 // 设置的逻辑：设置之后查询设置是否成功！
 
 void mr24hpc1Component::set_underlying_open_function(bool enable)
@@ -1031,6 +1059,7 @@ void mr24hpc1Component::set_scene_mode(const std::string &state){
     send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
     this->get_scene_mode();
+    this->get_sensitivity();
     this->get_custom_mode();
 }
 
@@ -1040,6 +1069,7 @@ void mr24hpc1Component::set_sensitivity(uint8_t value) {
     uint8_t send_data[10] = {0x53, 0x59, 0x05, 0x08, 0x00, 0x01, value, 0x00, 0x54, 0x43};
     send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
+    this->get_scene_mode();
     this->get_sensitivity();
 }
 
@@ -1067,9 +1097,8 @@ void mr24hpc1Component::set_custom_mode(uint8_t mode){
     send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
     this->get_custom_mode();
-    this->get_existence_boundary();
-    this->get_motion_boundary();
     this->get_scene_mode();
+    this->get_sensitivity();
 }
 
 void mr24hpc1Component::set_custom_end_mode(void){
@@ -1079,8 +1108,14 @@ void mr24hpc1Component::set_custom_end_mode(void){
     this->custom_mode_number_->publish_state(0);                        // 清空设定值
     this->get_existence_boundary();
     this->get_motion_boundary();
+    this->get_existence_threshold();
+    this->get_motion_threshold();
+    this->get_motion_trigger_time();
+    this->get_motion_to_rest_time();
+    this->get_custom_unman_time();
     this->get_custom_mode();
     this->get_scene_mode();
+    this->get_sensitivity();
 }
 
 void mr24hpc1Component::set_existence_boundary(const std::string &value){
@@ -1101,6 +1136,57 @@ void mr24hpc1Component::set_motion_boundary(const std::string &value){
     send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
     this->get_motion_boundary();
+}
+
+void mr24hpc1Component::set_existence_threshold(int value) {
+    unsigned char send_data_len = 10;
+    unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x08, 0x00, 0x01, value, 0x00, 0x54, 0x43};
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
+    this->send_query(send_data, send_data_len);
+    this->get_existence_threshold();
+}
+
+void mr24hpc1Component::set_motion_threshold(int value) {
+    unsigned char send_data_len = 10;
+    unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x09, 0x00, 0x01, value, 0x00, 0x54, 0x43};
+    send_data[7] = get_frame_crc_sum(send_data, send_data_len);
+    this->send_query(send_data, send_data_len);
+    this->get_motion_threshold();
+}
+
+void mr24hpc1Component::set_motion_trigger_time(int value) {
+    int h24_num = (value >> 24) & 0xff;
+    int h16_num = (value >> 16) & 0xff;
+    int h8_num = (value >> 8) & 0xff;
+    int l8_num = value & 0xff;
+    unsigned char send_data_len = 13;
+    unsigned char send_data[13] = {0x53, 0x59, 0x08, 0x0C, 0x00, 0x04, (uint8_t)h24_num, (uint8_t)h16_num, (uint8_t)h8_num, (uint8_t)l8_num, 0x00, 0x54, 0x43};
+    send_data[10] = get_frame_crc_sum(send_data, send_data_len);
+    this->send_query(send_data, send_data_len);
+    this->get_motion_trigger_time();
+}
+
+void mr24hpc1Component::set_motion_to_rest_time(int value) {
+    int h24_num = (value >> 24) & 0xff;
+    int h16_num = (value >> 16) & 0xff;
+    int h8_num = (value >> 8) & 0xff;
+    int l8_num = value & 0xff;
+    unsigned char send_data_len = 13;
+    unsigned char send_data[13] = {0x53, 0x59, 0x08, 0x0D, 0x00, 0x04, (uint8_t)h24_num, (uint8_t)h16_num, (uint8_t)h8_num, (uint8_t)l8_num, 0x00, 0x54, 0x43};
+    this->send_query(send_data, send_data_len);
+    this->get_motion_to_rest_time();
+}
+
+void mr24hpc1Component::set_custom_unman_time(int value) {
+    value *= 1000;
+    int h24_num = (value >> 24) & 0xff;
+    int h16_num = (value >> 16) & 0xff;
+    int h8_num = (value >> 8) & 0xff;
+    int l8_num = value & 0xff;
+    unsigned char send_data_len = 13;
+    unsigned char send_data[13] = {0x53, 0x59, 0x08, 0x0E, 0x00, 0x04, (uint8_t)h24_num, (uint8_t)h16_num, (uint8_t)h8_num, (uint8_t)l8_num, 0x00, 0x54, 0x43};
+    this->send_query(send_data, send_data_len);
+    this->get_custom_unman_time();
 }
 
 }  // namespace mr24hpc1

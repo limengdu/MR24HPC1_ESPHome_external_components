@@ -45,13 +45,13 @@ views:
             entities:
               - entity: switch.seeedstudio_mmwave_kit_underlying_open_function_info_output_switch
                 name: Underlying Open Function Info Output Switch
-              - entity: sensor.seeedstudio_mmwave_kit_existence_energy_value_proactive_reporting
-                name: Existence Energy Value (Proactive Reporting)
-              - entity: sensor.seeedstudio_mmwave_kit_motion_energy_value_proactive_reporting
-                name: Motion Energy Value (Proactive Reporting)
+              - entity: sensor.seeedstudio_mmwave_kit_existence_energy
+                name: Existence Energy
+              - entity: sensor.seeedstudio_mmwave_kit_motion_energy
+                name: Motion Energy
               - entity: sensor.seeedstudio_mmwave_kit_static_distance
                 name: Static Distance
-              - entity: sensor.seeedstudio_mmwave_kit_motion_distance_proactive_reporting
+              - entity: sensor.seeedstudio_mmwave_kit_motion_distance
                 name: Motion Distance
               - entity: sensor.seeedstudio_mmwave_kit_motion_speed
                 name: Motion Speed
@@ -61,11 +61,11 @@ views:
           - type: entities
             entities: 
               - entity: sensor.seeedstudio_mmwave_kit_custom_mode_status
-                name: "Custom Mode Status"
+                name: Custom Mode Status
               - entity: number.seeedstudio_mmwave_kit_custom_mode
-                name: "Custom Mode"
+                name: Custom Mode
               - entity: button.seeedstudio_mmwave_kit_end_of_custom_mode_settings
-                name: "End Of Custom Mode Settings"
+                name: End Of Custom Mode Settings
               - entity: select.seeedstudio_mmwave_kit_existence_boundary_settings
                 name: Existence Boundary Settings
               - entity: select.seeedstudio_mmwave_kit_motion_boundary_settings

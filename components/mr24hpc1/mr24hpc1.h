@@ -83,14 +83,13 @@ enum
     // CUSTOM_FUNCTION_QUERY_DISTANCE_OF_MOVING_OBJECT,
     // CUSTOM_FUNCTION_QUERY_TARGET_MOVEMENT_SPEED,
     
-
-    // CUSTOM_FUNCTION_QUERY_JUDGMENT_THRESHOLD_EXISTS,
-    // CUSTOM_FUNCTION_QUERY_MOTION_AMPLITUDE_TRIGGER_THRESHOLD,
-    // CUSTOM_FUNCTION_QUERY_PRESENCE_OF_PERCEPTION_BOUNDARY,
-    // CUSTOM_FUNCTION_QUERY_MOTION_TRIGGER_BOUNDARY,
-    // CUSTOM_FUNCTION_QUERY_MOTION_TRIGGER_TIME,
-    // CUSTOM_FUNCTION_QUERY_MOVEMENT_TO_REST_TIME,
-    // CUSTOM_FUNCTION_QUERY_TIME_OF_ENTER_UNMANNED,
+    CUSTOM_FUNCTION_QUERY_EXISTENCE_BOUNDARY,
+    CUSTOM_FUNCTION_QUERY_MOTION_BOUNDARY,
+    CUSTOM_FUNCTION_QUERY_EXISTENCE_THRESHOLD,
+    CUSTOM_FUNCTION_QUERY_MOTION_THRESHOLD,
+    CUSTOM_FUNCTION_QUERY_MOTION_TRIGGER_TIME,
+    CUSTOM_FUNCTION_QUERY_MOTION_TO_REST_TIME,
+    CUSTOM_FUNCTION_QUERY_TIME_OF_ENTER_UNMANNED,
     CUSTOM_FUNCTION_QUERY_HEARTBEAT_STATE,
     CUSTOM_FUNCTION_MAX,
 };
@@ -196,6 +195,11 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
 #ifdef USE_NUMBER
   SUB_NUMBER(sensitivity)
   SUB_NUMBER(custom_mode)
+  SUB_NUMBER(existence_threshold)
+  SUB_NUMBER(motion_threshold)
+  SUB_NUMBER(motion_trigger)
+  SUB_NUMBER(motion_to_rest)
+  SUB_NUMBER(custom_unman_time)
 #endif
 
   private:
@@ -239,6 +243,11 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
     void get_distance_of_static_object(void);
     void get_distance_of_moving_object(void);
     void get_target_movement_speed(void);
+    void get_existence_threshold(void);
+    void get_motion_threshold(void);
+    void get_motion_trigger_time(void);
+    void get_motion_to_rest_time(void);
+    void get_custom_unman_time(void);
 
     void set_scene_mode(const std::string &state);
     void set_underlying_open_function(bool enable);
@@ -249,6 +258,11 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
     void set_custom_end_mode(void);
     void set_existence_boundary(const std::string &value);
     void set_motion_boundary(const std::string &value);
+    void set_existence_threshold(int value);
+    void set_motion_threshold(int value);
+    void set_motion_trigger_time(int value);
+    void set_motion_to_rest_time(int value);
+    void set_custom_unman_time(int value);
 };
 
 }  // namespace mr24hpc1

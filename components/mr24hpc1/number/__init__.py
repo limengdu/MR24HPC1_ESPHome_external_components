@@ -8,9 +8,19 @@ from .. import CONF_MR24HPC1_ID, mr24hpc1Component, mr24hpc1_ns
 
 SensitivityNumber = mr24hpc1_ns.class_("SensitivityNumber", number.Number)
 CustomModeNumber = mr24hpc1_ns.class_("CustomModeNumber", number.Number)
+ExistenceThresholdNumber = mr24hpc1_ns.class_("ExistenceThresholdNumber", number.Number)
+MotionThresholdNumber = mr24hpc1_ns.class_("MotionThresholdNumber", number.Number)
+MotionTriggerTimeNumber = mr24hpc1_ns.class_("MotionTriggerTimeNumber", number.Number)
+Motion2RestTimeNumber = mr24hpc1_ns.class_("Motion2RestTimeNumber", number.Number)
+CustomUnmanTimeNumber = mr24hpc1_ns.class_("CustomUnmanTimeNumber", number.Number)
 
 CONF_SENSITIVE = "sensitivity"
 CONF_CUSTOMMODE = "custommode"
+CONF_EXISTENCETHRESHOLD = "existencethreshold"
+CONF_MOTIONTHRESHOLD = "motionthreshold"
+CONF_MOTIONTRIGGER = "motiontrigger"
+CONF_MOTION2REST = "motion2rest"
+CONF_CUSTOMUNMANTIME = "customunmantime"
 
 CONFIG_SCHEMA = cv.Schema(
     {
@@ -24,6 +34,32 @@ CONFIG_SCHEMA = cv.Schema(
             CustomModeNumber,
             entity_category=ENTITY_CATEGORY_CONFIG,
             icon="mdi:cog",
+        ),
+        cv.Optional(CONF_EXISTENCETHRESHOLD): number.number_schema(
+            ExistenceThresholdNumber,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+        ),
+        cv.Optional(CONF_MOTIONTHRESHOLD): number.number_schema(
+            MotionThresholdNumber,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+        ),
+        cv.Optional(CONF_MOTIONTRIGGER): number.number_schema(
+            MotionTriggerTimeNumber,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+            icon="mdi:camera-timer",
+            unit_of_measurement="ms",
+        ),
+        cv.Optional(CONF_MOTION2REST): number.number_schema(
+            Motion2RestTimeNumber,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+            icon="mdi:camera-timer",
+            unit_of_measurement="ms",
+        ),
+        cv.Optional(CONF_CUSTOMUNMANTIME): number.number_schema(
+            CustomUnmanTimeNumber,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+            icon="mdi:camera-timer",
+            unit_of_measurement="s",
         ),
     }
 )
@@ -43,3 +79,33 @@ async def to_code(config):
         )
         await cg.register_parented(n, config[CONF_MR24HPC1_ID])
         cg.add(mr24hpc1_component.set_custom_mode_number(n))
+    if existence_threshold_config := config.get(CONF_EXISTENCETHRESHOLD):
+        n = await number.new_number(
+            existence_threshold_config, min_value=0, max_value=250, step=1,
+        )
+        await cg.register_parented(n, config[CONF_MR24HPC1_ID])
+        cg.add(mr24hpc1_component.set_existence_threshold_number(n))
+    if motion_threshold_config := config.get(CONF_MOTIONTHRESHOLD):
+        n = await number.new_number(
+            motion_threshold_config, min_value=0, max_value=250, step=1,
+        )
+        await cg.register_parented(n, config[CONF_MR24HPC1_ID])
+        cg.add(mr24hpc1_component.set_motion_threshold_number(n))
+    if motion_trigger_config := config.get(CONF_MOTIONTRIGGER):
+        n = await number.new_number(
+            motion_trigger_config, min_value=0, max_value=150, step=1,
+        )
+        await cg.register_parented(n, config[CONF_MR24HPC1_ID])
+        cg.add(mr24hpc1_component.set_motion_trigger_number(n))
+    if motion_to_rest_config := config.get(CONF_MOTION2REST):
+        n = await number.new_number(
+            motion_to_rest_config, min_value=0, max_value=3000, step=1,
+        )
+        await cg.register_parented(n, config[CONF_MR24HPC1_ID])
+        cg.add(mr24hpc1_component.set_motion_to_rest_number(n))
+    if custom_unman_time_config := config.get(CONF_CUSTOMUNMANTIME):
+        n = await number.new_number(
+            custom_unman_time_config, min_value=0, max_value=3600, step=1,
+        )
+        await cg.register_parented(n, config[CONF_MR24HPC1_ID])
+        cg.add(mr24hpc1_component.set_custom_unman_time_number(n))

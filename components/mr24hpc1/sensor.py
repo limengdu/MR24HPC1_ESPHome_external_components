@@ -45,6 +45,7 @@ CONFIG_SCHEMA = cv.Schema(
             icon="mdi:counter"
         ),
         cv.Optional(CONF_CUSTOMMOTIONSPEED): sensor.sensor_schema(
+            unit_of_measurement="m/s",
             device_class=DEVICE_CLASS_SPEED,
             accuracy_decimals=2,
             icon="mdi:run-fast"
