@@ -7,7 +7,7 @@ from esphome.const import (
 from . import CONF_MR24HPC1_ID, mr24hpc1Component
 
 AUTO_LOAD = ["mr24hpc1"]
-CONF_SOMEONEEXIST = "someoneexist"
+CONF_SOMEONEEXIST = "someone_exist"
 
 CONFIG_SCHEMA = {
     cv.GenerateID(CONF_MR24HPC1_ID): cv.use_id(mr24hpc1Component),

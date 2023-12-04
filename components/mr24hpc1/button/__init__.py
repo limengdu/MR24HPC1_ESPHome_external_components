@@ -12,7 +12,7 @@ ResetButton = mr24hpc1_ns.class_("ResetButton", button.Button)
 CustomSetEndButton = mr24hpc1_ns.class_("CustomSetEndButton", button.Button)
 
 CONF_RESET = "reset"
-CONF_CUSTOMSETEND = "customsetend"
+CONF_CUSTOMSETEND = "custom_set_end"
 
 CONFIG_SCHEMA = {
     cv.GenerateID(CONF_MR24HPC1_ID): cv.use_id(mr24hpc1Component),

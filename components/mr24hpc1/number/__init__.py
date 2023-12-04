@@ -15,12 +15,12 @@ Motion2RestTimeNumber = mr24hpc1_ns.class_("Motion2RestTimeNumber", number.Numbe
 CustomUnmanTimeNumber = mr24hpc1_ns.class_("CustomUnmanTimeNumber", number.Number)
 
 CONF_SENSITIVE = "sensitivity"
-CONF_CUSTOMMODE = "custommode"
-CONF_EXISTENCETHRESHOLD = "existencethreshold"
-CONF_MOTIONTHRESHOLD = "motionthreshold"
-CONF_MOTIONTRIGGER = "motiontrigger"
-CONF_MOTION2REST = "motion2rest"
-CONF_CUSTOMUNMANTIME = "customunmantime"
+CONF_CUSTOMMODE = "custom_mode"
+CONF_EXISTENCETHRESHOLD = "existence_threshold"
+CONF_MOTIONTHRESHOLD = "motion_threshold"
+CONF_MOTIONTRIGGER = "motion_trigger"
+CONF_MOTION2REST = "motion_to_rest"
+CONF_CUSTOMUNMANTIME = "custom_unman_time"
 
 CONFIG_SCHEMA = cv.Schema(
     {

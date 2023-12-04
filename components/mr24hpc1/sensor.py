@@ -11,12 +11,12 @@ from . import CONF_MR24HPC1_ID, mr24hpc1Component
 
 AUTO_LOAD = ["mr24hpc1"]
 
-CONF_CUSTOMPRESENCEOFDETECTION = "custompresenceofdetection"
-CONF_MOVEMENTSIGNS = "movementsigns"
-CONF_CUSTOMMOTIONDISTANCE = "custommotiondistance"
-CONF_CUSTOMSPATIALSTATICVALUE = "customspatialstaticvalue"
-CONF_CUSTOMSPATIALMOTIONVALUE = "customspatialmotionvalue"
-CONF_CUSTOMMOTIONSPEED =  "custommotionspeed"
+CONF_CUSTOMPRESENCEOFDETECTION = "custom_presence_of_detection"
+CONF_MOVEMENTSIGNS = "movement_signs"
+CONF_CUSTOMMOTIONDISTANCE = "custom_motion_distance"
+CONF_CUSTOMSPATIALSTATICVALUE = "custom_spatial_static_value"
+CONF_CUSTOMSPATIALMOTIONVALUE = "custom_spatial_motion_value"
+CONF_CUSTOMMOTIONSPEED =  "custom_motion_speed"
 
 
 CONFIG_SCHEMA = cv.Schema(

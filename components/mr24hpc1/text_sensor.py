@@ -4,16 +4,16 @@ import esphome.config_validation as cv
 from esphome.const import ENTITY_CATEGORY_DIAGNOSTIC
 from . import CONF_MR24HPC1_ID, mr24hpc1Component
 
-CONF_HEARTBEAT = "heartbeat"
-CONF_PRODUCTMODEL = "productmodel"
-CONF_PRODUCTID = "productid"
-CONF_HARDWAREMODEL = "hardwaremodel"
-CONF_FIRWAREVERSION = "hardwareversion"
+CONF_HEARTBEAT = "heart_beat"
+CONF_PRODUCTMODEL = "product_model"
+CONF_PRODUCTID = "product_id"
+CONF_HARDWAREMODEL = "hardware_model"
+CONF_FIRWAREVERSION = "hardware_version"
 
-CONF_KEEPAWAY = "keepaway"
-CONF_MOTIONSTATUS = "motionstatus"
+CONF_KEEPAWAY = "keep_away"
+CONF_MOTIONSTATUS = "motion_status"
 
-CONF_CUSTOMMODEEND = "custommodeend"
+CONF_CUSTOMMODEEND = "custom_mode_end"
 
 AUTO_LOAD = ["mr24hpc1"]
 
