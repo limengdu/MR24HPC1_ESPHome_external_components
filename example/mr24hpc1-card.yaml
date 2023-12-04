@@ -28,7 +28,7 @@ views:
                 name: Scene
               - entity: number.seeedstudio_mmwave_kit_sensitivity
                 name: Sensitivity
-              - entity: select.seeedstudio_mmwave_kit_time_for_entering_no_person_state_setting_standard_function
+              - entity: select.seeedstudio_mmwave_kit_time_for_entering_no_person_state_standard_function
                 name: Time For Entering No Person State Setting (Standard Function)
               - entity: binary_sensor.seeedstudio_mmwave_kit_presence_information
                 name: Presence Information
@@ -70,14 +70,14 @@ views:
                 name: Existence Boundary
               - entity: select.seeedstudio_mmwave_kit_motion_boundary
                 name: Motion Boundary
-              - entity: select.seeedstudio_mmwave_kit_existence_energy_threshold
+              - entity: number.seeedstudio_mmwave_kit_existence_energy_threshold
                 name: Existence Energy Threshold
-              - entity: select.seeedstudio_mmwave_kit_motion_energy_threshold
+              - entity: number.seeedstudio_mmwave_kit_motion_energy_threshold
                 name: Motion Energy Threshold
-              - entity: select.seeedstudio_mmwave_kit_motion_trigger_time
+              - entity: number.seeedstudio_mmwave_kit_motion_trigger_time
                 name: Motion Trigger Time
-              - entity: select.seeedstudio_mmwave_kit_motion_to_rest_time
+              - entity: number.seeedstudio_mmwave_kit_motion_to_rest_time
                 name: Motion To Rest Time
-              - entity: select.seeedstudio_mmwave_kit_time_for_entering_no_person_state_underlying_open_function
+              - entity: number.seeedstudio_mmwave_kit_time_for_entering_no_person_state_underlying_open_function
                 name: Time For Entering No Person State (Underlying Open Function)
             title: Custom Settings
