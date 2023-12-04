@@ -60,8 +60,10 @@ views:
         cards:
           - type: entities
             entities: 
-              - entity: number.seeedstudio_mmwave_kit_custom_mode_settings
-                name: "Custom Mode Settings"
+              - entity: sensor.seeedstudio_mmwave_kit_custom_mode_status
+                name: "Custom Mode Status"
+              - entity: number.seeedstudio_mmwave_kit_custom_mode
+                name: "Custom Mode"
               - entity: button.seeedstudio_mmwave_kit_end_of_custom_mode_settings
                 name: "End Of Custom Mode Settings"
               - entity: select.seeedstudio_mmwave_kit_existence_boundary_settings

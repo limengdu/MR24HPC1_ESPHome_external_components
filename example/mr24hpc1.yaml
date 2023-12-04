@@ -76,6 +76,8 @@ text_sensor:
       name: "Active Reporting Of Proximity"
     motionstatus:
       name: "Motion Information"
+    custommodeend:
+      name: "Custom Mode Status"
 
 binary_sensor:
   - platform: mr24hpc1
@@ -125,4 +127,4 @@ number:
     sensitivity:
       name: "Sensitivity Settings"
     custommode:
-      name: "Custom Mode Settings"
+      name: "Custom Mode"

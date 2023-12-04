@@ -28,6 +28,7 @@ void mr24hpc1Component::dump_config() {
     LOG_TEXT_SENSOR(" ", "FirwareVerisonTextSensor", this->firware_version_text_sensor_);
     LOG_TEXT_SENSOR(" ", "KeepAwaySensor", this->keep_away_text_sensor_);
     LOG_TEXT_SENSOR(" ", "MotionStatusSensor", this->motion_status_text_sensor_);
+    LOG_TEXT_SENSOR(" ", "CustomModeEnd", this->custom_mode_end_text_sensor_);
 #endif
 #ifdef USE_BINARY_SENSOR
     LOG_BINARY_SENSOR(" ", "SomeoneExistsBinarySensor", this->someoneExists_binary_sensor_);
@@ -228,6 +229,10 @@ void mr24hpc1Component::loop() {
             //     this->get_target_movement_speed();
             //     sg_start_query_data++;
             //     break;
+            case CUSTOM_QUERY_CUSTOM_MODE:
+                this->get_custom_mode();
+                sg_start_query_data++;
+                break;
             case CUSTOM_FUNCTION_QUERY_HUMAN_STATUS:
                 this->get_human_status();
                 sg_start_query_data++;
@@ -704,6 +709,7 @@ void mr24hpc1Component::R24_frame_parse_work_status(uint8_t *data)
     {
         // 1-4
         this->custom_mode_number_->publish_state(data[FRAME_DATA_INDEX]);
+        this->custom_mode_end_text_sensor_->publish_state("Setup in progress...");
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x81)
     {
@@ -723,6 +729,10 @@ void mr24hpc1Component::R24_frame_parse_work_status(uint8_t *data)
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x88)
     {
         this->sensitivity_number_->publish_state(data[FRAME_DATA_INDEX]);
+    }
+    else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0A)
+    {
+        this->custom_mode_end_text_sensor_->publish_state("Set Success!");
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x89)
     {
