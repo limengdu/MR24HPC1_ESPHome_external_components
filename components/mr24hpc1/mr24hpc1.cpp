@@ -518,7 +518,7 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x08)
     {
-        this->existence_threshold_number_->.publish_state(data[FRAME_DATA_INDEX]);
+        this->existence_threshold_number_->publish_state(data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x09)
     {
@@ -1140,7 +1140,7 @@ void mr24hpc1Component::set_motion_boundary(const std::string &value){
 
 void mr24hpc1Component::set_existence_threshold(int value) {
     unsigned char send_data_len = 10;
-    unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x08, 0x00, 0x01, value, 0x00, 0x54, 0x43};
+    unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x08, 0x00, 0x01, (uint8_t)value, 0x00, 0x54, 0x43};
     send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
     this->get_existence_threshold();
@@ -1148,7 +1148,7 @@ void mr24hpc1Component::set_existence_threshold(int value) {
 
 void mr24hpc1Component::set_motion_threshold(int value) {
     unsigned char send_data_len = 10;
-    unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x09, 0x00, 0x01, value, 0x00, 0x54, 0x43};
+    unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x09, 0x00, 0x01, (uint8_t)value, 0x00, 0x54, 0x43};
     send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
     this->get_motion_threshold();
