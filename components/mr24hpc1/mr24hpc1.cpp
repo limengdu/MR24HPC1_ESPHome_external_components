@@ -1049,12 +1049,14 @@ void mr24hpc1Component::set_unman_time(const std::string &time){
 }
 
 void mr24hpc1Component::set_custom_mode(uint8_t mode){
-    if(mode == 0)set_custom_end_mode();
+    if(mode == 0)this->set_custom_end_mode();
     uint8_t send_data_len = 10;
     uint8_t send_data[10] = {0x53, 0x59, 0x05, 0x09, 0x00, 0x01, mode, 0x00, 0x54, 0x43};
     send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
     this->get_custom_mode();
+    this->get_existence_boundary();
+    this->get_motion_boundary();
 }
 
 void mr24hpc1Component::set_custom_end_mode(void){
@@ -1062,6 +1064,9 @@ void mr24hpc1Component::set_custom_end_mode(void){
     uint8_t send_data[10] = {0x53, 0x59, 0x05, 0x0a, 0x00, 0x01, 0x0F, 0xCB, 0x54, 0x43};
     this->send_query(send_data, send_data_len);
     this->custom_mode_number_->publish_state(0);                        // 清空设定值
+    this->get_existence_boundary();
+    this->get_motion_boundary();
+    this->get_custom_mode();
 }
 
 void mr24hpc1Component::set_existence_boundary(const std::string &value){
