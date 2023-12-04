@@ -24,10 +24,10 @@ views:
         cards:
           - type: entities
             entities:
-              - entity: select.seeedstudio_mmwave_kit_scene_settings
-                name: Scene Settings
-              - entity: number.seeedstudio_mmwave_kit_sensitivity_settings
-                name: Sensitivity Settings
+              - entity: select.seeedstudio_mmwave_kit_scene
+                name: Scene
+              - entity: number.seeedstudio_mmwave_kit_sensitivity
+                name: Sensitivity
               - entity: select.seeedstudio_mmwave_kit_time_for_entering_no_person_state_setting_standard_function
                 name: Time For Entering No Person State Setting (Standard Function)
               - entity: binary_sensor.seeedstudio_mmwave_kit_presence_information
@@ -66,8 +66,18 @@ views:
                 name: Custom Mode
               - entity: button.seeedstudio_mmwave_kit_end_of_custom_mode_settings
                 name: End Of Custom Mode Settings
-              - entity: select.seeedstudio_mmwave_kit_existence_boundary_settings
-                name: Existence Boundary Settings
-              - entity: select.seeedstudio_mmwave_kit_motion_boundary_settings
-                name: Motion Boundary Settings
+              - entity: select.seeedstudio_mmwave_kit_existence_boundary
+                name: Existence Boundary
+              - entity: select.seeedstudio_mmwave_kit_motion_boundary
+                name: Motion Boundary
+              - entity: select.seeedstudio_mmwave_kit_existence_energy_threshold
+                name: Existence Energy Threshold
+              - entity: select.seeedstudio_mmwave_kit_motion_energy_threshold
+                name: Motion Energy Threshold
+              - entity: select.seeedstudio_mmwave_kit_motion_trigger_time
+                name: Motion Trigger Time
+              - entity: select.seeedstudio_mmwave_kit_motion_to_rest_time
+                name: Motion To Rest Time
+              - entity: select.seeedstudio_mmwave_kit_time_for_entering_no_person_state_underlying_open_function
+                name: Time For Entering No Person State (Underlying Open Function)
             title: Custom Settings

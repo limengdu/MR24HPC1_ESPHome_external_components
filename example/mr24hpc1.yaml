@@ -62,41 +62,41 @@ mr24hpc1:
 
 text_sensor:
   - platform: mr24hpc1
-    heartbeat:
+    heart_beat:
       name: "Heartbeat"
-    productmodel:
+    product_model:
       name: "Product Model"
-    productid:
+    product_id:
       name: "Product ID"
-    hardwaremodel:
+    hardware_model:
       name: "Hardware Model"
-    hardwareversion:
+    hardware_version:
       name: "Hardware Version"
-    keepaway:
+    keep_away:
       name: "Active Reporting Of Proximity"
-    motionstatus:
+    motion_status:
       name: "Motion Information"
-    custommodeend:
+    custom_mode_end:
       name: "Custom Mode Status"
 
 binary_sensor:
   - platform: mr24hpc1
-    someoneexist:
+    someone_exist:
       name: "Presence Information"
 
 sensor:
   - platform: mr24hpc1
-    custompresenceofdetection:
+    custom_presence_of_detection:
       name: "Static Distance"
-    movementsigns:
+    movement_signs:
       name: "Body Movement Parameter"
-    custommotiondistance:
+    custom_motion_distance:
       name: "Motion Distance"
-    customspatialstaticvalue:
+    custom_spatial_static_value:
       name: "Existence Energy"
-    customspatialmotionvalue:
+    custom_spatial_motion_value:
       name: "Motion Energy"
-    custommotionspeed:
+    custom_motion_speed:
       name: "Motion Speed"
 
 switch:
@@ -108,23 +108,33 @@ button:
   - platform: mr24hpc1
     reset:
       name: "Module Reset"
-    customsetend:
+    custom_set_end:
       name: "End Of Custom Mode Settings"
 
 select:
   - platform: mr24hpc1
     scene_mode:
-      name: "Scene Settings"
+      name: "Scene"
     unman_time:
-      name: "Time For Entering No Person State Setting (Standard Function)"
+      name: "Time For Entering No Person State (Standard Function)"
     existence_boundary:
-      name: "Existence Boundary Settings"
+      name: "Existence Boundary"
     motion_boundary:
-      name: "Motion Boundary Settings"
+      name: "Motion Boundary"
 
 number:
   - platform: mr24hpc1
     sensitivity:
-      name: "Sensitivity Settings"
-    custommode:
+      name: "Sensitivity"
+    custom_mode:
       name: "Custom Mode"
+    existence_threshold:
+      name: "Existence Energy Threshold"
+    motion_threshold:
+      name: "Motion Energy Threshold"
+    motion_trigger:
+      name: "Motion Trigger Time"
+    motion_to_rest:
+      name: "Motion To Rest Time"
+    custom_unman_time:
+      name: "Time For Entering No Person State (Underlying Open Function)"
