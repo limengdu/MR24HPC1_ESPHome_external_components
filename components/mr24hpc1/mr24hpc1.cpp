@@ -188,6 +188,10 @@ void mr24hpc1Component::loop() {
                 this->get_keep_away();
                 sg_start_query_data++;
                 break;
+            case STANDARD_QUERY_CUSTOM_MODE:
+                this->get_custom_mode();
+                sg_start_query_data++;
+                break;
             case STANDARD_FUNCTION_QUERY_HEARTBEAT_STATE:
                 this->get_heartbeat_packet();
                 sg_start_query_data++;
@@ -230,10 +234,6 @@ void mr24hpc1Component::loop() {
             //     this->get_target_movement_speed();
             //     sg_start_query_data++;
             //     break;
-            case CUSTOM_QUERY_CUSTOM_MODE:
-                this->get_custom_mode();
-                sg_start_query_data++;
-                break;
             case CUSTOM_FUNCTION_QUERY_HUMAN_STATUS:
                 this->get_human_status();
                 sg_start_query_data++;
@@ -737,7 +737,7 @@ void mr24hpc1Component::R24_frame_parse_work_status(uint8_t *data)
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x89)
     {
-        // 1-4
+        if(data[FRAME_DATA_INDEX] == 0)this->custom_mode_end_text_sensor_->publish_state("Not in custom mode");
         this->custom_mode_number_->publish_state(data[FRAME_DATA_INDEX]);
     }
     else
@@ -1031,6 +1031,7 @@ void mr24hpc1Component::set_scene_mode(const std::string &state){
     send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
     this->get_scene_mode();
+    this->get_custom_mode();
 }
 
 void mr24hpc1Component::set_sensitivity(uint8_t value) {
@@ -1068,6 +1069,7 @@ void mr24hpc1Component::set_custom_mode(uint8_t mode){
     this->get_custom_mode();
     this->get_existence_boundary();
     this->get_motion_boundary();
+    this->get_scene_mode();
 }
 
 void mr24hpc1Component::set_custom_end_mode(void){
@@ -1078,6 +1080,7 @@ void mr24hpc1Component::set_custom_end_mode(void){
     this->get_existence_boundary();
     this->get_motion_boundary();
     this->get_custom_mode();
+    this->get_scene_mode();
 }
 
 void mr24hpc1Component::set_existence_boundary(const std::string &value){
