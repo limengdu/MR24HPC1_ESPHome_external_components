@@ -65,6 +65,7 @@ void mr24hpc1Component::setup() {
     ESP_LOGCONFIG(TAG, "uart_settings is 115200");
     this->check_uart_settings(115200);
     this->custom_mode_number_->publish_state(0);           // 将自定义模式归位
+    this->custom_mode_end_text_sensor_->publish_state("Not in custom mode");
     this->set_custom_end_mode();
     poll_time_base_func_check = true;
     check_dev_inf_sign = true;
