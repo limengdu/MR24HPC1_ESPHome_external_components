@@ -1198,8 +1198,8 @@ void mr24hpc1Component::set_motion_to_rest_time(int value) {
     int h8_num = (value >> 8) & 0xff;
     int l8_num = value & 0xff;
     unsigned char send_data_len = 13;
-    ESP_LOGD(TAG, "debug: set set_motion_to_rest_time: %x, %x, %x, %x", h24_num, h16_num, h8_num, l8_num);
     unsigned char send_data[13] = {0x53, 0x59, 0x08, 0x0D, 0x00, 0x04, (uint8_t)h24_num, (uint8_t)h16_num, (uint8_t)h8_num, (uint8_t)l8_num, 0x00, 0x54, 0x43};
+    send_data[10] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
     this->get_motion_to_rest_time();
 }
@@ -1212,8 +1212,8 @@ void mr24hpc1Component::set_custom_unman_time(int value) {
     int h8_num = (value >> 8) & 0xff;
     int l8_num = value & 0xff;
     unsigned char send_data_len = 13;
-    ESP_LOGD(TAG, "debug: set set_custom_unman_time: %x, %x, %x, %x", h24_num, h16_num, h8_num, l8_num);
     unsigned char send_data[13] = {0x53, 0x59, 0x08, 0x0E, 0x00, 0x04, (uint8_t)h24_num, (uint8_t)h16_num, (uint8_t)h8_num, (uint8_t)l8_num, 0x00, 0x54, 0x43};
+    send_data[10] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
     this->get_custom_unman_time();
 }
