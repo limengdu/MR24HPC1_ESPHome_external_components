@@ -8,7 +8,7 @@ esphome:
   name_add_mac_suffix: true
   project:
     name: "seeedstudio.mmwave_kit"
-    version: "1.2"
+    version: "2.0"
   platformio_options:
     board_build.flash_mode: dio
     board_build.mcu: esp32c3
