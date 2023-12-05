@@ -7,79 +7,79 @@ views:
         cards:
           - type: entities
             entities:
-              - entity: button.seeedstudio_mmwave_kit_module_reset
+              - entity: button.{$DEVIC}_module_reset
                 name: Module Reset
-              - entity: sensor.seeedstudio_mmwave_kit_hardware_model
+              - entity: sensor.{$DEVIC}_hardware_model
                 name: Hardware Model
-              - entity: sensor.seeedstudio_mmwave_kit_hardware_version
+              - entity: sensor.{$DEVIC}_hardware_version
                 name: Hardware Version
-              - entity: sensor.seeedstudio_mmwave_kit_heartbeat
+              - entity: sensor.{$DEVIC}_heartbeat
                 name: Heartbeat
-              - entity: sensor.seeedstudio_mmwave_kit_product_id
+              - entity: sensor.{$DEVIC}_product_id
                 name: Product ID
-              - entity: sensor.seeedstudio_mmwave_kit_product_model
+              - entity: sensor.{$DEVIC}_product_model
                 name: Product Model
             title: DEVICE Information
       - type: vertical-stack
         cards:
           - type: entities
             entities:
-              - entity: select.seeedstudio_mmwave_kit_scene
+              - entity: select.{$DEVIC}_scene
                 name: Scene
-              - entity: number.seeedstudio_mmwave_kit_sensitivity
+              - entity: number.{$DEVIC}_sensitivity
                 name: Sensitivity
-              - entity: select.seeedstudio_mmwave_kit_time_for_entering_no_person_state_standard_function
+              - entity: select.{$DEVIC}_time_for_entering_no_person_state_standard_function
                 name: Time For Entering No Person State Setting (Standard Function)
-              - entity: binary_sensor.seeedstudio_mmwave_kit_presence_information
+              - entity: binary_sensor.{$DEVIC}_presence_information
                 name: Presence Information
-              - entity: sensor.seeedstudio_mmwave_kit_motion_information
+              - entity: sensor.{$DEVIC}_motion_information
                 name: Motion Information
-              - entity: sensor.seeedstudio_mmwave_kit_body_movement_parameter
+              - entity: sensor.{$DEVIC}_body_movement_parameter
                 name: Body Movement Parameter
-              - entity: sensor.seeedstudio_mmwave_kit_active_reporting_of_proximity
+              - entity: sensor.{$DEVIC}_active_reporting_of_proximity
                 name: Active Reporting Of Proximity
             title: Unsolicited Information
       - type: horizontal-stack
         cards:
           - type: entities
             entities:
-              - entity: switch.seeedstudio_mmwave_kit_underlying_open_function_info_output_switch
+              - entity: switch.{$DEVIC}_underlying_open_function_info_output_switch
                 name: Underlying Open Function Info Output Switch
-              - entity: sensor.seeedstudio_mmwave_kit_existence_energy
+              - entity: sensor.{$DEVIC}_existence_energy
                 name: Existence Energy
-              - entity: sensor.seeedstudio_mmwave_kit_motion_energy
+              - entity: sensor.{$DEVIC}_motion_energy
                 name: Motion Energy
-              - entity: sensor.seeedstudio_mmwave_kit_static_distance
+              - entity: sensor.{$DEVIC}_static_distance
                 name: Static Distance
-              - entity: sensor.seeedstudio_mmwave_kit_motion_distance
+              - entity: sensor.{$DEVIC}_motion_distance
                 name: Motion Distance
-              - entity: sensor.seeedstudio_mmwave_kit_motion_speed
+              - entity: sensor.{$DEVIC}_motion_speed
                 name: Motion Speed
             title: Underlying Open Function
       - type: horizontal-stack
         cards:
           - type: entities
             entities: 
-              - entity: sensor.seeedstudio_mmwave_kit_custom_mode_status
+              - entity: sensor.{$DEVIC}_custom_mode_status
                 name: Custom Mode Status
-              - entity: number.seeedstudio_mmwave_kit_custom_mode
+              - entity: number.{$DEVIC}_custom_mode
                 name: Custom Mode
-              - entity: sensor.seeedstudio_mmwave_kit_current_custom_mode
+              - entity: sensor.{$DEVIC}_current_custom_mode
                 name: Current Custom Mode
-              - entity: button.seeedstudio_mmwave_kit_end_of_custom_mode_settings
+              - entity: button.{$DEVIC}_end_of_custom_mode_settings
                 name: End Of Custom Mode Settings
-              - entity: select.seeedstudio_mmwave_kit_existence_boundary
+              - entity: select.{$DEVIC}_existence_boundary
                 name: Existence Boundary
-              - entity: select.seeedstudio_mmwave_kit_motion_boundary
+              - entity: select.{$DEVIC}_motion_boundary
                 name: Motion Boundary
-              - entity: number.seeedstudio_mmwave_kit_existence_energy_threshold
+              - entity: number.{$DEVIC}_existence_energy_threshold
                 name: Existence Energy Threshold
-              - entity: number.seeedstudio_mmwave_kit_motion_energy_threshold
+              - entity: number.{$DEVIC}_motion_energy_threshold
                 name: Motion Energy Threshold
-              - entity: number.seeedstudio_mmwave_kit_motion_trigger_time
+              - entity: number.{$DEVIC}_motion_trigger_time
                 name: Motion Trigger Time
-              - entity: number.seeedstudio_mmwave_kit_motion_to_rest_time
+              - entity: number.{$DEVIC}_motion_to_rest_time
                 name: Motion To Rest Time
-              - entity: number.seeedstudio_mmwave_kit_time_for_entering_no_person_state_underlying_open_function
+              - entity: number.{$DEVIC}_time_for_entering_no_person_state_underlying_open_function
                 name: Time For Entering No Person State (Underlying Open Function)
             title: Custom Settings
