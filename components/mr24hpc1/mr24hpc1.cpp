@@ -548,11 +548,13 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0d)
     {
         uint32_t move_to_rest_time = (uint32_t)(data[FRAME_DATA_INDEX] << 24) + (uint32_t)(data[FRAME_DATA_INDEX + 1] << 16) + (uint32_t)(data[FRAME_DATA_INDEX + 2] << 8) + data[FRAME_DATA_INDEX + 3];
+        ESP_LOGD(TAG, "debug: get move_to_rest_time %d", move_to_rest_time);
         this->motion_to_rest_number_->publish_state(move_to_rest_time);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0e)
     {
         uint32_t enter_unmanned_time = (uint32_t)(data[FRAME_DATA_INDEX] << 24) + (uint32_t)(data[FRAME_DATA_INDEX + 1] << 16) + (uint32_t)(data[FRAME_DATA_INDEX + 2] << 8) + data[FRAME_DATA_INDEX + 3];
+        ESP_LOGD(TAG, "debug: get custom_unman_time_number_ %d", enter_unmanned_time);
         this->custom_unman_time_number_->publish_state(enter_unmanned_time);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x80)
@@ -1063,6 +1065,13 @@ void mr24hpc1Component::set_scene_mode(const std::string &state){
     this->get_scene_mode();
     this->get_sensitivity();
     this->get_custom_mode();
+    this->get_existence_boundary();
+    this->get_motion_boundary();
+    this->get_existence_threshold();
+    this->get_motion_threshold();
+    this->get_motion_trigger_time();
+    this->get_motion_to_rest_time();
+    this->get_custom_unman_time();
 }
 
 void mr24hpc1Component::set_sensitivity(uint8_t value) {
@@ -1187,6 +1196,7 @@ void mr24hpc1Component::set_motion_to_rest_time(int value) {
     int h8_num = (value >> 8) & 0xff;
     int l8_num = value & 0xff;
     unsigned char send_data_len = 13;
+    ESP_LOGD(TAG, "debug: get set_motion_to_rest_time: %x, %x, %x, %x", h24_num, h16_num, h8_num, l8_num);
     unsigned char send_data[13] = {0x53, 0x59, 0x08, 0x0D, 0x00, 0x04, (uint8_t)h24_num, (uint8_t)h16_num, (uint8_t)h8_num, (uint8_t)l8_num, 0x00, 0x54, 0x43};
     this->send_query(send_data, send_data_len);
     this->get_motion_to_rest_time();
@@ -1200,6 +1210,7 @@ void mr24hpc1Component::set_custom_unman_time(int value) {
     int h8_num = (value >> 8) & 0xff;
     int l8_num = value & 0xff;
     unsigned char send_data_len = 13;
+    ESP_LOGD(TAG, "debug: get set_custom_unman_time: %x, %x, %x, %x", h24_num, h16_num, h8_num, l8_num);
     unsigned char send_data[13] = {0x53, 0x59, 0x08, 0x0E, 0x00, 0x04, (uint8_t)h24_num, (uint8_t)h16_num, (uint8_t)h8_num, (uint8_t)l8_num, 0x00, 0x54, 0x43};
     this->send_query(send_data, send_data_len);
     this->get_custom_unman_time();
