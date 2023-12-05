@@ -702,6 +702,7 @@ void mr24hpc1Component::R24_frame_parse_work_status(uint8_t *data)
     {
         // 1-4
         this->custom_mode_num_sensor_->publish_state(data[FRAME_DATA_INDEX]);
+        this->custom_mode_number_->publish_state(0);
         this->custom_mode_end_text_sensor_->publish_state("Setup in progress...");
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x81)
@@ -730,6 +731,7 @@ void mr24hpc1Component::R24_frame_parse_work_status(uint8_t *data)
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x89)
     {
         if(data[FRAME_DATA_INDEX] == 0)this->custom_mode_end_text_sensor_->publish_state("Not in custom mode");
+        this->custom_mode_number_->publish_state(0);
         this->custom_mode_num_sensor_->publish_state(data[FRAME_DATA_INDEX]);
     }
     else
@@ -758,7 +760,7 @@ void mr24hpc1Component::R24_frame_parse_human_information(uint8_t *data)
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0A)
     {
         // none:0x00  1s:0x01 30s:0x02 1min:0x03 2min:0x04 5min:0x05 10min:0x06 30min:0x07 1hour:0x08
-        if (data[FRAME_DATA_INDEX] < 9 && data[FRAME_DATA_INDEX] >= 0)
+        if (data[FRAME_DATA_INDEX] < 9)
         {
             this->unman_time_select_->publish_state(s_unmanned_time_str[data[FRAME_DATA_INDEX]]);
         }
@@ -1062,6 +1064,8 @@ void mr24hpc1Component::set_scene_mode(const std::string &state){
     uint8_t send_data[10] = {0x53, 0x59, 0x05, 0x07, 0x00, 0x01, cmd_value, 0x00, 0x54, 0x43};
     send_data[7] = get_frame_crc_sum(send_data, send_data_len);
     this->send_query(send_data, send_data_len);
+    this->custom_mode_number_->publish_state(0);
+    this->custom_mode_num_sensor_->publish_state(0);
     this->get_scene_mode();
     this->get_sensitivity();
     this->get_custom_mode();
