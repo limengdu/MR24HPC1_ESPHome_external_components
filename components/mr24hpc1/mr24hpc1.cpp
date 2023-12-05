@@ -40,6 +40,7 @@ void mr24hpc1Component::dump_config() {
     LOG_SENSOR(" ", "customspatialstaticvalue", this->custom_spatial_static_value_sensor_);
     LOG_SENSOR(" ", "customspatialmotionvalue", this->custom_spatial_motion_value_sensor_);
     LOG_SENSOR(" ", "custommotionspeed", this->custom_motion_speed_sensor_);
+    LOG_SENSOR(" ", "custommodenum", this->custom_mode_num_sensor_);
 #endif
 #ifdef USE_SWITCH
     LOG_SWITCH(" ", "underly_open_function", this->underly_open_function_switch_);
@@ -70,6 +71,7 @@ void mr24hpc1Component::setup() {
     ESP_LOGCONFIG(TAG, "uart_settings is 115200");
     this->check_uart_settings(115200);
     this->custom_mode_number_->publish_state(0);           // 将自定义模式归位
+    this->custom_mode_num_sensor_->publish_state(0);
     this->custom_mode_end_text_sensor_->publish_state("Not in custom mode");
     this->set_custom_end_mode();
     poll_time_base_func_check = true;
@@ -498,11 +500,11 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x01)
     {
-        this->custom_spatial_static_value_sensor_->publish_state(data[FRAME_DATA_INDEX]);
-        this->custom_presence_of_detection_sensor_->publish_state(data[FRAME_DATA_INDEX + 1] * 0.5f);
-        this->custom_spatial_motion_value_sensor_->publish_state(data[FRAME_DATA_INDEX + 2]);
-        this->custom_motion_distance_sensor_->publish_state(data[FRAME_DATA_INDEX + 3] * 0.5f);
-        this->custom_motion_speed_sensor_->publish_state((data[FRAME_DATA_INDEX + 4] - 10) * 0.5f);
+        // this->custom_spatial_static_value_sensor_->publish_state(data[FRAME_DATA_INDEX]);
+        // this->custom_presence_of_detection_sensor_->publish_state(data[FRAME_DATA_INDEX + 1] * 0.5f);
+        // this->custom_spatial_motion_value_sensor_->publish_state(data[FRAME_DATA_INDEX + 2]);
+        // this->custom_motion_distance_sensor_->publish_state(data[FRAME_DATA_INDEX + 3] * 0.5f);
+        // this->custom_motion_speed_sensor_->publish_state((data[FRAME_DATA_INDEX + 4] - 10) * 0.5f);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x06)
     {
@@ -528,14 +530,14 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
     {
         if (this->existence_boundary_select_->has_index(data[FRAME_DATA_INDEX] - 1))
         {
-            this->existence_boundary_select_->publish_state(s_boundary_str[data[FRAME_DATA_INDEX]] - 1);
+            this->existence_boundary_select_->publish_state(s_boundary_str[data[FRAME_DATA_INDEX] - 1]);
         }
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0b)
     {
-        if (this->motion_boundary_select_->has_index(data[FRAME_DATA_INDEX]))
+        if (this->motion_boundary_select_->has_index(data[FRAME_DATA_INDEX] - 1))
         {
-            this->motion_boundary_select_->publish_state(s_boundary_str[data[FRAME_DATA_INDEX]]);
+            this->motion_boundary_select_->publish_state(s_boundary_str[data[FRAME_DATA_INDEX] - 1]);
         }
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0c)
@@ -601,14 +603,14 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
     {
         if (this->existence_boundary_select_->has_index(data[FRAME_DATA_INDEX] - 1))
         {
-            this->existence_boundary_select_->publish_state(s_boundary_str[data[FRAME_DATA_INDEX]] - 1);
+            this->existence_boundary_select_->publish_state(s_boundary_str[data[FRAME_DATA_INDEX] - 1]);
         }
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x8b)
     {
-        if (this->motion_boundary_select_->has_index(data[FRAME_DATA_INDEX]))
+        if (this->motion_boundary_select_->has_index(data[FRAME_DATA_INDEX] - 1))
         {
-            this->motion_boundary_select_->publish_state(s_boundary_str[data[FRAME_DATA_INDEX]]);
+            this->motion_boundary_select_->publish_state(s_boundary_str[data[FRAME_DATA_INDEX] - 1]);
         }
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x8c)
@@ -697,7 +699,7 @@ void mr24hpc1Component::R24_frame_parse_work_status(uint8_t *data)
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x09)
     {
         // 1-4
-        this->custom_mode_number_->publish_state(data[FRAME_DATA_INDEX]);
+        this->custom_mode_num_sensor_->publish_state(data[FRAME_DATA_INDEX]);
         this->custom_mode_end_text_sensor_->publish_state("Setup in progress...");
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x81)
@@ -726,7 +728,7 @@ void mr24hpc1Component::R24_frame_parse_work_status(uint8_t *data)
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x89)
     {
         if(data[FRAME_DATA_INDEX] == 0)this->custom_mode_end_text_sensor_->publish_state("Not in custom mode");
-        this->custom_mode_number_->publish_state(data[FRAME_DATA_INDEX]);
+        this->custom_mode_num_sensor_->publish_state(data[FRAME_DATA_INDEX]);
     }
     else
     {
@@ -1091,7 +1093,7 @@ void mr24hpc1Component::set_unman_time(const std::string &time){
 }
 
 void mr24hpc1Component::set_custom_mode(uint8_t mode){
-    if(mode == 0)this->set_custom_end_mode();
+    if(mode == 0)this->set_custom_end_mode();                         // 等同于结束设置
     uint8_t send_data_len = 10;
     uint8_t send_data[10] = {0x53, 0x59, 0x05, 0x09, 0x00, 0x01, mode, 0x00, 0x54, 0x43};
     send_data[7] = get_frame_crc_sum(send_data, send_data_len);
@@ -1106,6 +1108,7 @@ void mr24hpc1Component::set_custom_end_mode(void){
     uint8_t send_data[10] = {0x53, 0x59, 0x05, 0x0a, 0x00, 0x01, 0x0F, 0xCB, 0x54, 0x43};
     this->send_query(send_data, send_data_len);
     this->custom_mode_number_->publish_state(0);                        // 清空设定值
+    this->custom_mode_num_sensor_publish_state(0);
     this->get_existence_boundary();
     this->get_motion_boundary();
     this->get_existence_threshold();
@@ -1119,7 +1122,7 @@ void mr24hpc1Component::set_custom_end_mode(void){
 }
 
 void mr24hpc1Component::set_existence_boundary(const std::string &value){
-    if(this->custom_mode_number_->state == 0)return;                    // 你得检查在自定义模式下才能进行设置
+    if(this->custom_mode_num_sensor_->state == 0)return;                    // 你得检查在自定义模式下才能进行设置
     uint8_t cmd_value = BOUNDARY_ENUM_TO_INT.at(value);
     uint8_t send_data_len = 10;
     uint8_t send_data[10] = {0x53, 0x59, 0x08, 0x0A, 0x00, 0x01, cmd_value, 0x00, 0x54, 0x43};
@@ -1129,7 +1132,7 @@ void mr24hpc1Component::set_existence_boundary(const std::string &value){
 }
 
 void mr24hpc1Component::set_motion_boundary(const std::string &value){
-    if(this->custom_mode_number_->state == 0)return;                     // 你得检查在自定义模式下才能进行设置
+    if(this->custom_mode_num_sensor_->state == 0)return;                     // 你得检查在自定义模式下才能进行设置
     uint8_t cmd_value = BOUNDARY_ENUM_TO_INT.at(value);
     uint8_t send_data_len = 10;
     uint8_t send_data[10] = {0x53, 0x59, 0x08, 0x0B, 0x00, 0x01, cmd_value, 0x00, 0x54, 0x43};
@@ -1139,6 +1142,7 @@ void mr24hpc1Component::set_motion_boundary(const std::string &value){
 }
 
 void mr24hpc1Component::set_existence_threshold(int value) {
+    if(this->custom_mode_num_sensor_->state == 0)return;                     // 你得检查在自定义模式下才能进行设置
     unsigned char send_data_len = 10;
     unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x08, 0x00, 0x01, (uint8_t)value, 0x00, 0x54, 0x43};
     send_data[7] = get_frame_crc_sum(send_data, send_data_len);
@@ -1147,6 +1151,7 @@ void mr24hpc1Component::set_existence_threshold(int value) {
 }
 
 void mr24hpc1Component::set_motion_threshold(int value) {
+    if(this->custom_mode_num_sensor_->state == 0)return;                     // 你得检查在自定义模式下才能进行设置
     unsigned char send_data_len = 10;
     unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x09, 0x00, 0x01, (uint8_t)value, 0x00, 0x54, 0x43};
     send_data[7] = get_frame_crc_sum(send_data, send_data_len);
@@ -1155,6 +1160,7 @@ void mr24hpc1Component::set_motion_threshold(int value) {
 }
 
 void mr24hpc1Component::set_motion_trigger_time(int value) {
+    if(this->custom_mode_num_sensor_->state == 0)return;                     // 你得检查在自定义模式下才能进行设置
     int h24_num = (value >> 24) & 0xff;
     int h16_num = (value >> 16) & 0xff;
     int h8_num = (value >> 8) & 0xff;
@@ -1167,6 +1173,7 @@ void mr24hpc1Component::set_motion_trigger_time(int value) {
 }
 
 void mr24hpc1Component::set_motion_to_rest_time(int value) {
+    if(this->custom_mode_num_sensor_->state == 0)return;                     // 你得检查在自定义模式下才能进行设置
     int h24_num = (value >> 24) & 0xff;
     int h16_num = (value >> 16) & 0xff;
     int h8_num = (value >> 8) & 0xff;
@@ -1178,6 +1185,7 @@ void mr24hpc1Component::set_motion_to_rest_time(int value) {
 }
 
 void mr24hpc1Component::set_custom_unman_time(int value) {
+    if(this->custom_mode_num_sensor_->state == 0)return;                     // 你得检查在自定义模式下才能进行设置
     value *= 1000;
     int h24_num = (value >> 24) & 0xff;
     int h16_num = (value >> 16) & 0xff;

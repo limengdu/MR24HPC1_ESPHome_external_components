@@ -178,6 +178,7 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
   SUB_SENSOR(custom_spatial_static_value)
   SUB_SENSOR(custom_spatial_motion_value)
   SUB_SENSOR(custom_motion_speed)
+  SUB_SENSOR(custom_mode_num)
 #endif
 #ifdef USE_SWITCH
   SUB_SWITCH(underly_open_function)

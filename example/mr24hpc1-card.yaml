@@ -64,6 +64,8 @@ views:
                 name: Custom Mode Status
               - entity: number.seeedstudio_mmwave_kit_custom_mode
                 name: Custom Mode
+              - entity: sensor.seeedstudio_mmwave_kit_current_custom_mode
+                name: Current Custom Mode
               - entity: button.seeedstudio_mmwave_kit_end_of_custom_mode_settings
                 name: End Of Custom Mode Settings
               - entity: select.seeedstudio_mmwave_kit_existence_boundary

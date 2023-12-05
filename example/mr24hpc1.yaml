@@ -98,6 +98,8 @@ sensor:
       name: "Motion Energy"
     custom_motion_speed:
       name: "Motion Speed"
+    custom_mode_num:
+      name: "Current Custom Mode"
 
 switch:
   - platform: mr24hpc1

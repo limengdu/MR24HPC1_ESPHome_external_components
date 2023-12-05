@@ -18,6 +18,8 @@ CONF_CUSTOMSPATIALSTATICVALUE = "custom_spatial_static_value"
 CONF_CUSTOMSPATIALMOTIONVALUE = "custom_spatial_motion_value"
 CONF_CUSTOMMOTIONSPEED =  "custom_motion_speed"
 
+CONF_CUSTOMMODENUM = "custom_mode_num"
+
 
 CONFIG_SCHEMA = cv.Schema(
     {
@@ -38,17 +40,20 @@ CONFIG_SCHEMA = cv.Schema(
         ),
         cv.Optional(CONF_CUSTOMSPATIALSTATICVALUE): sensor.sensor_schema(
             device_class=DEVICE_CLASS_ENERGY,
-            icon="mdi:counter"
+            icon="mdi:counter",
         ),
         cv.Optional(CONF_CUSTOMSPATIALMOTIONVALUE): sensor.sensor_schema(
             device_class=DEVICE_CLASS_ENERGY,
-            icon="mdi:counter"
+            icon="mdi:counter",
         ),
         cv.Optional(CONF_CUSTOMMOTIONSPEED): sensor.sensor_schema(
             unit_of_measurement="m/s",
             device_class=DEVICE_CLASS_SPEED,
             accuracy_decimals=2,
-            icon="mdi:run-fast"
+            icon="mdi:run-fast",
+        ),
+        cv.Optional(CONF_CUSTOMMODENUM): sensor.sensor_schema(
+            icon="mdi:counter",
         ),
     }
 )
@@ -74,3 +79,6 @@ async def to_code(config):
     if custommotionspeed_config := config.get(CONF_CUSTOMMOTIONSPEED):
         sens = await sensor.new_sensor(custommotionspeed_config)
         cg.add(mr24hpc1_component.set_custom_motion_speed_sensor(sens))
+    if custommodenum_config := config.get(CONF_CUSTOMMODENUM):
+        sens = await sensor.new_sensor(custommodenum_config)
+        cg.add(mr24hpc1_component.set_custom_mode_num_sensor(sens))
