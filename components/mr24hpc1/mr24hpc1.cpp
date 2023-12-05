@@ -1093,8 +1093,8 @@ void mr24hpc1Component::set_reset(void) {
     unsigned char send_data_len = 10;
     unsigned char send_data[10] = {0x53, 0x59, 0x01, 0x02, 0x00, 0x01, 0x0F, 0xBF, 0x54, 0x43};
     this->send_query(send_data, send_data_len);
-    check_dev_inf_sign = true;
     sg_start_query_data = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
+    check_dev_inf_sign = true;
 }
 
 void mr24hpc1Component::set_unman_time(const std::string &time){
