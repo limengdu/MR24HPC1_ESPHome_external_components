@@ -1108,7 +1108,7 @@ void mr24hpc1Component::set_custom_end_mode(void){
     uint8_t send_data[10] = {0x53, 0x59, 0x05, 0x0a, 0x00, 0x01, 0x0F, 0xCB, 0x54, 0x43};
     this->send_query(send_data, send_data_len);
     this->custom_mode_number_->publish_state(0);                        // 清空设定值
-    this->custom_mode_num_sensor_publish_state(0);
+    this->custom_mode_num_sensor_->publish_state(0);
     this->get_existence_boundary();
     this->get_motion_boundary();
     this->get_existence_threshold();
