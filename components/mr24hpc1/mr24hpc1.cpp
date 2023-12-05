@@ -500,11 +500,11 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x01)
     {
-        // this->custom_spatial_static_value_sensor_->publish_state(data[FRAME_DATA_INDEX]);
-        // this->custom_presence_of_detection_sensor_->publish_state(data[FRAME_DATA_INDEX + 1] * 0.5f);
-        // this->custom_spatial_motion_value_sensor_->publish_state(data[FRAME_DATA_INDEX + 2]);
-        // this->custom_motion_distance_sensor_->publish_state(data[FRAME_DATA_INDEX + 3] * 0.5f);
-        // this->custom_motion_speed_sensor_->publish_state((data[FRAME_DATA_INDEX + 4] - 10) * 0.5f);
+        this->custom_spatial_static_value_sensor_->publish_state(data[FRAME_DATA_INDEX]);
+        this->custom_presence_of_detection_sensor_->publish_state(data[FRAME_DATA_INDEX + 1] * 0.5f);
+        this->custom_spatial_motion_value_sensor_->publish_state(data[FRAME_DATA_INDEX + 2]);
+        this->custom_motion_distance_sensor_->publish_state(data[FRAME_DATA_INDEX + 3] * 0.5f);
+        this->custom_motion_speed_sensor_->publish_state((data[FRAME_DATA_INDEX + 4] - 10) * 0.5f);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x06)
     {
@@ -516,7 +516,7 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x07)
     {
-        // this->movementSigns_sensor_->publish_state(data[FRAME_DATA_INDEX]);
+        this->movementSigns_sensor_->publish_state(data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x08)
     {
@@ -548,14 +548,13 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0d)
     {
         uint32_t move_to_rest_time = (uint32_t)(data[FRAME_DATA_INDEX] << 24) + (uint32_t)(data[FRAME_DATA_INDEX + 1] << 16) + (uint32_t)(data[FRAME_DATA_INDEX + 2] << 8) + data[FRAME_DATA_INDEX + 3];
-        ESP_LOGD(TAG, "debug: get move_to_rest_time %d", move_to_rest_time);
         this->motion_to_rest_number_->publish_state(move_to_rest_time);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0e)
     {
         uint32_t enter_unmanned_time = (uint32_t)(data[FRAME_DATA_INDEX] << 24) + (uint32_t)(data[FRAME_DATA_INDEX + 1] << 16) + (uint32_t)(data[FRAME_DATA_INDEX + 2] << 8) + data[FRAME_DATA_INDEX + 3];
-        ESP_LOGD(TAG, "debug: get custom_unman_time_number_ %d", enter_unmanned_time);
-        this->custom_unman_time_number_->publish_state(enter_unmanned_time);
+        float custom_unmanned_time = enter_unmanned_time/1000;
+        this->custom_unman_time_number_->publish_state(custom_unmanned_time);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x80)
     {
@@ -591,7 +590,7 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x87)
     {
-        // this->movementSigns_sensor_->publish_state(data[FRAME_DATA_INDEX]);
+        this->movementSigns_sensor_->publish_state(data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x88)
     {
@@ -623,14 +622,13 @@ void mr24hpc1Component::R24_frame_parse_open_underlying_information(uint8_t *dat
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x8d)
     {
         uint32_t move_to_rest_time = (uint32_t)(data[FRAME_DATA_INDEX] << 24) + (uint32_t)(data[FRAME_DATA_INDEX + 1] << 16) + (uint32_t)(data[FRAME_DATA_INDEX + 2] << 8) + data[FRAME_DATA_INDEX + 3];
-        ESP_LOGD(TAG, "debug: get move_to_rest_time %d", move_to_rest_time);
         this->motion_to_rest_number_->publish_state(move_to_rest_time);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x8e)
     {
         uint32_t enter_unmanned_time = (uint32_t)(data[FRAME_DATA_INDEX] << 24) + (uint32_t)(data[FRAME_DATA_INDEX + 1] << 16) + (uint32_t)(data[FRAME_DATA_INDEX + 2] << 8) + data[FRAME_DATA_INDEX + 3];
-        ESP_LOGD(TAG, "debug: get custom_unman_time_number_ %d", enter_unmanned_time);
-        this->custom_unman_time_number_->publish_state(enter_unmanned_time);
+        float custom_unmanned_time = enter_unmanned_time / 1000;
+        this->custom_unman_time_number_->publish_state(custom_unmanned_time);
     }
 }
 
@@ -755,7 +753,7 @@ void mr24hpc1Component::R24_frame_parse_human_information(uint8_t *data)
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x03)
     {
-        // this->movementSigns_sensor_->publish_state(data[FRAME_DATA_INDEX]);
+        this->movementSigns_sensor_->publish_state(data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x0A)
     {
@@ -786,7 +784,7 @@ void mr24hpc1Component::R24_frame_parse_human_information(uint8_t *data)
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x83)
     {
-        // this->movementSigns_sensor_->publish_state(data[FRAME_DATA_INDEX]);
+        this->movementSigns_sensor_->publish_state(data[FRAME_DATA_INDEX]);
     }
     else if (data[FRAME_COMMAND_WORD_INDEX] == 0x8A)
     {
