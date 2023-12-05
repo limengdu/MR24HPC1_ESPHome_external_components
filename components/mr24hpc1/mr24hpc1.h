@@ -150,12 +150,6 @@ static uint8_t sg_frame_len = 0;
 static uint8_t sg_data_len = 0;
 static uint8_t sg_frame_buf[FRAME_BUF_MAX_SIZE] = {0};
 static uint8_t sg_frame_prase_buf[FRAME_BUF_MAX_SIZE] = {0};
-static bool sg_init_flag = false;
-static uint32_t sg_motion_trigger_time_bak;
-static uint32_t sg_move_to_rest_time_bak;
-static uint32_t sg_enter_unmanned_time_bak;
-static uint8_t sg_heartbeat_flag = 255;
-static uint8_t s_power_on_status = 0;
 
 class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {      // The class name must be the name defined by text_sensor.py
 #ifdef USE_TEXT_SENSOR
@@ -209,7 +203,7 @@ class mr24hpc1Component : public PollingComponent, public uart::UARTDevice {    
     char c_hardware_model[PRODUCT_BUF_MAX_SIZE + 1];
     char c_firmware_version[PRODUCT_BUF_MAX_SIZE + 1];
   public:
-    mr24hpc1Component() : PollingComponent(8000) {}  // 每隔8秒调用update()函数一次
+    mr24hpc1Component() : PollingComponent(8000) {}  // The update() function is called every 8 seconds.
     float get_setup_priority() const override { return esphome::setup_priority::LATE; }
     void setup() override;
     void update() override;
