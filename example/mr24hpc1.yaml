@@ -57,11 +57,11 @@ uart:
   parity: NONE
   stop_bits: 1
 
-mr24hpc1:
-  id: my_mr24hpc1
+seeed_mr24hpc1:
+  id: my_seeed_mr24hpc1
 
 text_sensor:
-  - platform: mr24hpc1
+  - platform: seeed_mr24hpc1
     heart_beat:
       name: "Heartbeat"
     product_model:
@@ -80,12 +80,12 @@ text_sensor:
       name: "Custom Mode Status"
 
 binary_sensor:
-  - platform: mr24hpc1
+  - platform: seeed_mr24hpc1
     someone_exist:
       name: "Presence Information"
 
 sensor:
-  - platform: mr24hpc1
+  - platform: seeed_mr24hpc1
     custom_presence_of_detection:
       name: "Static Distance"
     movement_signs:
@@ -102,19 +102,19 @@ sensor:
       name: "Current Custom Mode"
 
 switch:
-  - platform: mr24hpc1
+  - platform: seeed_mr24hpc1
     underly_open_function:
       name: Underlying Open Function Info Output Switch
 
 button:
-  - platform: mr24hpc1
+  - platform: seeed_mr24hpc1
     reset:
       name: "Module Reset"
     custom_set_end:
       name: "End Of Custom Mode Settings"
 
 select:
-  - platform: mr24hpc1
+  - platform: seeed_mr24hpc1
     scene_mode:
       name: "Scene"
     unman_time:
@@ -125,7 +125,7 @@ select:
       name: "Motion Boundary"
 
 number:
-  - platform: mr24hpc1
+  - platform: seeed_mr24hpc1
     sensitivity:
       name: "Sensitivity"
     custom_mode:
