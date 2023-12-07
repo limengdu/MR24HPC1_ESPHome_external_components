@@ -108,8 +108,23 @@ void MR24HPC1Component::loop() {
     this->r24_split_data_frame(byte);  // split data frame
   }
 
-  if (check_dev_inf_sign) {         // First time power up information polling
-    switch (sg_start_query_data) {  // Query device basic information: device firmware, ID, etc.
+  if ((s_output_info_switch_flag == OUTPUT_SWTICH_OFF) &&
+      (sg_start_query_data > CUSTOM_FUNCTION_QUERY_TIME_OF_ENTER_UNMANNED) &&
+      (!check_dev_inf_sign)) {
+    sg_start_query_data = STANDARD_FUNCTION_QUERY_SCENE_MODE;
+  } else if ((s_output_info_switch_flag == OUTPUT_SWTICH_ON) &&
+             (sg_start_query_data < CUSTOM_FUNCTION_QUERY_EXISTENCE_BOUNDARY) &&
+             (!check_dev_inf_sign)) {
+    sg_start_query_data = CUSTOM_FUNCTION_QUERY_EXISTENCE_BOUNDARY;
+  } else if (check_dev_inf_sign &&
+             (sg_start_query_data > STANDARD_FUNCTION_QUERY_HARDWARE_MODE)) {
+              // First time power up information polling
+    sg_start_query_data = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
+  }
+
+  // Polling Functions
+  if (poll_time_base_func_check) {
+    switch (sg_start_query_data) {
       case STANDARD_FUNCTION_QUERY_PRODUCT_MODE:
         this->get_product_mode();
         ESP_LOGD(TAG, "Step 1");
@@ -129,63 +144,20 @@ void MR24HPC1Component::loop() {
         this->get_hardware_model();
         ESP_LOGD(TAG, "Step 4");
         sg_start_query_data++;
+        check_dev_inf_sign = false;
         break;
       case STANDARD_FUNCTION_QUERY_SCENE_MODE:
         this->get_scene_mode();
-        ESP_LOGD(TAG, "Step 5");
         sg_start_query_data++;
         break;
       case STANDARD_FUNCTION_QUERY_SENSITIVITY:
         this->get_sensitivity();
-        ESP_LOGD(TAG, "Step 6");
         sg_start_query_data++;
         break;
       case STANDARD_FUNCTION_QUERY_UNMANNED_TIME:
         this->get_unmanned_time();
         sg_start_query_data++;
         break;
-      case STANDARD_FUNCTION_QUERY_HUMAN_STATUS:
-        this->get_human_status();
-        sg_start_query_data++;
-        break;
-      case STANDARD_FUNCTION_QUERY_HUMAN_MOTION_INF:
-        this->get_human_motion_info();
-        sg_start_query_data++;
-        break;
-      // case STANDARD_FUNCTION_QUERY_BODY_MOVE_PARAMETER:  // It is not recommended to turn on the query for body
-      // movement parameters, as the frequency of reporting is frequent enough
-      //   this->get_body_motion_params();
-      //   sg_start_query_data++;
-      //   break;
-      case STANDARD_FUNCTION_QUERY_KEEPAWAY_STATUS:  // The above is the basic functional information
-        this->get_keep_away();
-        sg_start_query_data++;
-        break;
-      case STANDARD_FUNCTION_QUERY_HEARTBEAT_STATE:
-        this->get_heartbeat_packet();
-        sg_start_query_data++;
-        break;
-      case STANDARD_FUNCTION_MAX:  // Closing of the first uploading enquiry
-        sg_start_query_data++;
-        check_dev_inf_sign = false;
-        break;
-      default:
-        break;
-    }
-  }
-
-  // After the first polling, if the switch for the underlying open parameter is off, only the base function is polled
-  if ((s_output_info_switch_flag == OUTPUT_SWTICH_OFF) && (sg_start_query_data == CUSTOM_FUNCTION_QUERY_HUMAN_STATUS)) {
-    sg_start_query_data = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;
-  } else if ((s_output_info_switch_flag == OUTPUT_SWTICH_ON) &&
-             (sg_start_query_data < CUSTOM_FUNCTION_QUERY_HUMAN_STATUS)) {
-    sg_start_query_data = CUSTOM_FUNCTION_QUERY_HUMAN_STATUS;
-  }
-
-  // Polling Basic Functions
-  if ((s_output_info_switch_flag == OUTPUT_SWTICH_OFF) && (!check_dev_inf_sign) &&
-      (sg_start_query_data >= STANDARD_FUNCTION_QUERY_HUMAN_STATUS) && poll_time_base_func_check) {
-    switch (sg_start_query_data) {
       case STANDARD_FUNCTION_QUERY_HUMAN_STATUS:
         this->get_human_status();
         sg_start_query_data++;
@@ -211,50 +183,23 @@ void MR24HPC1Component::loop() {
         this->get_heartbeat_packet();
         sg_start_query_data++;
         break;
-      case STANDARD_FUNCTION_MAX:
-        if (s_output_info_switch_flag == OUTPUT_SWTICH_OFF) {
-          sg_start_query_data = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;  // If the switch status remains off, wait for the
-                                                                       // next polling of the base function
-        } else {
-          sg_start_query_data =
-              CUSTOM_FUNCTION_QUERY_HUMAN_STATUS;  // If the switch status is on, enter the custom function query
-        }
-        poll_time_base_func_check = false;         // Avoiding high-speed polling that can cause the device to jam
-        break;
-      default:
-        if (s_output_info_switch_flag == OUTPUT_SWTICH_OFF) {
-          sg_start_query_data = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;  // If the switch status remains off, wait for the
-                                                                       // next polling of the base function
-        }
-        break;
-    }
-  }
-
-  // If the underlying open parameter switch is on, polling custom functions
-  if ((s_output_info_switch_flag == OUTPUT_SWTICH_ON) && (!check_dev_inf_sign) &&
-      (sg_start_query_data >= CUSTOM_FUNCTION_QUERY_HUMAN_STATUS) && poll_time_base_func_check) {
-    switch (sg_start_query_data) {
-      case CUSTOM_FUNCTION_QUERY_HUMAN_STATUS:
-        this->get_human_status();
-        sg_start_query_data++;
-        break;
-      // case CUSTOM_FUNCTION_QUERY_SPATIAL_STATIC_VALUE:
+      // case UNDERLY_FUNCTION_QUERY_SPATIAL_STATIC_VALUE:
       // this->get_spatial_static_value();  // Values reported on a regular basis, so no need turn on
       // sg_start_query_data++;
       // break;
-      // case CUSTOM_FUNCTION_QUERY_SPATIAL_MOTION_VALUE:
+      // case UNDERLY_FUNCTION_QUERY_SPATIAL_MOTION_VALUE:
       // this->get_spatial_motion_value();
       // sg_start_query_data++;
       // break;
-      // case CUSTOM_FUNCTION_QUERY_DISTANCE_OF_STATIC_OBJECT:
+      // case UNDERLY_FUNCTION_QUERY_DISTANCE_OF_STATIC_OBJECT:
       // this->get_distance_of_static_object();
       // sg_start_query_data++;
       // break;
-      // case CUSTOM_FUNCTION_QUERY_DISTANCE_OF_MOVING_OBJECT:
+      // case UNDERLY_FUNCTION_QUERY_DISTANCE_OF_MOVING_OBJECT:
       // this->get_distance_of_moving_object();
       // sg_start_query_data++;
       // break;
-      // case CUSTOM_FUNCTION_QUERY_TARGET_MOVEMENT_SPEED:
+      // case UNDERLY_FUNCTION_QUERY_TARGET_MOVEMENT_SPEED:
       // this->get_target_movement_speed();
       // sg_start_query_data++;
       // break;
@@ -285,19 +230,16 @@ void MR24HPC1Component::loop() {
       case CUSTOM_FUNCTION_QUERY_TIME_OF_ENTER_UNMANNED:
         this->get_custom_unman_time();
         sg_start_query_data++;
+        if (s_output_info_switch_flag == OUTPUT_SWTICH_OFF) {
+          poll_time_base_func_check = false;         // Avoiding high-speed polling that can cause the device to jam
+        }
         break;
-      case CUSTOM_FUNCTION_QUERY_HEARTBEAT_STATE:
-        this->get_heartbeat_packet();
+      case UNDERLY_FUNCTION_QUERY_HUMAN_STATUS:
+        this->get_human_status();
         sg_start_query_data++;
-        break;
-      case CUSTOM_FUNCTION_MAX:
-        if (s_output_info_switch_flag == OUTPUT_SWTICH_OFF)
-          sg_start_query_data = STANDARD_FUNCTION_QUERY_HUMAN_STATUS;  // If the switch status remains off, wait for the
-                                                                       // next polling of the base function
-        else
-          sg_start_query_data =
-              CUSTOM_FUNCTION_QUERY_HUMAN_STATUS;  // If the switch status is on, enter the custom function query
-        poll_time_base_func_check = false;         // Avoiding high-speed polling that can cause the device to jam
+        if (s_output_info_switch_flag == OUTPUT_SWTICH_ON) {
+          poll_time_base_func_check = false;         // Avoiding high-speed polling that can cause the device to jam
+        }
         break;
       default:
         break;
@@ -930,7 +872,6 @@ void MR24HPC1Component::set_reset() {
   unsigned char send_data_len = 10;
   unsigned char send_data[10] = {0x53, 0x59, 0x01, 0x02, 0x00, 0x01, 0x0F, 0xBF, 0x54, 0x43};
   this->send_query(send_data, send_data_len);
-  sg_start_query_data = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
   check_dev_inf_sign = true;
 }
 
