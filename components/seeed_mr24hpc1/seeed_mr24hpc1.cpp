@@ -112,26 +112,32 @@ void MR24HPC1Component::loop() {
     switch (sg_start_query_data) {  // Query device basic information: device firmware, ID, etc.
       case STANDARD_FUNCTION_QUERY_PRODUCT_MODE:
         this->get_product_mode();
+        ESP_LOGD(TAG, "Step 1");
         sg_start_query_data++;
         break;
       case STANDARD_FUNCTION_QUERY_PRODUCT_ID:
         this->get_product_id();
+        ESP_LOGD(TAG, "Step 2");
         sg_start_query_data++;
         break;
       case STANDARD_FUNCTION_QUERY_FIRMWARE_VERSION:
         this->get_firmware_version();
+        ESP_LOGD(TAG, "Step 3");
         sg_start_query_data++;
         break;
       case STANDARD_FUNCTION_QUERY_HARDWARE_MODE:  // Above is the equipment information
         this->get_hardware_model();
+        ESP_LOGD(TAG, "Step 4");
         sg_start_query_data++;
         break;
       case STANDARD_FUNCTION_QUERY_SCENE_MODE:
         this->get_scene_mode();
+        ESP_LOGD(TAG, "Step 5");
         sg_start_query_data++;
         break;
       case STANDARD_FUNCTION_QUERY_SENSITIVITY:
         this->get_sensitivity();
+        ESP_LOGD(TAG, "Step 6");
         sg_start_query_data++;
         break;
       case STANDARD_FUNCTION_QUERY_UNMANNED_TIME:
@@ -413,6 +419,7 @@ void MR24HPC1Component::r24_split_data_frame(uint8_t value) {
 void MR24HPC1Component::r24_frame_parse_product_information(uint8_t *data) {
   uint8_t product_len = 0;
   if (data[FRAME_COMMAND_WORD_INDEX] == 0xA1) {
+    ESP_LOGD(TAG, "received product model");
     product_len = data[FRAME_COMMAND_WORD_INDEX + 1] * 256 + data[FRAME_COMMAND_WORD_INDEX + 2];
     if (product_len < PRODUCT_BUF_MAX_SIZE) {
       memset(this->c_product_mode_, 0, PRODUCT_BUF_MAX_SIZE);
@@ -422,6 +429,7 @@ void MR24HPC1Component::r24_frame_parse_product_information(uint8_t *data) {
       ESP_LOGD(TAG, "Reply: get product_mode length too long!");
     }
   } else if (data[FRAME_COMMAND_WORD_INDEX] == 0xA2) {
+    ESP_LOGD(TAG, "received product id");
     product_len = data[FRAME_COMMAND_WORD_INDEX + 1] * 256 + data[FRAME_COMMAND_WORD_INDEX + 2];
     if (product_len < PRODUCT_BUF_MAX_SIZE) {
       memset(this->c_product_id_, 0, PRODUCT_BUF_MAX_SIZE);
