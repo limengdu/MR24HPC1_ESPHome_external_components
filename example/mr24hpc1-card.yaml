@@ -7,79 +7,79 @@ views:
         cards:
           - type: entities
             entities:
-              - entity: button.{$DEVIC}_module_reset
+              - entity: button.{$DEVICE}_module_reset
                 name: Module Reset
-              - entity: sensor.{$DEVIC}_hardware_model
+              - entity: sensor.{$DEVICE}_hardware_model
                 name: Hardware Model
-              - entity: sensor.{$DEVIC}_hardware_version
+              - entity: sensor.{$DEVICE}_hardware_version
                 name: Hardware Version
-              - entity: sensor.{$DEVIC}_heartbeat
+              - entity: sensor.{$DEVICE}_heartbeat
                 name: Heartbeat
-              - entity: sensor.{$DEVIC}_product_id
+              - entity: sensor.{$DEVICE}_product_id
                 name: Product ID
-              - entity: sensor.{$DEVIC}_product_model
+              - entity: sensor.{$DEVICE}_product_model
                 name: Product Model
             title: DEVICE Information
       - type: vertical-stack
         cards:
           - type: entities
             entities:
-              - entity: select.{$DEVIC}_scene
+              - entity: select.{$DEVICE}_scene
                 name: Scene
-              - entity: number.{$DEVIC}_sensitivity
+              - entity: number.{$DEVICE}_sensitivity
                 name: Sensitivity
-              - entity: select.{$DEVIC}_time_for_entering_no_person_state_standard_function
+              - entity: select.{$DEVICE}_time_for_entering_no_person_state_standard_function
                 name: Time For Entering No Person State Setting (Standard Function)
-              - entity: binary_sensor.{$DEVIC}_presence_information
+              - entity: binary_sensor.{$DEVICE}_presence_information
                 name: Presence Information
-              - entity: sensor.{$DEVIC}_motion_information
+              - entity: sensor.{$DEVICE}_motion_information
                 name: Motion Information
-              - entity: sensor.{$DEVIC}_body_movement_parameter
+              - entity: sensor.{$DEVICE}_body_movement_parameter
                 name: Body Movement Parameter
-              - entity: sensor.{$DEVIC}_active_reporting_of_proximity
+              - entity: sensor.{$DEVICE}_active_reporting_of_proximity
                 name: Active Reporting Of Proximity
             title: Unsolicited Information
       - type: horizontal-stack
         cards:
           - type: entities
             entities:
-              - entity: switch.{$DEVIC}_underlying_open_function_info_output_switch
+              - entity: switch.{$DEVICE}_underlying_open_function_info_output_switch
                 name: Underlying Open Function Info Output Switch
-              - entity: sensor.{$DEVIC}_existence_energy
+              - entity: sensor.{$DEVICE}_existence_energy
                 name: Existence Energy
-              - entity: sensor.{$DEVIC}_motion_energy
+              - entity: sensor.{$DEVICE}_motion_energy
                 name: Motion Energy
-              - entity: sensor.{$DEVIC}_static_distance
+              - entity: sensor.{$DEVICE}_static_distance
                 name: Static Distance
-              - entity: sensor.{$DEVIC}_motion_distance
+              - entity: sensor.{$DEVICE}_motion_distance
                 name: Motion Distance
-              - entity: sensor.{$DEVIC}_motion_speed
+              - entity: sensor.{$DEVICE}_motion_speed
                 name: Motion Speed
             title: Underlying Open Function
       - type: horizontal-stack
         cards:
           - type: entities
             entities: 
-              - entity: sensor.{$DEVIC}_custom_mode_status
+              - entity: sensor.{$DEVICE}_custom_mode_status
                 name: Custom Mode Status
-              - entity: number.{$DEVIC}_custom_mode
+              - entity: number.{$DEVICE}_custom_mode
                 name: Custom Mode
-              - entity: sensor.{$DEVIC}_current_custom_mode
+              - entity: sensor.{$DEVICE}_current_custom_mode
                 name: Current Custom Mode
-              - entity: button.{$DEVIC}_end_of_custom_mode_settings
+              - entity: button.{$DEVICE}_end_of_custom_mode_settings
                 name: End Of Custom Mode Settings
-              - entity: select.{$DEVIC}_existence_boundary
+              - entity: select.{$DEVICE}_existence_boundary
                 name: Existence Boundary
-              - entity: select.{$DEVIC}_motion_boundary
+              - entity: select.{$DEVICE}_motion_boundary
                 name: Motion Boundary
-              - entity: number.{$DEVIC}_existence_energy_threshold
+              - entity: number.{$DEVICE}_existence_energy_threshold
                 name: Existence Energy Threshold
-              - entity: number.{$DEVIC}_motion_energy_threshold
+              - entity: number.{$DEVICE}_motion_energy_threshold
                 name: Motion Energy Threshold
-              - entity: number.{$DEVIC}_motion_trigger_time
+              - entity: number.{$DEVICE}_motion_trigger_time
                 name: Motion Trigger Time
-              - entity: number.{$DEVIC}_motion_to_rest_time
+              - entity: number.{$DEVICE}_motion_to_rest_time
                 name: Motion To Rest Time
-              - entity: number.{$DEVIC}_time_for_entering_no_person_state_underlying_open_function
+              - entity: number.{$DEVICE}_time_for_entering_no_person_state_underlying_open_function
                 name: Time For Entering No Person State (Underlying Open Function)
             title: Custom Settings
