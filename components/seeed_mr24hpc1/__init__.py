@@ -1,6 +1,6 @@
 import esphome.codegen as cg
-import esphome.config_validation as cv
 from esphome import pins
+import esphome.config_validation as cv
 from esphome.components import uart
 from esphome.const import CONF_ID
 from esphome.automation import maybe_simple_id
@@ -26,6 +26,7 @@ CONF_MOS_PIN = "mos_pin"
 CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(): cv.declare_id(MR24HPC1Component),
+        cv.Required(CONF_MOS_PIN): pins.gpio_output_pin_schema,
     }
 )
 
@@ -33,11 +34,6 @@ CONFIG_SCHEMA = cv.Schema(
 # This means that in the YAML configuration file, the user can use these parameters to configure this component.
 CONFIG_SCHEMA = cv.All(
     CONFIG_SCHEMA.extend(uart.UART_DEVICE_SCHEMA).extend(cv.COMPONENT_SCHEMA)
-    .extend(
-        {
-            cv.Required(CONF_MOS_PIN): pins.gpio_input_pin_schema,
-        }
-    )
 )
 
 # A verification mode was created to verify the configuration parameters of a UART device named "seeed_mr24hpc1".
