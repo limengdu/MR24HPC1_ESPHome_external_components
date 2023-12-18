@@ -17,9 +17,7 @@ CONF_CUSTOM_MOTION_DISTANCE = "custom_motion_distance"
 CONF_CUSTOM_SPATIAL_STATIC_VALUE = "custom_spatial_static_value"
 CONF_CUSTOM_SPATIAL_MOTION_VALUE = "custom_spatial_motion_value"
 CONF_CUSTOM_MOTION_SPEED = "custom_motion_speed"
-
 CONF_CUSTOM_MODE_NUM = "custom_mode_num"
-
 
 CONFIG_SCHEMA = cv.Schema(
     {
