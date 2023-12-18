@@ -62,7 +62,7 @@ async def to_code(config):
     await uart.register_uart_device(var, config)
 
     mos_pin = await cg.gpio_pin_expression(config[CONF_MOS_PIN])
-    cg.add(var.set_dout_pin(mos_pin))
+    cg.add(var.set_mos_pin(mos_pin))
 
 
 CALIBRATION_ACTION_SCHEMA = maybe_simple_id(
