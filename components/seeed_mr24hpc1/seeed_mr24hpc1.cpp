@@ -19,48 +19,48 @@ static const char *const TAG = "seeed_mr24hpc1";
 void MR24HPC1Component::dump_config() {
   ESP_LOGCONFIG(TAG, "MR24HPC1:");
 #ifdef USE_TEXT_SENSOR
-  LOG_TEXT_SENSOR(" ", "HeartbeatTextSensor", this->heartbeat_state_text_sensor_);
-  LOG_TEXT_SENSOR(" ", "ProductModelTextSensor", this->product_model_text_sensor_);
-  LOG_TEXT_SENSOR(" ", "ProductIDTextSensor", this->product_id_text_sensor_);
-  LOG_TEXT_SENSOR(" ", "HardwareModelTextSensor", this->hardware_model_text_sensor_);
-  LOG_TEXT_SENSOR(" ", "FirwareVerisonTextSensor", this->firware_version_text_sensor_);
-  LOG_TEXT_SENSOR(" ", "KeepAwaySensor", this->keep_away_text_sensor_);
-  LOG_TEXT_SENSOR(" ", "MotionStatusSensor", this->motion_status_text_sensor_);
-  LOG_TEXT_SENSOR(" ", "CustomModeEnd", this->custom_mode_end_text_sensor_);
+  LOG_TEXT_SENSOR(" ", "Heartbeat Text Sensor", this->heartbeat_state_text_sensor_);
+  LOG_TEXT_SENSOR(" ", "Product Model Text Sensor", this->product_model_text_sensor_);
+  LOG_TEXT_SENSOR(" ", "Product ID Text Sensor", this->product_id_text_sensor_);
+  LOG_TEXT_SENSOR(" ", "Hardware Model Text Sensor", this->hardware_model_text_sensor_);
+  LOG_TEXT_SENSOR(" ", "Firware Verison Text Sensor", this->firware_version_text_sensor_);
+  LOG_TEXT_SENSOR(" ", "Keep Away Text Sensor", this->keep_away_text_sensor_);
+  LOG_TEXT_SENSOR(" ", "Motion Status Text Sensor", this->motion_status_text_sensor_);
+  LOG_TEXT_SENSOR(" ", "Custom Mode End Text Sensor", this->custom_mode_end_text_sensor_);
 #endif
 #ifdef USE_BINARY_SENSOR
-  LOG_BINARY_SENSOR(" ", "HasTargetBinarySensor", this->has_target_binary_sensor_);
+  LOG_BINARY_SENSOR(" ", "Has Target Binary Sensor", this->has_target_binary_sensor_);
 #endif
 #ifdef USE_SENSOR
-  LOG_SENSOR(" ", "CustomPresenceOfDetectionSensor", this->custom_presence_of_detection_sensor_);
-  LOG_SENSOR(" ", "MovementSignsSensor", this->movementSigns_sensor_);
-  LOG_SENSOR(" ", "CustomMotionDistanceSensor", this->custom_motion_distance_sensor_);
-  LOG_SENSOR(" ", "CustomSpatialStaticSensor", this->custom_spatial_static_value_sensor_);
-  LOG_SENSOR(" ", "CustomSpatialMotionSensor", this->custom_spatial_motion_value_sensor_);
-  LOG_SENSOR(" ", "CustomMotionSpeedSensor", this->custom_motion_speed_sensor_);
-  LOG_SENSOR(" ", "CustomModeNumSensor", this->custom_mode_num_sensor_);
+  LOG_SENSOR(" ", "Custom Presence Of Detection Sensor", this->custom_presence_of_detection_sensor_);
+  LOG_SENSOR(" ", "Movement Signs Sensor", this->movementSigns_sensor_);
+  LOG_SENSOR(" ", "Custom Motion Distance Sensor", this->custom_motion_distance_sensor_);
+  LOG_SENSOR(" ", "Custom Spatial Static Sensor", this->custom_spatial_static_value_sensor_);
+  LOG_SENSOR(" ", "Custom Spatial Motion Sensor", this->custom_spatial_motion_value_sensor_);
+  LOG_SENSOR(" ", "Custom Motion Speed Sensor", this->custom_motion_speed_sensor_);
+  LOG_SENSOR(" ", "Custom Mode Num Sensor", this->custom_mode_num_sensor_);
 #endif
 #ifdef USE_SWITCH
-  LOG_SWITCH(" ", "UnderlyOpenFunctionSwitch", this->underly_open_function_switch_);
+  LOG_SWITCH(" ", "Underly Open Function Switch", this->underly_open_function_switch_);
 #endif
 #ifdef USE_BUTTON
-  LOG_BUTTON(" ", "RestartButton", this->restart_button_);
-  LOG_BUTTON(" ", "CustomSetEndButton", this->custom_set_end_button_);
+  LOG_BUTTON(" ", "Restart Button", this->restart_button_);
+  LOG_BUTTON(" ", "Custom Set End Button", this->custom_set_end_button_);
 #endif
 #ifdef USE_SELECT
-  LOG_SELECT(" ", "SceneModeSelect", this->scene_mode_select_);
-  LOG_SELECT(" ", "UnmanTimeSelect", this->unman_time_select_);
-  LOG_SELECT(" ", "ExistenceBoundarySelect", this->existence_boundary_select_);
-  LOG_SELECT(" ", "MotionBoundarySelect", this->motion_boundary_select_);
+  LOG_SELECT(" ", "Scene Mode Select", this->scene_mode_select_);
+  LOG_SELECT(" ", "Unman Time Select", this->unman_time_select_);
+  LOG_SELECT(" ", "Existence Boundary Select", this->existence_boundary_select_);
+  LOG_SELECT(" ", "Motion Boundary Select", this->motion_boundary_select_);
 #endif
 #ifdef USE_NUMBER
-  LOG_NUMBER(" ", "SensitivityNumber", this->sensitivity_number_);
-  LOG_NUMBER(" ", "CustomModeNumber", this->custom_mode_number_);
-  LOG_NUMBER(" ", "ExistenceThresholdNumber", this->existence_threshold_number_);
-  LOG_NUMBER(" ", "MotionThresholdNumber", this->motion_threshold_number_);
-  LOG_NUMBER(" ", "MotionTriggerTimeNumber", this->motion_trigger_number_);
-  LOG_NUMBER(" ", "MotionToRestTimeNumber", this->motion_to_rest_number_);
-  LOG_NUMBER(" ", "CustomUnmanTimeNumber", this->custom_unman_time_number_);
+  LOG_NUMBER(" ", "Sensitivity Number", this->sensitivity_number_);
+  LOG_NUMBER(" ", "Custom Mode Number", this->custom_mode_number_);
+  LOG_NUMBER(" ", "Existence Threshold Number", this->existence_threshold_number_);
+  LOG_NUMBER(" ", "Motion Threshold Number", this->motion_threshold_number_);
+  LOG_NUMBER(" ", "Motion Trigger Time Number", this->motion_trigger_number_);
+  LOG_NUMBER(" ", "Motion To Rest Time Number", this->motion_to_rest_number_);
+  LOG_NUMBER(" ", "Custom Unman Time Number", this->custom_unman_time_number_);
 #endif
 }
 
