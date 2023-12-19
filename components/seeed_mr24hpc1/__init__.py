@@ -20,11 +20,13 @@ MR24HPC1Component = mr24hpc1_ns.class_(
 
 CONF_MR24HPC1_ID = "mr24hpc1_id"
 
-# A base schema is created
-CONFIG_SCHEMA = cv.Schema(
-    {
-        cv.GenerateID(): cv.declare_id(MR24HPC1Component),
-    }
+CONFIG_SCHEMA = (
+    cv.Schema(
+        {
+            cv.GenerateID(): cv.declare_id(MR24HPC1Component),
+        }
+    )
+    .extend(uart.UART_DEVICE_SCHEMA).extend(cv.COMPONENT_SCHEMA)
 )
 
 # This code extends the current CONFIG_SCHEMA by adding all the configuration parameters for the UART device and components.
