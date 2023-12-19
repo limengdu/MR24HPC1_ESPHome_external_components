@@ -115,7 +115,7 @@ static const char *const S_BOUNDARY_STR[10] = {"0.5m", "1.0m", "1.5m", "2.0m", "
                                                "3.0m", "3.5m", "4.0m", "4.5m", "5.0m"};       // uint: m
 static const float S_PRESENCE_OF_DETECTION_RANGE_STR[7] = {0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0};  // uint: m
 
-class MR24HPC1Component : public PollingComponent,
+class MR24HPC1Component : public Component,
                           public uart::UARTDevice {  // The class name must be the name defined by text_sensor.py
 #ifdef USE_TEXT_SENSOR
   SUB_TEXT_SENSOR(heartbeat_state)
