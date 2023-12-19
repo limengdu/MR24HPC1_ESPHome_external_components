@@ -825,19 +825,19 @@ void MR24HPC1Component::set_underlying_open_function(bool enable) {
     this->motion_status_text_sensor_->publish_state("");
   }
   if (this->custom_spatial_static_value_sensor_ != nullptr) {
-    this->custom_spatial_static_value_sensor_->publish_state(0.0f);
+    this->custom_spatial_static_value_sensor_->publish_state(NAN);
   }
   if (this->custom_spatial_motion_value_sensor_ != nullptr) {
-    this->custom_spatial_motion_value_sensor_->publish_state(0.0f);
+    this->custom_spatial_motion_value_sensor_->publish_state(NAN);
   }
   if (this->custom_motion_distance_sensor_ != nullptr) {
-    this->custom_motion_distance_sensor_->publish_state(0.0f);
+    this->custom_motion_distance_sensor_->publish_state(NAN);
   }
   if (this->custom_presence_of_detection_sensor_ != nullptr) {
-    this->custom_presence_of_detection_sensor_->publish_state(0.0f);
+    this->custom_presence_of_detection_sensor_->publish_state(NAN);
   }
   if (this->custom_motion_speed_sensor_ != nullptr) {
-    this->custom_motion_speed_sensor_->publish_state(0.0f);
+    this->custom_motion_speed_sensor_->publish_state(NAN);
   }
 }
 
