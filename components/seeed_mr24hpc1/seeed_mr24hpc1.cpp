@@ -923,9 +923,6 @@ void MR24HPC1Component::set_custom_end_mode() {
   if (this->custom_mode_number_ != nullptr) {
     this->custom_mode_number_->publish_state(0);  // Clear setpoints
   }
-  if (this->custom_mode_num_sensor_ != nullptr) {
-    this->custom_mode_num_sensor_->publish_state(0);
-  }
   this->get_existence_boundary();
   this->get_motion_boundary();
   this->get_existence_threshold();
