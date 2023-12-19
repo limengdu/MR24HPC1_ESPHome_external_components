@@ -181,7 +181,6 @@ class MR24HPC1Component : public PollingComponent,
  public:
   float get_setup_priority() const override { return esphome::setup_priority::LATE; }
   void setup() override;
-  void update() override;
   void dump_config() override;
   void loop() override;
   void r24_split_data_frame(uint8_t value);
