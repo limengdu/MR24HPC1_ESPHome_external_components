@@ -176,9 +176,9 @@ class MR24HPC1Component : public PollingComponent,
   int sg_start_query_data_;
   bool check_dev_inf_sign_;
   bool poll_time_base_func_check_;
+  void update_();
 
  public:
-  MR24HPC1Component() : PollingComponent(8000) {}  // The update() function is called every 8 seconds.
   float get_setup_priority() const override { return esphome::setup_priority::LATE; }
   void setup() override;
   void update() override;

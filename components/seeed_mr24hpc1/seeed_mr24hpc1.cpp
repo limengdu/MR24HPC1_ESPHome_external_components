@@ -93,10 +93,12 @@ void MR24HPC1Component::setup() {
   memset(this->c_hardware_model_, 0, PRODUCT_BUF_MAX_SIZE);
   memset(this->sg_frame_prase_buf_, 0, FRAME_BUF_MAX_SIZE);
   memset(this->sg_frame_buf_, 0, FRAME_BUF_MAX_SIZE);
+
+  this->set_interval(8000, [this]() { this->update_(); });
 }
 
-// component callback function, which is called every time the loop is called
-void MR24HPC1Component::update() {
+// Timed polling of radar data
+void MR24HPC1Component::update_() {
   this->get_radar_output_information_switch();  // Query the key status every so often
   this->poll_time_base_func_check_ = true;      // Query the base functionality information at regular intervals
 }
