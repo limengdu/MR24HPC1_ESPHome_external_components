@@ -69,9 +69,6 @@ void MR24HPC1Component::setup() {
   ESP_LOGCONFIG(TAG, "uart_settings is 115200");
   this->check_uart_settings(115200);
 
-  this->mos_pin_->setup();
-  this->mos_pin_->digital_write(true);
-
   if (this->custom_mode_number_ != nullptr) {
     this->custom_mode_number_->publish_state(0);  // Zero out the custom mode
   }

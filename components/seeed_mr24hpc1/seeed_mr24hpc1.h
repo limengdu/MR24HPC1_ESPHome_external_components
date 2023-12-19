@@ -177,11 +177,8 @@ class MR24HPC1Component : public PollingComponent,
   bool check_dev_inf_sign_;
   bool poll_time_base_func_check_;
 
-  GPIOPin *mos_pin_;
-
  public:
   MR24HPC1Component() : PollingComponent(8000) {}  // The update() function is called every 8 seconds.
-  void set_mos_pin(GPIOPin *mos_pin) { mos_pin_ = mos_pin; }
   float get_setup_priority() const override { return esphome::setup_priority::LATE; }
   void setup() override;
   void update() override;

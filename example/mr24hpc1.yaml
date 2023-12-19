@@ -59,7 +59,6 @@ uart:
 
 seeed_mr24hpc1:
   id: my_seeed_mr24hpc1
-  mos_pin: GPIO21
 
 text_sensor:
   - platform: seeed_mr24hpc1
