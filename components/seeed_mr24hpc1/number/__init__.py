@@ -11,7 +11,7 @@ CustomModeNumber = mr24hpc1_ns.class_("CustomModeNumber", number.Number)
 ExistenceThresholdNumber = mr24hpc1_ns.class_("ExistenceThresholdNumber", number.Number)
 MotionThresholdNumber = mr24hpc1_ns.class_("MotionThresholdNumber", number.Number)
 MotionTriggerTimeNumber = mr24hpc1_ns.class_("MotionTriggerTimeNumber", number.Number)
-Motion2RestTimeNumber = mr24hpc1_ns.class_("Motion2RestTimeNumber", number.Number)
+MotionToRestTimeNumber = mr24hpc1_ns.class_("MotionToRestTimeNumber", number.Number)
 CustomUnmanTimeNumber = mr24hpc1_ns.class_("CustomUnmanTimeNumber", number.Number)
 
 CONF_SENSITIVITY = "sensitivity"
@@ -50,7 +50,7 @@ CONFIG_SCHEMA = cv.Schema(
             unit_of_measurement="ms",
         ),
         cv.Optional(CONF_MOTION_TO_REST): number.number_schema(
-            Motion2RestTimeNumber,
+            MotionToRestTimeNumber,
             entity_category=ENTITY_CATEGORY_CONFIG,
             icon="mdi:camera-timer",
             unit_of_measurement="ms",

@@ -33,19 +33,19 @@ void MR24HPC1Component::dump_config() {
 #endif
 #ifdef USE_SENSOR
   LOG_SENSOR(" ", "CustomPresenceOfDetectionSensor", this->custom_presence_of_detection_sensor_);
-  LOG_SENSOR(" ", "movementsigns", this->movementSigns_sensor_);
-  LOG_SENSOR(" ", "custommotiondistance", this->custom_motion_distance_sensor_);
-  LOG_SENSOR(" ", "customspatialstaticvalue", this->custom_spatial_static_value_sensor_);
-  LOG_SENSOR(" ", "customspatialmotionvalue", this->custom_spatial_motion_value_sensor_);
-  LOG_SENSOR(" ", "custommotionspeed", this->custom_motion_speed_sensor_);
-  LOG_SENSOR(" ", "custommodenum", this->custom_mode_num_sensor_);
+  LOG_SENSOR(" ", "MovementSignsSensor", this->movementSigns_sensor_);
+  LOG_SENSOR(" ", "CustomMotionDistanceSensor", this->custom_motion_distance_sensor_);
+  LOG_SENSOR(" ", "CustomSpatialStaticSensor", this->custom_spatial_static_value_sensor_);
+  LOG_SENSOR(" ", "CustomSpatialMotionSensor", this->custom_spatial_motion_value_sensor_);
+  LOG_SENSOR(" ", "CustomMotionSpeedSensor", this->custom_motion_speed_sensor_);
+  LOG_SENSOR(" ", "CustomModeNumSensor", this->custom_mode_num_sensor_);
 #endif
 #ifdef USE_SWITCH
-  LOG_SWITCH(" ", "underly_open_function", this->underly_open_function_switch_);
+  LOG_SWITCH(" ", "UnderlyOpenFunctionSwitch", this->underly_open_function_switch_);
 #endif
 #ifdef USE_BUTTON
   LOG_BUTTON(" ", "RestartButton", this->restart_button_);
-  LOG_BUTTON(" ", "CustomSetEnd", this->custom_set_end_button_);
+  LOG_BUTTON(" ", "CustomSetEndButton", this->custom_set_end_button_);
 #endif
 #ifdef USE_SELECT
   LOG_SELECT(" ", "SceneModeSelect", this->scene_mode_select_);
@@ -59,7 +59,7 @@ void MR24HPC1Component::dump_config() {
   LOG_NUMBER(" ", "ExistenceThresholdNumber", this->existence_threshold_number_);
   LOG_NUMBER(" ", "MotionThresholdNumber", this->motion_threshold_number_);
   LOG_NUMBER(" ", "MotionTriggerTimeNumber", this->motion_trigger_number_);
-  LOG_NUMBER(" ", "Motion2RestTimeNumber", this->motion_to_rest_number_);
+  LOG_NUMBER(" ", "MotionToRestTimeNumber", this->motion_to_rest_number_);
   LOG_NUMBER(" ", "CustomUnmanTimeNumber", this->custom_unman_time_number_);
 #endif
 }
