@@ -15,7 +15,7 @@ MULTI_CONF = True
 mr24hpc1_ns = cg.esphome_ns.namespace("seeed_mr24hpc1")
 # This MR24HPC1Component class will be a periodically polled UART device
 MR24HPC1Component = mr24hpc1_ns.class_(
-    "MR24HPC1Component", cg.PollingComponent, uart.UARTDevice
+    "MR24HPC1Component", cg.Component, uart.UARTDevice
 )
 
 CONF_MR24HPC1_ID = "mr24hpc1_id"
@@ -55,10 +55,3 @@ async def to_code(config):
     await cg.register_component(var, config)
     # This line of code registers the newly created Pvariable as a device.
     await uart.register_uart_device(var, config)
-
-
-CALIBRATION_ACTION_SCHEMA = maybe_simple_id(
-    {
-        cv.Required(CONF_ID): cv.use_id(MR24HPC1Component),
-    }
-)
