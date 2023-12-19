@@ -108,8 +108,8 @@ switch:
 
 button:
   - platform: seeed_mr24hpc1
-    reset:
-      name: "Module Reset"
+    restart:
+      name: "Module Restart"
     custom_set_end:
       name: "End Of Custom Mode Settings"
 

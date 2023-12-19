@@ -44,7 +44,7 @@ void MR24HPC1Component::dump_config() {
   LOG_SWITCH(" ", "underly_open_function", this->underly_open_function_switch_);
 #endif
 #ifdef USE_BUTTON
-  LOG_BUTTON(" ", "ResetButton", this->reset_button_);
+  LOG_BUTTON(" ", "RestartButton", this->restart_button_);
   LOG_BUTTON(" ", "CustomSetEnd", this->custom_set_end_button_);
 #endif
 #ifdef USE_SELECT
@@ -502,7 +502,7 @@ void MR24HPC1Component::r24_parse_data_frame(uint8_t *data, uint8_t len) {
       if ((this->heartbeat_state_text_sensor_ != nullptr) && (data[FRAME_COMMAND_WORD_INDEX] == 0x01)) {
         this->heartbeat_state_text_sensor_->publish_state("Equipment Normal");
       } else if (data[FRAME_COMMAND_WORD_INDEX] == 0x02) {
-        ESP_LOGD(TAG, "Reply: query reset packet");
+        ESP_LOGD(TAG, "Reply: query restart packet");
       } else if (this->heartbeat_state_text_sensor_ != nullptr) {
         this->heartbeat_state_text_sensor_->publish_state("Equipment Abnormal");
       }
@@ -876,7 +876,7 @@ void MR24HPC1Component::set_sensitivity(uint8_t value) {
   this->get_sensitivity();
 }
 
-void MR24HPC1Component::set_reset() {
+void MR24HPC1Component::set_restart() {
   unsigned char send_data_len = 10;
   unsigned char send_data[10] = {0x53, 0x59, 0x01, 0x02, 0x00, 0x01, 0x0F, 0xBF, 0x54, 0x43};
   this->send_query(send_data, send_data_len);

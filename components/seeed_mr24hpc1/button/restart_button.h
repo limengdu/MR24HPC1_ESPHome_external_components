@@ -6,9 +6,9 @@
 namespace esphome {
 namespace seeed_mr24hpc1 {
 
-class ResetButton : public button::Button, public Parented<MR24HPC1Component> {
+class RestartButton : public button::Button, public Parented<MR24HPC1Component> {
  public:
-  ResetButton() = default;
+  RestartButton() = default;
 
  protected:
   void press_action() override;

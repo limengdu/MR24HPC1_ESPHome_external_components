@@ -224,8 +224,8 @@ views:
         cards:
           - type: entities
             entities:
-              - entity: button.{$DEVICE}_module_reset
-                name: Module Reset
+              - entity: button.{$DEVICE}_module_restart
+                name: Module Restart
               - entity: sensor.{$DEVICE}_hardware_model
                 name: Hardware Model
               - entity: sensor.{$DEVICE}_hardware_version

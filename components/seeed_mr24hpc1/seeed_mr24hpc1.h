@@ -143,7 +143,7 @@ class MR24HPC1Component : public Component,
   SUB_SWITCH(underly_open_function)
 #endif
 #ifdef USE_BUTTON
-  SUB_BUTTON(reset)
+  SUB_BUTTON(restart)
   SUB_BUTTON(custom_set_end)
 #endif
 #ifdef USE_SELECT
@@ -221,7 +221,7 @@ class MR24HPC1Component : public Component,
   void set_scene_mode(const std::string &state);
   void set_underlying_open_function(bool enable);
   void set_sensitivity(uint8_t value);
-  void set_reset();
+  void set_restart();
   void set_unman_time(const std::string &time);
   void set_custom_mode(uint8_t mode);
   void set_custom_end_mode();
