@@ -81,7 +81,7 @@ text_sensor:
 
 binary_sensor:
   - platform: seeed_mr24hpc1
-    someone_exist:
+    has_target:
       name: "Presence Information"
 
 sensor:

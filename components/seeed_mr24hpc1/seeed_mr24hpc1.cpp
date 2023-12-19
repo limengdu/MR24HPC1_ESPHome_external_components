@@ -29,7 +29,7 @@ void MR24HPC1Component::dump_config() {
   LOG_TEXT_SENSOR(" ", "CustomModeEnd", this->custom_mode_end_text_sensor_);
 #endif
 #ifdef USE_BINARY_SENSOR
-  LOG_BINARY_SENSOR(" ", "SomeoneExistsBinarySensor", this->someoneExists_binary_sensor_);
+  LOG_BINARY_SENSOR(" ", "HasTargetBinarySensor", this->has_target_binary_sensor_);
 #endif
 #ifdef USE_SENSOR
   LOG_SENSOR(" ", "CustomPresenceOfDetectionSensor", this->custom_presence_of_detection_sensor_);
@@ -577,9 +577,9 @@ void MR24HPC1Component::r24_frame_parse_work_status(uint8_t *data) {
 }
 
 void MR24HPC1Component::r24_frame_parse_human_information(uint8_t *data) {
-  if ((this->someoneExists_binary_sensor_ != nullptr) &&
+  if ((this->has_target_binary_sensor_ != nullptr) &&
       ((data[FRAME_COMMAND_WORD_INDEX] == 0x01) || (data[FRAME_COMMAND_WORD_INDEX] == 0x81))) {
-    this->someoneExists_binary_sensor_->publish_state(S_SOMEONE_EXISTS_STR[data[FRAME_DATA_INDEX]]);
+    this->has_target_binary_sensor_->publish_state(S_SOMEONE_EXISTS_STR[data[FRAME_DATA_INDEX]]);
   } else if ((this->motion_status_text_sensor_ != nullptr) &&
              ((data[FRAME_COMMAND_WORD_INDEX] == 0x02) || (data[FRAME_COMMAND_WORD_INDEX] == 0x82))) {
     if (data[FRAME_DATA_INDEX] < 3) {

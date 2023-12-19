@@ -128,7 +128,7 @@ class MR24HPC1Component : public Component,
   SUB_TEXT_SENSOR(custom_mode_end)
 #endif
 #ifdef USE_BINARY_SENSOR
-  SUB_BINARY_SENSOR(someoneExists)
+  SUB_BINARY_SENSOR(has_target)
 #endif
 #ifdef USE_SENSOR
   SUB_SENSOR(custom_presence_of_detection)
