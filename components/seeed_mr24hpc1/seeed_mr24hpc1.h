@@ -93,15 +93,6 @@ enum {
   OUTPUT_SWTICH_OFF,
 };
 
-static const std::map<std::string, uint8_t> UNMANDTIME_ENUM_TO_INT{{"None", 0x00},  {"10s", 0x01},   {"30s", 0x02},
-                                                                   {"1min", 0x03},  {"2min", 0x04},  {"5min", 0x05},
-                                                                   {"10min", 0x06}, {"30min", 0x07}, {"60min", 0x08}};
-
-static const std::map<std::string, uint8_t> BOUNDARY_ENUM_TO_INT{
-    {"0.5m", 0x01}, {"1.0m", 0x02}, {"1.5m", 0x03}, {"2.0m", 0x04}, {"2.5m", 0x05},
-    {"3.0m", 0x06}, {"3.5m", 0x07}, {"4.0m", 0x08}, {"4.5m", 0x09}, {"5.0m", 0x0a},
-};
-
 static const char *const S_SCENE_STR[5] = {"None", "Living Room", "Bedroom", "Washroom", "Area Detection"};
 static const bool S_SOMEONE_EXISTS_STR[2] = {false, true};
 static const char *const S_MOTION_STATUS_STR[3] = {"None", "Motionless", "Active"};
@@ -220,7 +211,7 @@ class MR24HPC1Component : public Component,
   void set_underlying_open_function(bool enable);
   void set_sensitivity(uint8_t value);
   void set_restart();
-  void set_unman_time(const std::string &time);
+  void set_unman_time(uint8_t value);
   void set_custom_mode(uint8_t mode);
   void set_custom_end_mode();
   void set_existence_boundary(uint8_t value);

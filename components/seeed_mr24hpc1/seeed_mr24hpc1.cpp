@@ -871,10 +871,9 @@ void MR24HPC1Component::set_restart() {
   this->check_dev_inf_sign_ = true;
 }
 
-void MR24HPC1Component::set_unman_time(const std::string &time) {
-  uint8_t cmd_value = UNMANDTIME_ENUM_TO_INT.at(time);
+void MR24HPC1Component::set_unman_time(uint8_t value) {
   uint8_t send_data_len = 10;
-  uint8_t send_data[10] = {0x53, 0x59, 0x80, 0x0a, 0x00, 0x01, cmd_value, 0x00, 0x54, 0x43};
+  uint8_t send_data[10] = {0x53, 0x59, 0x80, 0x0a, 0x00, 0x01, static_cast<uint8_t>(value), 0x00, 0x54, 0x43};
   send_data[7] = get_frame_crc_sum(send_data, send_data_len);
   this->send_query(send_data, send_data_len);
   this->get_unmanned_time();
