@@ -567,6 +567,10 @@ void MR24HPC1Component::r24_frame_parse_work_status(uint8_t *data) {
       if (this->custom_mode_num_sensor_ != nullptr) {
         this->custom_mode_num_sensor_->publish_state(data[FRAME_DATA_INDEX]);
       }
+    } else {
+      if (this->custom_mode_num_sensor_ != nullptr) {
+        this->custom_mode_num_sensor_->publish_state(data[FRAME_DATA_INDEX]);
+      }
     }
   } else {
     ESP_LOGD(TAG, "[%s] No found COMMAND_WORD(%02X) in Frame", __FUNCTION__, data[FRAME_COMMAND_WORD_INDEX]);
