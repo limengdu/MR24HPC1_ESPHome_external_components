@@ -630,177 +630,177 @@ void MR24HPC1Component::get_heartbeat_packet() {
 
 // Issuance of the underlying open parameter query command
 void MR24HPC1Component::get_radar_output_information_switch() {
-  unsigned char send_data_len = 10;
-  unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x80, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+  uint8_t send_data_len = 10;
+  uint8_t send_data[10] = {0x53, 0x59, 0x08, 0x80, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
   send_data[7] = get_frame_crc_sum(send_data, send_data_len);
   this->send_query(send_data, send_data_len);
 }
 
 // Issuance of product model orders
 void MR24HPC1Component::get_product_mode() {
-  unsigned char send_data_len = 10;
-  unsigned char send_data[10] = {0x53, 0x59, 0x02, 0xA1, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+  uint8_t send_data_len = 10;
+  uint8_t send_data[10] = {0x53, 0x59, 0x02, 0xA1, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
   send_data[7] = get_frame_crc_sum(send_data, send_data_len);
   this->send_query(send_data, send_data_len);
 }
 
 // Issuing the Get Product ID command
 void MR24HPC1Component::get_product_id() {
-  unsigned char send_data_len = 10;
-  unsigned char send_data[10] = {0x53, 0x59, 0x02, 0xA2, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+  uint8_t send_data_len = 10;
+  uint8_t send_data[10] = {0x53, 0x59, 0x02, 0xA2, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
   send_data[7] = get_frame_crc_sum(send_data, send_data_len);
   this->send_query(send_data, send_data_len);
 }
 
 // Issuing hardware model commands
 void MR24HPC1Component::get_hardware_model() {
-  unsigned char send_data_len = 10;
-  unsigned char send_data[10] = {0x53, 0x59, 0x02, 0xA3, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+  uint8_t send_data_len = 10;
+  uint8_t send_data[10] = {0x53, 0x59, 0x02, 0xA3, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
   send_data[7] = get_frame_crc_sum(send_data, send_data_len);
   this->send_query(send_data, send_data_len);
 }
 
 // Issuing software version commands
 void MR24HPC1Component::get_firmware_version() {
-  unsigned char send_data_len = 10;
-  unsigned char send_data[10] = {0x53, 0x59, 0x02, 0xA4, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+  uint8_t send_data_len = 10;
+  uint8_t send_data[10] = {0x53, 0x59, 0x02, 0xA4, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
   send_data[7] = get_frame_crc_sum(send_data, send_data_len);
   this->send_query(send_data, send_data_len);
 }
 
 void MR24HPC1Component::get_human_status() {
-  unsigned char send_data_len = 10;
-  unsigned char send_data[10] = {0x53, 0x59, 0x80, 0x81, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+  uint8_t send_data_len = 10;
+  uint8_t send_data[10] = {0x53, 0x59, 0x80, 0x81, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
   send_data[7] = get_frame_crc_sum(send_data, send_data_len);
   this->send_query(send_data, send_data_len);
 }
 
 void MR24HPC1Component::get_human_motion_info() {
-  unsigned char send_data_len = 10;
-  unsigned char send_data[10] = {0x53, 0x59, 0x80, 0x82, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+  uint8_t send_data_len = 10;
+  uint8_t send_data[10] = {0x53, 0x59, 0x80, 0x82, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
   send_data[7] = get_frame_crc_sum(send_data, send_data_len);
   this->send_query(send_data, send_data_len);
 }
 
 void MR24HPC1Component::get_body_motion_params() {
-  unsigned char send_data_len = 10;
-  unsigned char send_data[10] = {0x53, 0x59, 0x80, 0x83, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+  uint8_t send_data_len = 10;
+  uint8_t send_data[10] = {0x53, 0x59, 0x80, 0x83, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
   send_data[7] = get_frame_crc_sum(send_data, send_data_len);
   this->send_query(send_data, send_data_len);
 }
 
 void MR24HPC1Component::get_keep_away() {
-  unsigned char send_data_len = 10;
-  unsigned char send_data[10] = {0x53, 0x59, 0x80, 0x8B, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+  uint8_t send_data_len = 10;
+  uint8_t send_data[10] = {0x53, 0x59, 0x80, 0x8B, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
   send_data[7] = get_frame_crc_sum(send_data, send_data_len);
   this->send_query(send_data, send_data_len);
 }
 
 void MR24HPC1Component::get_scene_mode() {
-  unsigned char send_data_len = 10;
-  unsigned char send_data[10] = {0x53, 0x59, 0x05, 0x87, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+  uint8_t send_data_len = 10;
+  uint8_t send_data[10] = {0x53, 0x59, 0x05, 0x87, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
   send_data[7] = get_frame_crc_sum(send_data, send_data_len);
   this->send_query(send_data, send_data_len);
 }
 
 void MR24HPC1Component::get_sensitivity() {
-  unsigned int send_data_len = 10;
-  unsigned char send_data[10] = {0x53, 0x59, 0x05, 0x88, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+  uint8_t send_data_len = 10;
+  uint8_t send_data[10] = {0x53, 0x59, 0x05, 0x88, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
   send_data[7] = get_frame_crc_sum(send_data, send_data_len);
   this->send_query(send_data, send_data_len);
 }
 
 void MR24HPC1Component::get_unmanned_time() {
-  unsigned char send_data_len = 10;
-  unsigned char send_data[10] = {0x53, 0x59, 0x80, 0x8a, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+  uint8_t send_data_len = 10;
+  uint8_t send_data[10] = {0x53, 0x59, 0x80, 0x8a, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
   send_data[7] = get_frame_crc_sum(send_data, send_data_len);
   this->send_query(send_data, send_data_len);
 }
 
 void MR24HPC1Component::get_custom_mode() {
-  unsigned char send_data_len = 10;
-  unsigned char send_data[10] = {0x53, 0x59, 0x05, 0x89, 0x00, 0x01, 0x0F, 0x4A, 0x54, 0x43};
+  uint8_t send_data_len = 10;
+  uint8_t send_data[10] = {0x53, 0x59, 0x05, 0x89, 0x00, 0x01, 0x0F, 0x4A, 0x54, 0x43};
   this->send_query(send_data, send_data_len);
 }
 
 void MR24HPC1Component::get_existence_boundary() {
-  unsigned char send_data_len = 10;
-  unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x8A, 0x00, 0x01, 0x0F, 0x45, 0x54, 0x43};
+  uint8_t send_data_len = 10;
+  uint8_t send_data[10] = {0x53, 0x59, 0x08, 0x8A, 0x00, 0x01, 0x0F, 0x45, 0x54, 0x43};
   this->send_query(send_data, send_data_len);
 }
 
 void MR24HPC1Component::get_motion_boundary() {
-  unsigned char send_data_len = 10;
-  unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x8B, 0x00, 0x01, 0x0F, 0x46, 0x54, 0x43};
+  uint8_t send_data_len = 10;
+  uint8_t send_data[10] = {0x53, 0x59, 0x08, 0x8B, 0x00, 0x01, 0x0F, 0x46, 0x54, 0x43};
   this->send_query(send_data, send_data_len);
 }
 
 void MR24HPC1Component::get_spatial_static_value() {
-  unsigned char send_data_len = 10;
-  unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x81, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+  uint8_t send_data_len = 10;
+  uint8_t send_data[10] = {0x53, 0x59, 0x08, 0x81, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
   send_data[7] = get_frame_crc_sum(send_data, send_data_len);
   this->send_query(send_data, send_data_len);
 }
 
 void MR24HPC1Component::get_spatial_motion_value() {
-  unsigned char send_data_len = 10;
-  unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x82, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+  uint8_t send_data_len = 10;
+  uint8_t send_data[10] = {0x53, 0x59, 0x08, 0x82, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
   send_data[7] = get_frame_crc_sum(send_data, send_data_len);
   this->send_query(send_data, send_data_len);
 }
 
 void MR24HPC1Component::get_distance_of_static_object() {
-  unsigned char send_data_len = 10;
-  unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x83, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+  uint8_t send_data_len = 10;
+  uint8_t send_data[10] = {0x53, 0x59, 0x08, 0x83, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
   send_data[7] = get_frame_crc_sum(send_data, send_data_len);
   this->send_query(send_data, send_data_len);
 }
 
 void MR24HPC1Component::get_distance_of_moving_object() {
-  unsigned char send_data_len = 10;
-  unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x84, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+  uint8_t send_data_len = 10;
+  uint8_t send_data[10] = {0x53, 0x59, 0x08, 0x84, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
   send_data[7] = get_frame_crc_sum(send_data, send_data_len);
   this->send_query(send_data, send_data_len);
 }
 
 void MR24HPC1Component::get_target_movement_speed() {
-  unsigned char send_data_len = 10;
-  unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x85, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+  uint8_t send_data_len = 10;
+  uint8_t send_data[10] = {0x53, 0x59, 0x08, 0x85, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
   send_data[7] = get_frame_crc_sum(send_data, send_data_len);
   this->send_query(send_data, send_data_len);
 }
 
 void MR24HPC1Component::get_existence_threshold() {
-  unsigned char send_data_len = 10;
-  unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x88, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+  uint8_t send_data_len = 10;
+  uint8_t send_data[10] = {0x53, 0x59, 0x08, 0x88, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
   send_data[7] = get_frame_crc_sum(send_data, send_data_len);
   this->send_query(send_data, send_data_len);
 }
 
 void MR24HPC1Component::get_motion_threshold() {
-  unsigned char send_data_len = 10;
-  unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x89, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+  uint8_t send_data_len = 10;
+  uint8_t send_data[10] = {0x53, 0x59, 0x08, 0x89, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
   send_data[7] = get_frame_crc_sum(send_data, send_data_len);
   this->send_query(send_data, send_data_len);
 }
 
 void MR24HPC1Component::get_motion_trigger_time() {
-  unsigned char send_data_len = 10;
-  unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x8C, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+  uint8_t send_data_len = 10;
+  uint8_t send_data[10] = {0x53, 0x59, 0x08, 0x8C, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
   send_data[7] = get_frame_crc_sum(send_data, send_data_len);
   this->send_query(send_data, send_data_len);
 }
 
 void MR24HPC1Component::get_motion_to_rest_time() {
-  unsigned char send_data_len = 10;
-  unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x8D, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+  uint8_t send_data_len = 10;
+  uint8_t send_data[10] = {0x53, 0x59, 0x08, 0x8D, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
   send_data[7] = get_frame_crc_sum(send_data, send_data_len);
   this->send_query(send_data, send_data_len);
 }
 
 void MR24HPC1Component::get_custom_unman_time() {
-  unsigned char send_data_len = 10;
-  unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x8E, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
+  uint8_t send_data_len = 10;
+  uint8_t send_data[10] = {0x53, 0x59, 0x08, 0x8E, 0x00, 0x01, 0x0F, 0x00, 0x54, 0x43};
   send_data[7] = get_frame_crc_sum(send_data, send_data_len);
   this->send_query(send_data, send_data_len);
 }
@@ -874,8 +874,8 @@ void MR24HPC1Component::set_sensitivity(uint8_t value) {
 }
 
 void MR24HPC1Component::set_restart() {
-  unsigned char send_data_len = 10;
-  unsigned char send_data[10] = {0x53, 0x59, 0x01, 0x02, 0x00, 0x01, 0x0F, 0xBF, 0x54, 0x43};
+  uint8_t send_data_len = 10;
+  uint8_t send_data[10] = {0x53, 0x59, 0x01, 0x02, 0x00, 0x01, 0x0F, 0xBF, 0x54, 0x43};
   this->send_query(send_data, send_data_len);
   this->check_dev_inf_sign_ = true;
 }
@@ -957,8 +957,8 @@ void MR24HPC1Component::set_motion_boundary(const std::string &value) {
 void MR24HPC1Component::set_existence_threshold(int value) {
   if (this->custom_mode_num_sensor_->state == 0)
     return;  // You'll have to check that you're in custom mode to set it up
-  unsigned char send_data_len = 10;
-  unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x08, 0x00, 0x01, (uint8_t) value, 0x00, 0x54, 0x43};
+  uint8_t send_data_len = 10;
+  uint8_t send_data[10] = {0x53, 0x59, 0x08, 0x08, 0x00, 0x01, (uint8_t) value, 0x00, 0x54, 0x43};
   send_data[7] = get_frame_crc_sum(send_data, send_data_len);
   this->send_query(send_data, send_data_len);
   this->get_existence_threshold();
@@ -967,8 +967,8 @@ void MR24HPC1Component::set_existence_threshold(int value) {
 void MR24HPC1Component::set_motion_threshold(int value) {
   if (this->custom_mode_num_sensor_->state == 0)
     return;  // You'll have to check that you're in custom mode to set it up
-  unsigned char send_data_len = 10;
-  unsigned char send_data[10] = {0x53, 0x59, 0x08, 0x09, 0x00, 0x01, (uint8_t) value, 0x00, 0x54, 0x43};
+  uint8_t send_data_len = 10;
+  uint8_t send_data[10] = {0x53, 0x59, 0x08, 0x09, 0x00, 0x01, (uint8_t) value, 0x00, 0x54, 0x43};
   send_data[7] = get_frame_crc_sum(send_data, send_data_len);
   this->send_query(send_data, send_data_len);
   this->get_motion_threshold();
@@ -981,8 +981,8 @@ void MR24HPC1Component::set_motion_trigger_time(int value) {
   int h16_num = (value >> 16) & 0xff;
   int h8_num = (value >> 8) & 0xff;
   int l8_num = value & 0xff;
-  unsigned char send_data_len = 13;
-  unsigned char send_data[13] = {
+  uint8_t send_data_len = 13;
+  uint8_t send_data[13] = {
       0x53, 0x59, 0x08, 0x0C, 0x00, 0x04, (uint8_t) h24_num, (uint8_t) h16_num, (uint8_t) h8_num, (uint8_t) l8_num,
       0x00, 0x54, 0x43};
   send_data[10] = get_frame_crc_sum(send_data, send_data_len);
@@ -997,8 +997,8 @@ void MR24HPC1Component::set_motion_to_rest_time(int value) {
   int h16_num = (value >> 16) & 0xff;
   int h8_num = (value >> 8) & 0xff;
   int l8_num = value & 0xff;
-  unsigned char send_data_len = 13;
-  unsigned char send_data[13] = {
+  uint8_t send_data_len = 13;
+  uint8_t send_data[13] = {
       0x53, 0x59, 0x08, 0x0D, 0x00, 0x04, (uint8_t) h24_num, (uint8_t) h16_num, (uint8_t) h8_num, (uint8_t) l8_num,
       0x00, 0x54, 0x43};
   send_data[10] = get_frame_crc_sum(send_data, send_data_len);
@@ -1014,8 +1014,8 @@ void MR24HPC1Component::set_custom_unman_time(int value) {
   int h16_num = (value >> 16) & 0xff;
   int h8_num = (value >> 8) & 0xff;
   int l8_num = value & 0xff;
-  unsigned char send_data_len = 13;
-  unsigned char send_data[13] = {
+  uint8_t send_data_len = 13;
+  uint8_t send_data[13] = {
       0x53, 0x59, 0x08, 0x0E, 0x00, 0x04, (uint8_t) h24_num, (uint8_t) h16_num, (uint8_t) h8_num, (uint8_t) l8_num,
       0x00, 0x54, 0x43};
   send_data[10] = get_frame_crc_sum(send_data, send_data_len);
