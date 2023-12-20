@@ -216,7 +216,7 @@ class MR24HPC1Component : public Component,
   void get_motion_to_rest_time();
   void get_custom_unman_time();
 
-  void set_scene_mode(const std::string &state);
+  void set_scene_mode(uint8_t value);
   void set_underlying_open_function(bool enable);
   void set_sensitivity(uint8_t value);
   void set_restart();
