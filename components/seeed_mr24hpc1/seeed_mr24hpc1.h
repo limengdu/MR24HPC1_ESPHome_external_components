@@ -226,8 +226,8 @@ class MR24HPC1Component : public Component,
   void set_unman_time(const std::string &time);
   void set_custom_mode(uint8_t mode);
   void set_custom_end_mode();
-  void set_existence_boundary(const std::string &value);
-  void set_motion_boundary(const std::string &value);
+  void set_existence_boundary(uint8_t value);
+  void set_motion_boundary(uint8_t value);
   void set_existence_threshold(int value);
   void set_motion_threshold(int value);
   void set_motion_trigger_time(int value);
