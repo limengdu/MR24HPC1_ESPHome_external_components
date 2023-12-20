@@ -176,13 +176,8 @@ class MR24HPC1Component : public Component,
   int sg_start_query_data_;
   bool check_dev_inf_sign_;
   bool poll_time_base_func_check_;
-  void update_();
 
- public:
-  float get_setup_priority() const override { return esphome::setup_priority::LATE; }
-  void setup() override;
-  void dump_config() override;
-  void loop() override;
+  void update_();
   void r24_split_data_frame(uint8_t value);
   void r24_parse_data_frame(uint8_t *data, uint8_t len);
   void r24_frame_parse_open_underlying_information(uint8_t *data);
@@ -191,6 +186,12 @@ class MR24HPC1Component : public Component,
   void r24_frame_parse_human_information(uint8_t *data);
   void send_query(uint8_t *query, size_t string_length);
 
+ public:
+  float get_setup_priority() const override { return esphome::setup_priority::LATE; }
+  void setup() override;
+  void dump_config() override;
+  void loop() override;
+  
   void get_heartbeat_packet();
   void get_radar_output_information_switch();
   void get_product_mode();
