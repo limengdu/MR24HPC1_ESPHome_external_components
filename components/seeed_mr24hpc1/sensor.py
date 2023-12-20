@@ -66,7 +66,7 @@ async def to_code(config):
         cg.add(mr24hpc1_component.set_custom_presence_of_detection_sensor(sens))
     if movementsigns_config := config.get(CONF_MOVEMENT_SIGNS):
         sens = await sensor.new_sensor(movementsigns_config)
-        cg.add(mr24hpc1_component.set_movementSigns_sensor(sens))
+        cg.add(mr24hpc1_component.set_movement_signs_sensor(sens))
     if custommotiondistance_config := config.get(CONF_CUSTOM_MOTION_DISTANCE):
         sens = await sensor.new_sensor(custommotiondistance_config)
         cg.add(mr24hpc1_component.set_custom_motion_distance_sensor(sens))

@@ -33,7 +33,7 @@ void MR24HPC1Component::dump_config() {
 #endif
 #ifdef USE_SENSOR
   LOG_SENSOR(" ", "Custom Presence Of Detection Sensor", this->custom_presence_of_detection_sensor_);
-  LOG_SENSOR(" ", "Movement Signs Sensor", this->movementSigns_sensor_);
+  LOG_SENSOR(" ", "Movement Signs Sensor", this->movement_signs_sensor_);
   LOG_SENSOR(" ", "Custom Motion Distance Sensor", this->custom_motion_distance_sensor_);
   LOG_SENSOR(" ", "Custom Spatial Static Sensor", this->custom_spatial_static_value_sensor_);
   LOG_SENSOR(" ", "Custom Spatial Motion Sensor", this->custom_spatial_motion_value_sensor_);
@@ -432,9 +432,9 @@ void MR24HPC1Component::r24_frame_parse_open_underlying_information(uint8_t *dat
     if ((this->keep_away_text_sensor_ != nullptr) && (data[FRAME_DATA_INDEX] < 3)) {
       this->keep_away_text_sensor_->publish_state(S_KEEP_AWAY_STR[data[FRAME_DATA_INDEX]]);
     }
-  } else if ((this->movementSigns_sensor_ != nullptr) &&
+  } else if ((this->movement_signs_sensor_ != nullptr) &&
              ((data[FRAME_COMMAND_WORD_INDEX] == 0x07) || (data[FRAME_COMMAND_WORD_INDEX] == 0x87))) {
-    this->movementSigns_sensor_->publish_state(data[FRAME_DATA_INDEX]);
+    this->movement_signs_sensor_->publish_state(data[FRAME_DATA_INDEX]);
   } else if ((this->existence_threshold_number_ != nullptr) &&
              ((data[FRAME_COMMAND_WORD_INDEX] == 0x08) || (data[FRAME_COMMAND_WORD_INDEX] == 0x88))) {
     this->existence_threshold_number_->publish_state(data[FRAME_DATA_INDEX]);
@@ -582,9 +582,9 @@ void MR24HPC1Component::r24_frame_parse_human_information(uint8_t *data) {
     if (data[FRAME_DATA_INDEX] < 3) {
       this->motion_status_text_sensor_->publish_state(S_MOTION_STATUS_STR[data[FRAME_DATA_INDEX]]);
     }
-  } else if ((this->movementSigns_sensor_ != nullptr) &&
+  } else if ((this->movement_signs_sensor_ != nullptr) &&
              ((data[FRAME_COMMAND_WORD_INDEX] == 0x03) || (data[FRAME_COMMAND_WORD_INDEX] == 0x83))) {
-    this->movementSigns_sensor_->publish_state(data[FRAME_DATA_INDEX]);
+    this->movement_signs_sensor_->publish_state(data[FRAME_DATA_INDEX]);
   } else if ((this->unman_time_select_ != nullptr) &&
              ((data[FRAME_COMMAND_WORD_INDEX] == 0x0A) || (data[FRAME_COMMAND_WORD_INDEX] == 0x8A))) {
     // none:0x00  1s:0x01 30s:0x02 1min:0x03 2min:0x04 5min:0x05 10min:0x06 30min:0x07 1hour:0x08
