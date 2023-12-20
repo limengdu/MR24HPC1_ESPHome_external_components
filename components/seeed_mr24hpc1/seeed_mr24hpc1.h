@@ -93,9 +93,6 @@ enum {
   OUTPUT_SWTICH_OFF,
 };
 
-static const std::map<std::string, uint8_t> SCENEMODE_ENUM_TO_INT{
-    {"None", 0x00}, {"Living Room", 0x01}, {"Bedroom", 0x02}, {"Washroom", 0x03}, {"Area Detection", 0x04}};
-
 static const std::map<std::string, uint8_t> UNMANDTIME_ENUM_TO_INT{{"None", 0x00},  {"10s", 0x01},   {"30s", 0x02},
                                                                    {"1min", 0x03},  {"2min", 0x04},  {"5min", 0x05},
                                                                    {"10min", 0x06}, {"30min", 0x07}, {"60min", 0x08}};

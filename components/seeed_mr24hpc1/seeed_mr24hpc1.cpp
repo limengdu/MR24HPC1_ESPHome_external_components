@@ -830,10 +830,9 @@ void MR24HPC1Component::set_underlying_open_function(bool enable) {
   }
 }
 
-void MR24HPC1Component::set_scene_mode(const std::string &state) {
-  uint8_t cmd_value = SCENEMODE_ENUM_TO_INT.at(state);
+void MR24HPC1Component::set_scene_mode(uint8_t value) {
   uint8_t send_data_len = 10;
-  uint8_t send_data[10] = {0x53, 0x59, 0x05, 0x07, 0x00, 0x01, cmd_value, 0x00, 0x54, 0x43};
+  uint8_t send_data[10] = {0x53, 0x59, 0x05, 0x07, 0x00, 0x01, static_cast<uint8_t>(value), 0x00, 0x54, 0x43};
   send_data[7] = get_frame_crc_sum(send_data, send_data_len);
   this->send_query(send_data, send_data_len);
   if (this->custom_mode_number_ != nullptr) {
