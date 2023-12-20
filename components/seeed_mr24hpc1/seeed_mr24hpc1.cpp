@@ -168,11 +168,10 @@ void MR24HPC1Component::loop() {
         this->get_human_motion_info();
         this->sg_start_query_data_++;
         break;
-      // case STANDARD_FUNCTION_QUERY_BODY_MOVE_PARAMETER: // It is not recommended to turn on the query for body
-      // movement parameters, as the frequency of reporting is frequent enough
-      //   this->get_body_motion_params();
-      //   this->sg_start_query_data_++;
-      //   break;
+      case STANDARD_FUNCTION_QUERY_BODY_MOVE_PARAMETER:
+        this->get_body_motion_params();
+        this->sg_start_query_data_++;
+        break;
       case STANDARD_FUNCTION_QUERY_KEEPAWAY_STATUS:  // The above is the basic functional information
         this->get_keep_away();
         this->sg_start_query_data_++;
@@ -185,26 +184,6 @@ void MR24HPC1Component::loop() {
         this->get_heartbeat_packet();
         this->sg_start_query_data_++;
         break;
-      // case UNDERLY_FUNCTION_QUERY_SPATIAL_STATIC_VALUE:
-      // this->get_spatial_static_value();  // Values reported on a regular basis, so no need turn on
-      // this->sg_start_query_data_++;
-      // break;
-      // case UNDERLY_FUNCTION_QUERY_SPATIAL_MOTION_VALUE:
-      // this->get_spatial_motion_value();
-      // this->sg_start_query_data_++;
-      // break;
-      // case UNDERLY_FUNCTION_QUERY_DISTANCE_OF_STATIC_OBJECT:
-      // this->get_distance_of_static_object();
-      // this->sg_start_query_data_++;
-      // break;
-      // case UNDERLY_FUNCTION_QUERY_DISTANCE_OF_MOVING_OBJECT:
-      // this->get_distance_of_moving_object();
-      // this->sg_start_query_data_++;
-      // break;
-      // case UNDERLY_FUNCTION_QUERY_TARGET_MOVEMENT_SPEED:
-      // this->get_target_movement_speed();
-      // this->sg_start_query_data_++;
-      // break;
       case CUSTOM_FUNCTION_QUERY_EXISTENCE_BOUNDARY:
         this->get_existence_boundary();
         this->sg_start_query_data_++;
@@ -239,9 +218,27 @@ void MR24HPC1Component::loop() {
       case UNDERLY_FUNCTION_QUERY_HUMAN_STATUS:
         this->get_human_status();
         this->sg_start_query_data_++;
-        if (this->s_output_info_switch_flag_ == OUTPUT_SWTICH_ON) {
-          this->poll_time_base_func_check_ = false;  // Avoiding high-speed polling that can cause the device to jam
-        }
+        break;
+      case UNDERLY_FUNCTION_QUERY_SPATIAL_STATIC_VALUE:
+        this->get_spatial_static_value();
+        this->sg_start_query_data_++;
+        break;
+      case UNDERLY_FUNCTION_QUERY_SPATIAL_MOTION_VALUE:
+        this->get_spatial_motion_value();
+        this->sg_start_query_data_++;
+        break;
+      case UNDERLY_FUNCTION_QUERY_DISTANCE_OF_STATIC_OBJECT:
+        this->get_distance_of_static_object();
+        this->sg_start_query_data_++;
+        break;
+      case UNDERLY_FUNCTION_QUERY_DISTANCE_OF_MOVING_OBJECT:
+        this->get_distance_of_moving_object();
+        this->sg_start_query_data_++;
+        break;
+      case UNDERLY_FUNCTION_QUERY_TARGET_MOVEMENT_SPEED:
+        this->get_target_movement_speed();
+        this->sg_start_query_data_++;
+        this->poll_time_base_func_check_ = false;  // Avoiding high-speed polling that can cause the device to jam
         break;
       default:
         break;
