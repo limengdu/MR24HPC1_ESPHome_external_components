@@ -603,9 +603,7 @@ void MR24HPC1Component::r24_frame_parse_human_information(uint8_t *data) {
 }
 
 // Sending data frames
-void MR24HPC1Component::send_query(uint8_t *query, size_t string_length) {
-  this->write_array(query, string_length);
-}
+void MR24HPC1Component::send_query(uint8_t *query, size_t string_length) { this->write_array(query, string_length); }
 
 // Send Heartbeat Packet Command
 void MR24HPC1Component::get_heartbeat_packet() {
@@ -920,7 +918,7 @@ void MR24HPC1Component::set_custom_end_mode() {
 }
 
 void MR24HPC1Component::set_existence_boundary(const std::string &value) {
-  if (this->custom_mode_num_sensor_->state == 0)
+  if ((this->custom_mode_num_sensor_ != nullptr) && (this->custom_mode_num_sensor_->state == 0))
     return;  // You'll have to check that you're in custom mode to set it up
   uint8_t cmd_value = BOUNDARY_ENUM_TO_INT.at(value);
   uint8_t send_data_len = 10;
@@ -931,7 +929,7 @@ void MR24HPC1Component::set_existence_boundary(const std::string &value) {
 }
 
 void MR24HPC1Component::set_motion_boundary(const std::string &value) {
-  if (this->custom_mode_num_sensor_->state == 0)
+  if ((this->custom_mode_num_sensor_ != nullptr) && (this->custom_mode_num_sensor_->state == 0))
     return;  // You'll have to check that you're in custom mode to set it up
   uint8_t cmd_value = BOUNDARY_ENUM_TO_INT.at(value);
   uint8_t send_data_len = 10;
@@ -942,7 +940,7 @@ void MR24HPC1Component::set_motion_boundary(const std::string &value) {
 }
 
 void MR24HPC1Component::set_existence_threshold(int value) {
-  if (this->custom_mode_num_sensor_->state == 0)
+  if ((this->custom_mode_num_sensor_ != nullptr) && (this->custom_mode_num_sensor_->state == 0))
     return;  // You'll have to check that you're in custom mode to set it up
   uint8_t send_data_len = 10;
   uint8_t send_data[10] = {0x53, 0x59, 0x08, 0x08, 0x00, 0x01, (uint8_t) value, 0x00, 0x54, 0x43};
@@ -952,7 +950,7 @@ void MR24HPC1Component::set_existence_threshold(int value) {
 }
 
 void MR24HPC1Component::set_motion_threshold(int value) {
-  if (this->custom_mode_num_sensor_->state == 0)
+  if ((this->custom_mode_num_sensor_ != nullptr) && (this->custom_mode_num_sensor_->state == 0))
     return;  // You'll have to check that you're in custom mode to set it up
   uint8_t send_data_len = 10;
   uint8_t send_data[10] = {0x53, 0x59, 0x08, 0x09, 0x00, 0x01, (uint8_t) value, 0x00, 0x54, 0x43};
@@ -962,7 +960,7 @@ void MR24HPC1Component::set_motion_threshold(int value) {
 }
 
 void MR24HPC1Component::set_motion_trigger_time(int value) {
-  if (this->custom_mode_num_sensor_->state == 0)
+  if ((this->custom_mode_num_sensor_ != nullptr) && (this->custom_mode_num_sensor_->state == 0))
     return;  // You'll have to check that you're in custom mode to set it up
   int h24_num = (value >> 24) & 0xff;
   int h16_num = (value >> 16) & 0xff;
@@ -978,7 +976,7 @@ void MR24HPC1Component::set_motion_trigger_time(int value) {
 }
 
 void MR24HPC1Component::set_motion_to_rest_time(int value) {
-  if (this->custom_mode_num_sensor_->state == 0)
+  if ((this->custom_mode_num_sensor_ != nullptr) && (this->custom_mode_num_sensor_->state == 0))
     return;  // You'll have to check that you're in custom mode to set it up
   int h24_num = (value >> 24) & 0xff;
   int h16_num = (value >> 16) & 0xff;
@@ -994,7 +992,7 @@ void MR24HPC1Component::set_motion_to_rest_time(int value) {
 }
 
 void MR24HPC1Component::set_custom_unman_time(int value) {
-  if (this->custom_mode_num_sensor_->state == 0)
+  if ((this->custom_mode_num_sensor_ != nullptr) && (this->custom_mode_num_sensor_->state == 0))
     return;  // You'll have to check that you're in custom mode to set it up
   value *= 1000;
   int h24_num = (value >> 24) & 0xff;
