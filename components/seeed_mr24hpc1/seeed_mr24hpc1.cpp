@@ -602,22 +602,9 @@ void MR24HPC1Component::r24_frame_parse_human_information(uint8_t *data) {
   }
 }
 
-// Print data frame
-static void show_frame_data(const uint8_t *data, int len) {
-  printf("[%s] FRAME: %d, ", __FUNCTION__, len);
-  for (int i = 0; i < len; i++) {
-    printf("%02X ", data[i] & 0xff);
-  }
-  printf("\r\n");
-}
-
 // Sending data frames
 void MR24HPC1Component::send_query(uint8_t *query, size_t string_length) {
-  int i;
-  for (i = 0; i < string_length; i++) {
-    write(query[i]);
-  }
-  show_frame_data(query, i);
+  this->write_array(query, string_length);
 }
 
 // Send Heartbeat Packet Command
