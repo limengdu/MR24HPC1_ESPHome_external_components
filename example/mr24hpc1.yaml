@@ -13,9 +13,9 @@ esphome:
     board_build.flash_mode: dio
     board_build.mcu: esp32c3
 
-external_components:
-  - source: github://limengdu/mmwave-kit-external-components@main
-    refresh: 0s
+# external_components:
+#   - source: github://limengdu/mmwave-kit-external-components@main
+#     refresh: 0s
 
 esp32:
   board: esp32-c3-devkitm-1
