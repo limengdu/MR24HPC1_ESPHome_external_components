@@ -104,7 +104,7 @@ sensor:
 
 switch:
   - platform: seeed_mr24hpc1
-    underly_open_function:
+    underlying_open_function:
       name: Underlying Open Function Info Output Switch
 
 button:

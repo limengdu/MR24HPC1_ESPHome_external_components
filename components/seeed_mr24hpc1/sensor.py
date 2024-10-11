@@ -5,12 +5,9 @@ from esphome.const import (
     DEVICE_CLASS_DISTANCE,
     DEVICE_CLASS_ENERGY,
     DEVICE_CLASS_SPEED,
-    STATE_CLASS_MEASUREMENT,
     UNIT_METER,
 )
 from . import CONF_MR24HPC1_ID, MR24HPC1Component
-
-AUTO_LOAD = ["seeed_mr24hpc1"]
 
 CONF_CUSTOM_PRESENCE_OF_DETECTION = "custom_presence_of_detection"
 CONF_MOVEMENT_SIGNS = "movement_signs"
@@ -30,7 +27,6 @@ CONFIG_SCHEMA = cv.Schema(
             icon="mdi:signal-distance-variant",
         ),
         cv.Optional(CONF_MOVEMENT_SIGNS): sensor.sensor_schema(
-            state_class=STATE_CLASS_MEASUREMENT,
             icon="mdi:human-greeting-variant",
         ),
         cv.Optional(CONF_CUSTOM_MOTION_DISTANCE): sensor.sensor_schema(
