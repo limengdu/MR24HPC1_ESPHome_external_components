@@ -16,21 +16,14 @@ jobs:
       max-parallel: 3
       matrix:
         file:
-          - example/mr24hpc1.yaml
+          - Seeed Studio MR24HPC1
         esphome-version:
           - stable
-          - beta
-          - dev
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4.1.7
       - name: ESPHome ${{ matrix.esphome-version }}
         uses: esphome/build-action@v4.0.1
         with:
-          yaml-file: ${{ matrix.file }}.yaml
-          version: ${{ matrix.esphome-version }}
-      - name: ESPHome ${{ matrix.esphome-version }} Factory
-        uses: esphome/build-action@v4.0.1
-        with:
-          yaml-file: ${{ matrix.file }}.factory.yaml
+          yaml-file: example/mr24hpc1.yaml
           version: ${{ matrix.esphome-version }}
