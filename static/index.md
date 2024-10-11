@@ -11,3 +11,8 @@ You can use the button below to install the pre-built firmware directly to your 
 <esp-web-install-button manifest="./firmware/manifest.json"></esp-web-install-button>
 
 <script type="module" src="https://unpkg.com/esp-web-tools@9/dist/web/install-button.js?module"></script>
+
+
+Then, refer to the tutorial here to complete the subsequent steps:
+
+https://wiki.seeedstudio.com/mmwave_human_detection_kit/
