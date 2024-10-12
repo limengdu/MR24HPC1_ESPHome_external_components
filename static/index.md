@@ -25,60 +25,50 @@ Please supply power to the kit via a USB-C type cable. Be careful that the power
 
 After the kit is powered on, a hotspot named **seedstudio-mr24hpc1** will be opened automatically, please search and connect to the hotspot. You can use your cell phone to connect to this network so you don't have to switch networks on your computer as often.
 
-:::note
-If you are using an older version of firmware, then this may require you to enter your WiFi password in order to connect to **mmwave-kit**. we recommend **[updating your firmware](#restore-factory-firmware)**. If you want to continue, the network password is `seeedstudio`.
-:::
-
-<div style={{textAlign:'center'}}><img src="https://files.seeedstudio.com/wiki/mmwave_kit/40.png" style={{width:400, height:'auto'}}/></div>
+![Seeed Studio MR24HPC1 Kit](https://files.seeedstudio.com/wiki/mmwave_kit/40.png)
 
 Then use your browser to go to the backend administration address: `192.168.4.1`. This is where we will configure the network and password that the kit needs to connect to.
 
-<div style={{textAlign:'center'}}><img src="https://files.seeedstudio.com/wiki/mmwave_kit/4.png" style={{width:1000, height:'auto'}}/></div>
+![Seeed Studio MR24HPC1 Kit](https://files.seeedstudio.com/wiki/mmwave_kit/4.png)
 
 Then, select the name of the network you want the kit to connect to. Please note that the network you select needs to be on the same LAN as Home Assitant, otherwise your kit will not be recognized by Home Assitant searches.
 
-:::caution
-If you can't find the network you want to connect to on the page, it's likely that the XIAO ESP32C3 doesn't support your network. Please adjust your router yourself to enable maximum compatibility and make sure the network is on the 2.4GHz band.XIAO does not support networks on the 5GHz band.
-:::
+**If you can't find the network you want to connect to on the page, it's likely that the XIAO ESP32C3 doesn't support your network. Please adjust your router yourself to enable maximum compatibility and make sure the network is on the 2.4GHz band.XIAO does not support networks on the 5GHz band.**
 
 Enter the correct WiFi password and click Save. The device will automatically reboot and try to connect to the network you configured. You don't need to stay on this page, you can close it now.
 
-<div style={{textAlign:'center'}}><img src="https://files.seeedstudio.com/wiki/mmwave_kit/5.png" style={{width:600, height:'auto'}}/></div>
+![Seeed Studio MR24HPC1 Kit](https://files.seeedstudio.com/wiki/mmwave_kit/5.png)
 
 ### Step 3. Adding your device to Home Assistant
 
 If the networking goes well, you'll be able to find your device on Home Assistant. Please follow the path below to add your device. 
 
-<div style={{textAlign:'center'}}><img src="https://files.seeedstudio.com/wiki/mmwave_kit/41.png" style={{width:500, height:'auto'}}/></div>
+![Seeed Studio MR24HPC1 Kit](https://files.seeedstudio.com/wiki/mmwave_kit/41.png)
 
 Click **Settings** in the menu bar and select **Devices & services**.
 
-<div style={{textAlign:'center'}}><img src="https://files.seeedstudio.com/wiki/mmwave_kit/42.png" style={{width:1000, height:'auto'}}/></div>
+![Seeed Studio MR24HPC1 Kit](https://files.seeedstudio.com/wiki/mmwave_kit/42.png)
 
 You should see the device appear in the **Discovered** section, click the **CONFIGURE** button. Select **SUBMIT** in the window that pops up afterwards and configure the region to use the device normally.
 
-<div style={{textAlign:'center'}}><img src="https://files.seeedstudio.com/wiki/mmwave_kit/43.png" style={{width:1000, height:'auto'}}/></div>
+![Seeed Studio MR24HPC1 Kit](https://files.seeedstudio.com/wiki/mmwave_kit/43.png)
 
 The kit was then successfully added to Home Assistant.
 
-<div style={{textAlign:'center'}}><img src="https://files.seeedstudio.com/wiki/mmwave_kit/44.png" style={{width:1000, height:'auto'}}/></div>
+![Seeed Studio MR24HPC1 Kit](https://files.seeedstudio.com/wiki/mmwave_kit/44.png)
 
-:::note
-If you have too many devices in your home, there is a certain probability that your device will not be found in Discovered. Then, please get the IP address of the kit from your router's console, click the **Add Integration** button at the bottom right corner, and manually enter the IP address to add the device.
-:::
+**If you have too many devices in your home, there is a certain probability that your device will not be found in Discovered. Then, please get the IP address of the kit from your router's console, click the Add Integration button at the bottom right corner, and manually enter the IP address to add the device.**
 
 ### Step 4. Adding components to the dashboard
 
 Then, we click on the added **ESPHome** card, **1 device** here.
 
-<div style={{textAlign:'center'}}><img src="https://files.seeedstudio.com/wiki/mmwave_kit/45.png" style={{width:1000, height:'auto'}}/></div>
+![Seeed Studio MR24HPC1 Kit](https://files.seeedstudio.com/wiki/mmwave_kit/45.png)
 
 This will show all the component content we have written for the kit. Let's scroll down the display area slightly to add all of these components to the dashboard.
 
-:::caution
-If you don't find the components shown under this page, check the kit's power supply and logs. If you are using the computer function, some computers may not have USB ports that provide enough power support. If you make sure there is no problem with the power supply, please open the logs and send the detailed logs back to Seeed Studio's technical support.
-:::
+**If you don't find the components shown under this page, check the kit's power supply and logs. If you are using the computer function, some computers may not have USB ports that provide enough power support. If you make sure there is no problem with the power supply, please open the logs and send the detailed logs back to Seeed Studio's technical support.**
 
-<div style={{textAlign:'center'}}><img src="https://files.seeedstudio.com/wiki/mmwave_kit/46.png" style={{width:1000, height:'auto'}}/></div>
+![Seeed Studio MR24HPC1 Kit](https://files.seeedstudio.com/wiki/mmwave_kit/46.png)
 
 We can then see all the information and content in **Overview**.
