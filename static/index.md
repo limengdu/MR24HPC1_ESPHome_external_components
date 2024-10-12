@@ -15,4 +15,4 @@ You can use the button below to install the pre-built firmware directly to your 
 
 Then, refer to the tutorial here to complete the subsequent steps:
 
-https://wiki.seeedstudio.com/mmwave_human_detection_kit/
+[https://wiki.seeedstudio.com/mmwave_human_detection_kit/](https://wiki.seeedstudio.com/mmwave_human_detection_kit/)
