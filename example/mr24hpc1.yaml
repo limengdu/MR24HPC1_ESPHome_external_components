@@ -13,9 +13,15 @@ esphome:
     board_build.flash_mode: dio
     board_build.mcu: esp32c3
 
-# external_components:
-#   - source: github://limengdu/mmwave-kit-external-components@main
-#     refresh: 0s
+# Use this repository's component so firmware picks up the UART startup fix.
+# ESPHome Builder: change the source to
+#   github://limengdu/MR24HPC1_ESPHome_external_components
+#   components: [seeed_mr24hpc1]
+external_components:
+  - source:
+      type: local
+      path: ../components
+    components: [seeed_mr24hpc1]
 
 esp32:
   board: esp32-c3-devkitm-1
@@ -53,13 +59,15 @@ esp32_improv:
 uart:
   id: uart_bus
   baud_rate: 115200
-  rx_pin: 4
-  tx_pin: 5
+  rx_pin: GPIO4
+  tx_pin: GPIO5
   parity: NONE
   stop_bits: 1
+  rx_buffer_size: 1024
 
 seeed_mr24hpc1:
   id: my_seeed_mr24hpc1
+  uart_id: uart_bus
 
 text_sensor:
   - platform: seeed_mr24hpc1
@@ -103,6 +111,8 @@ sensor:
       name: "Current Custom Mode"
 
 switch:
+  # Turn this on to receive Static Distance, Motion Distance,
+  # Existence Energy, Motion Energy, and Motion Speed.
   - platform: seeed_mr24hpc1
     underlying_open_function:
       name: Underlying Open Function Info Output Switch

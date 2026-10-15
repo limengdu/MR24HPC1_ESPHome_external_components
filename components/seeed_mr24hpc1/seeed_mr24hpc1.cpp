@@ -1,6 +1,16 @@
 #include "seeed_mr24hpc1.h"
 
+#include "esphome/core/hal.h"
 #include "esphome/core/log.h"
+
+#ifdef USE_ESP32
+#include "soc/gpio_periph.h"
+#include "soc/io_mux_reg.h"
+#endif
+#ifdef USE_ESP_IDF
+#include "driver/uart.h"
+#include "esphome/components/uart/uart_component_esp_idf.h"
+#endif
 
 #include <utility>
 
@@ -59,6 +69,76 @@ void MR24HPC1Component::dump_config() {
 #endif
 }
 
+// Select GPIO function on the UART pads and resync the radar UART parser.
+// 把串口引脚切到 GPIO 功能，并用 break 让雷达重新对齐帧。
+void MR24HPC1Component::prepare_uart_() {
+#if defined(USE_ESP32_VARIANT_ESP32C3)
+  PIN_FUNC_SELECT(GPIO_PIN_MUX_REG[4], PIN_FUNC_GPIO);
+  PIN_FUNC_SELECT(GPIO_PIN_MUX_REG[5], PIN_FUNC_GPIO);
+#endif
+#ifdef USE_ESP_IDF
+  if (this->parent_ != nullptr) {
+    auto *idf_uart = static_cast<uart::IDFUARTComponent *>(this->parent_);
+    uart_port_t uart_num = static_cast<uart_port_t>(idf_uart->get_hw_serial_number());
+    uart_set_line_inverse(uart_num, UART_SIGNAL_TXD_INV);
+    delay(100);
+    uart_set_line_inverse(uart_num, 0);
+    delay(50);
+  }
+#endif
+  this->flush_rx_();
+}
+
+// Discard bytes already sitting in the UART RX buffer.
+// 清空已经到达的串口接收数据。
+void MR24HPC1Component::flush_rx_() {
+  uint8_t byte;
+  while (this->available()) {
+    this->read_byte(&byte);
+  }
+  this->sg_recv_data_state_ = FRAME_IDLE;
+  this->sg_frame_len_ = 0;
+  this->sg_data_len_ = 0;
+}
+
+// Start queries after the radar boot window.
+// 雷达启动窗口结束后开始查询。
+void MR24HPC1Component::start_after_boot_delay_() {
+  this->module_ready_ = true;
+  this->set_restart();
+  this->set_timeout(RADAR_RESET_DELAY_MS, [this]() {
+    this->set_custom_end_mode();
+    this->poll_time_base_func_check_ = true;
+    this->set_interval(8000, [this]() { this->update_(); });
+  });
+}
+
+// Choose the next query index from the current output-switch state.
+// 按当前输出开关状态选择下一轮查询起点。
+void MR24HPC1Component::advance_query_state_() {
+  if (this->check_dev_inf_sign_ && (this->sg_start_query_data_ > STANDARD_FUNCTION_QUERY_HARDWARE_MODE)) {
+    this->sg_start_query_data_ = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
+    return;
+  }
+  if (this->check_dev_inf_sign_) {
+    return;
+  }
+
+  if (this->s_output_info_switch_flag_ == OUTPUT_SWTICH_OFF) {
+    if (this->sg_start_query_data_ > CUSTOM_FUNCTION_QUERY_TIME_OF_ENTER_UNMANNED) {
+      this->sg_start_query_data_ = STANDARD_FUNCTION_QUERY_SCENE_MODE;
+    }
+    return;
+  }
+
+  if (this->s_output_info_switch_flag_ == OUTPUT_SWITCH_ON) {
+    if ((this->sg_start_query_data_ < CUSTOM_FUNCTION_QUERY_EXISTENCE_BOUNDARY) ||
+        (this->sg_start_query_data_ > UNDERLY_FUNCTION_QUERY_TARGET_MOVEMENT_SPEED)) {
+      this->sg_start_query_data_ = CUSTOM_FUNCTION_QUERY_EXISTENCE_BOUNDARY;
+    }
+  }
+}
+
 // Initialisation functions
 void MR24HPC1Component::setup() {
   ESP_LOGCONFIG(TAG, "Setting up MR24HPC1...");
@@ -73,14 +153,14 @@ void MR24HPC1Component::setup() {
   if (this->custom_mode_end_text_sensor_ != nullptr) {
     this->custom_mode_end_text_sensor_->publish_state("Not in custom mode");
   }
-  this->set_custom_end_mode();
-  this->poll_time_base_func_check_ = true;
+  this->poll_time_base_func_check_ = false;
   this->check_dev_inf_sign_ = true;
   this->sg_start_query_data_ = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
   this->sg_data_len_ = 0;
   this->sg_frame_len_ = 0;
   this->sg_recv_data_state_ = FRAME_IDLE;
   this->s_output_info_switch_flag_ = OUTPUT_SWITCH_INIT;
+  this->module_ready_ = false;
 
   memset(this->c_product_mode_, 0, PRODUCT_BUF_MAX_SIZE);
   memset(this->c_product_id_, 0, PRODUCT_BUF_MAX_SIZE);
@@ -89,12 +169,20 @@ void MR24HPC1Component::setup() {
   memset(this->sg_frame_prase_buf_, 0, FRAME_BUF_MAX_SIZE);
   memset(this->sg_frame_buf_, 0, FRAME_BUF_MAX_SIZE);
 
-  this->set_interval(8000, [this]() { this->update_(); });
+  this->prepare_uart_();
+  this->set_timeout(STARTUP_DELAY_MS, [this]() { this->start_after_boot_delay_(); });
   ESP_LOGCONFIG(TAG, "Set up MR24HPC1 complete");
 }
 
 // Timed polling of radar data
 void MR24HPC1Component::update_() {
+  if (!this->module_ready_) {
+    return;
+  }
+  if (this->s_output_info_switch_flag_ == OUTPUT_SWITCH_INIT) {
+    this->check_dev_inf_sign_ = true;
+    this->sg_start_query_data_ = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
+  }
   this->get_radar_output_information_switch();  // Query the key status every so often
   this->poll_time_base_func_check_ = true;      // Query the base functionality information at regular intervals
 }
@@ -109,16 +197,7 @@ void MR24HPC1Component::loop() {
     this->r24_split_data_frame_(byte);  // split data frame
   }
 
-  if ((this->s_output_info_switch_flag_ == OUTPUT_SWTICH_OFF) &&
-      (this->sg_start_query_data_ > CUSTOM_FUNCTION_QUERY_TIME_OF_ENTER_UNMANNED) && (!this->check_dev_inf_sign_)) {
-    this->sg_start_query_data_ = STANDARD_FUNCTION_QUERY_SCENE_MODE;
-  } else if ((this->s_output_info_switch_flag_ == OUTPUT_SWITCH_ON) &&
-             (this->sg_start_query_data_ < CUSTOM_FUNCTION_QUERY_EXISTENCE_BOUNDARY) && (!this->check_dev_inf_sign_)) {
-    this->sg_start_query_data_ = CUSTOM_FUNCTION_QUERY_EXISTENCE_BOUNDARY;
-  } else if (this->check_dev_inf_sign_ && (this->sg_start_query_data_ > STANDARD_FUNCTION_QUERY_HARDWARE_MODE)) {
-    // First time power up information polling
-    this->sg_start_query_data_ = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
-  }
+  this->advance_query_state_();
 
   // Polling Functions
   if (this->poll_time_base_func_check_) {
@@ -597,6 +676,9 @@ void MR24HPC1Component::r24_frame_parse_human_information_(uint8_t *data) {
 
 // Sending data frames
 void MR24HPC1Component::send_query_(const uint8_t *query, size_t string_length) {
+  if (!this->module_ready_) {
+    return;
+  }
   this->write_array(query, string_length);
 }
 
@@ -756,6 +838,9 @@ void MR24HPC1Component::set_sensitivity(uint8_t value) {
 void MR24HPC1Component::set_restart() {
   this->send_query_(SET_RESTART, sizeof(SET_RESTART));
   this->check_dev_inf_sign_ = true;
+  this->sg_start_query_data_ = STANDARD_FUNCTION_QUERY_PRODUCT_MODE;
+  this->s_output_info_switch_flag_ = OUTPUT_SWITCH_INIT;
+  this->poll_time_base_func_check_ = false;
 }
 
 void MR24HPC1Component::set_unman_time(uint8_t value) {
