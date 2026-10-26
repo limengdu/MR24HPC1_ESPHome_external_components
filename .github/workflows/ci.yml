@@ -23,7 +23,8 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4.1.7
       - name: ESPHome ${{ matrix.esphome-version }}
-        uses: esphome/build-action@v4.0.1
+        # v4.0.1 still pulls actions/cache@v4.0.2, which GitHub now rejects.
+        uses: esphome/build-action@v6.0.1
         with:
           yaml-file: example/mr24hpc1.yaml
           version: ${{ matrix.esphome-version }}
