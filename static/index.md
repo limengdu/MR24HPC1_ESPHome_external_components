@@ -67,7 +67,7 @@ Then, we click on the added **ESPHome** card, **1 device** here.
 
 This will show all the component content we have written for the kit. Let's scroll down the display area slightly to add all of these components to the dashboard.
 
-**If you don't find the components shown under this page, check the kit's power supply and logs. If you are using the computer function, some computers may not have USB ports that provide enough power support. If you make sure there is no problem with the power supply, please open the logs and send the detailed logs back to Seeed Studio's technical support.**
+The radar finishes its own boot a few seconds after power is applied, then presence and motion entities start updating. Energy and distance values appear after you turn on **Underlying Open Function Info Output Switch**. Use a 5V USB supply that can deliver 1A; some computer USB ports do not provide enough current for the kit. If entities stay empty after that wait, open the ESPHome logs and send them to Seeed Studio technical support.
 
 ![Seeed Studio MR24HPC1 Kit](https://files.seeedstudio.com/wiki/mmwave_kit/46.png)
 

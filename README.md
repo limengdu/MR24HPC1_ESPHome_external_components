@@ -351,6 +351,23 @@ This kit is mainly oriented to the direction of the smart home, the secondary de
 
 - Built-in XIAO ESP32C3 development materials and hands-on Wiki: [Getting Started with Seeed Studio XIAO ESP32C3](https://wiki.seeedstudio.com/XIAO_ESP32C3_Getting_Started/)
 
+### Sensor values in Home Assistant
+
+After the device is powered on, the radar needs a few seconds to finish its own boot. The component waits before the first UART query, then presence, motion, and device-info entities start updating.
+
+Standard-mode entities such as **Presence Information**, **Motion Information**, and **Body Movement Parameter** report on their own. **Static Distance**, **Motion Distance**, **Existence Energy**, **Motion Energy**, and **Motion Speed** are published after you turn on **Underlying Open Function Info Output Switch**.
+
+When you compile from ESPHome Builder, add this repository as an external component so the firmware includes the UART startup handling:
+
+```yaml
+external_components:
+  - source: github://limengdu/MR24HPC1_ESPHome_external_components
+    components: [seeed_mr24hpc1]
+    refresh: 0s
+```
+
+Keep `logger.hardware_uart: USB_SERIAL_JTAG` so log output stays on the USB port and the radar keeps UART0 on GPIO4 (RX) / GPIO5 (TX) at 115200 8N1. Power the kit from a 5V USB supply that can deliver 1A.
+
 ### Secondary development for ESPHome
 
 All of the kit's code is currently open source. If you have a need to develop ESPHome, you can use the code of external components.

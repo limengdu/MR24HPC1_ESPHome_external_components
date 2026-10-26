@@ -33,6 +33,13 @@
 namespace esphome {
 namespace seeed_mr24hpc1 {
 
+// Delay before the first UART TX so the radar can finish its own boot.
+// 首次串口发送前的等待时间，让雷达完成上电自检。
+static const uint32_t STARTUP_DELAY_MS = 2000;
+// Delay after the module restart command before queries resume.
+// 发送模块重启命令后再等待一段时间，再开始查询。
+static const uint32_t RADAR_RESET_DELAY_MS = 2000;
+
 enum FrameState {
   FRAME_IDLE,
   FRAME_HEADER2,
@@ -154,8 +161,13 @@ class MR24HPC1Component : public Component,
   int sg_start_query_data_;
   bool check_dev_inf_sign_;
   bool poll_time_base_func_check_;
+  bool module_ready_{false};
 
   void update_();
+  void prepare_uart_();
+  void flush_rx_();
+  void start_after_boot_delay_();
+  void advance_query_state_();
   void r24_split_data_frame_(uint8_t value);
   void r24_parse_data_frame_(uint8_t *data, uint8_t len);
   void r24_frame_parse_open_underlying_information_(uint8_t *data);
