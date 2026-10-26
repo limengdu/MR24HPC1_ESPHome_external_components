@@ -29,12 +29,14 @@ CONFIG_SCHEMA = (
     .extend(cv.COMPONENT_SCHEMA)
 )
 
-# A verification mode was created to verify the configuration parameters of a UART device named "seeed_mr24hpc1".
-# This authentication mode requires that the device must have transmit and receive functionality, a parity mode of "NONE", and a stop bit of one.
+# Validate the UART bus at config time: 115200 8N1 with TX and RX pins.
+# 在配置阶段校验串口：115200 8N1，且必须同时有发送和接收引脚。
 FINAL_VALIDATE_SCHEMA = uart.final_validate_device_schema(
     "seeed_mr24hpc1",
+    baud_rate=115200,
     require_tx=True,
     require_rx=True,
+    data_bits=8,
     parity="NONE",
     stop_bits=1,
 )
